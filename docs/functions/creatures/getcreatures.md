@@ -1,5 +1,5 @@
-# getcreatures()
+# getcreatures
 
 ```lua
-creature[] getcreatures()     
+table getcreatures()     
 ```

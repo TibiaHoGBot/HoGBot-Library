@@ -1,5 +1,5 @@
-# getcontainers()
+# getcontainers
 
 ```lua
-container[] getcontainers()     
+table getcontainers()     
 ```
