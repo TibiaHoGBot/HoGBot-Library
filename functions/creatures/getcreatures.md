@@ -1,0 +1,5 @@
+# getcreatures()
+
+```lua
+creature[] getcreatures()     
+```

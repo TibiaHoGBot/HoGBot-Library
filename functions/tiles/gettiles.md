@@ -1,0 +1,5 @@
+# gettiles()
+
+```lua
+tile[] gettiles()   
+```

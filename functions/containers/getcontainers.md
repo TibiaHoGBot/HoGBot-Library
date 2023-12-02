@@ -1,0 +1,5 @@
+# getcontainers()
+
+```lua
+container[] getcontainers()     
+```
