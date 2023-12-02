@@ -14,3 +14,39 @@
     You should have received a copy of the GNU General Public License 
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 --]]
+
+
+
+-- @name    hppc
+-- @desc    amount of current health percent
+-- @author     Dworak
+-- @returns     number
+
+function hppc()
+    local currentHP = hp()
+    local maxHP = maxhp()
+
+    if currentHP > 0 and maxHP > 0 then
+        local percentage = (currentHP / maxHP) * 100
+        return percentage
+    else
+        return 0
+    end
+end
+
+-- @name    mppc
+-- @desc    amount of current mana percent
+-- @author     Dworak
+-- @returns     number
+
+function mppc()
+    local currentMP = mp()
+    local maxMP = maxmp()
+
+    if currentMP > 0 and maxMP > 0 then
+        local percentage = (currentMP / maxMP) * 100
+        return percentage
+    else
+        return 0
+    end
+end
