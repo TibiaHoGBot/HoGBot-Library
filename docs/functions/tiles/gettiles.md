@@ -1,5 +1,5 @@
-# gettiles()
+# gettiles
 
 ```lua
-tile[] gettiles()   
+table gettiles()   
 ```
