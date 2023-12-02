@@ -37,7 +37,7 @@ auto(200)
 
 local isburning = playerflag(PLAYER_FLAGS.FIRE)
 
-if burning and mp() >= 30 and vocation() == 'druid' then
+if isburning and mp() >= 30 and vocation() == 'druid' then
 	cast('exana flam') 
 	wait(300, 500)
 end
