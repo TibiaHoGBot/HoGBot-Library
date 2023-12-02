@@ -1,3 +1,5 @@
 # Table of contents
 
-* [Page](README.md)
+* [Overview](Overview.md)
+** [How HoGBot works?](pages/how-hogbot-works.md)
+
