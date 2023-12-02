@@ -1,5 +1,5 @@
 # Table of contents
 
-* [Overview](Overview.md)
-** [How HoGBot works?](pages/how-hogbot-works.md)
+* [Overview](pages/overview.md)
+* [How HoGBot works?](pages/how-hogbot-works.md)
 
