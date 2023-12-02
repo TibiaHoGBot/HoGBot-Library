@@ -1,8 +1,7 @@
-# premium()
+# premium
 
 {% code lineNumbers="true" %}
 ```lua
-number premium()     
+boolean premium()     
 ```
 {% endcode %}
-
