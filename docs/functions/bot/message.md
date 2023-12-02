@@ -1,6 +1,6 @@
 # message
 
 ```lua
-talk(mode, msg)   
+message(mode, msg)   
 ```
 

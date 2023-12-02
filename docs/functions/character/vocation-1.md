@@ -1,7 +1,7 @@
-# main
+# playerflag
 
 {% code lineNumbers="true" %}
 ```lua
-boolean main()     
+boolean playerflag()     
 ```
 {% endcode %}
