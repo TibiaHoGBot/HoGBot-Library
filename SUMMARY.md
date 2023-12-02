@@ -4,6 +4,8 @@
   * [How HoGBot works?](overview/how-hogbot-works.md)
   * [Script language](overview/script-language.md)
   * [Adding new functionality](overview/adding-new-functionality.md)
+* [Constants](constants/README.md)
+  * [Player Flags](constants/player-flags.md)
 * [Functions](functions/README.md)
   * [Misc](functions/misc/README.md)
     * [auto](functions/misc/auto.md)
