@@ -1,0 +1,5 @@
+# getrunes
+
+```lua
+table getrunes()   
+```
