@@ -16,11 +16,11 @@
 --]]
 
 -- @name    	getrange
--- @desc    	get rabnge between two points
+-- @desc    	distance between two points
 -- @author     	spec8320
 -- @returns     number
 
-function getrange(x1, y1, x2, y2)
+function distance(x1, y1, x2, y2)
     -- Check if all arguments are numbers
     if type(x1) ~= "number" or type(y1) ~= "number" or type(x2) ~= "number" or type(y2) ~= "number" then
         error("All arguments must be numbers")
