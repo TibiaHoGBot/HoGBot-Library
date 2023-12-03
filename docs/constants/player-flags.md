@@ -1,4 +1,4 @@
-# Player Flags
+# PLAYER\_FLAGS
 
 The following flags are available to check player status.
 
