@@ -6,7 +6,7 @@ Returns your character's current level.
 ```lua
 auto(200)
 if level >= 8 then
-    gotolabel(0, 'gotomainland')
+    gotolabel('gotomainland')
 end
 ```
 {% endcode %}
