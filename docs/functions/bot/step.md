@@ -1,6 +1,2 @@
 # step
 
-```lua
-step(direction)   
-```
-

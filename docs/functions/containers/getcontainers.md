@@ -1,5 +1,2 @@
 # getcontainers
 
-```lua
-table getcontainers()     
-```

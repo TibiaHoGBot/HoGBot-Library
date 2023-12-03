@@ -1,5 +1,2 @@
 # gettiles
 
-```lua
-table gettiles()   
-```
