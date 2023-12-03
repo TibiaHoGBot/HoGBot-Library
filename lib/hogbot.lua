@@ -130,7 +130,7 @@ end
 -- @returns     bool
 
 function creatureonscreen(name)
-    if type(name) ~= "string" then error("Npc name must be a string") end
+    if type(name) ~= "string" then error("Monster name must be a string") end
 
 	local creatures = getcreatures()
 
@@ -155,7 +155,7 @@ function paround(range)
     local playersAround = 0
 
 	for _, c in ipairs(creatures) do
-		if math.floor(c:dist()) <= range and c:type() == CREATURE_TYPE.PLAYER then
+		if math.floor(c:dist()) <= range and c:type() == CREATURE_TYPE_PLAYER then
             playersAround = playersAround + 1
 		end
 	end
@@ -175,7 +175,7 @@ function maround(range)
     local monstersAround = 0
     
 	for _, c in ipairs(creatures) do
-		if math.floor(c:dist()) <= range and c:type() == CREATURE_TYPE.MONSTER then
+		if math.floor(c:dist()) <= range and c:type() == CREATURE_TYPE_MONSTER then
 
             monstersAround = monstersAround + 1
 		end
@@ -196,7 +196,7 @@ function saround(range)
     local around = 0
     
 	for _, c in ipairs(creatures) do
-		if math.floor(c:dist()) <= range and (c:type() == CREATURE_TYPE.PLAYER_SUMMON or c:type() == CREATURE_TYPE.OTHER_SUMMON) then
+		if math.floor(c:dist()) <= range and (c:type() == CREATURE_TYPE_PLAYER_SUMMON or c:type() == CREATURE_TYPE_OTHER_SUMMON) then
             around = around + 1
 		end
 	end
@@ -221,7 +221,7 @@ function naround(range, name)
             return 1;
         end
 
-		if math.floor(c:dist()) <= range and c:type() == CREATURE_TYPE.NPC then
+		if math.floor(c:dist()) <= range and c:type() == CREATURE_TYPE_NPC then
             around = around + 1
 		end
 	end
@@ -241,7 +241,7 @@ function reachnpc(name)
 	local creatures = getcreatures()
     
 	for _, c in ipairs(creatures) do
-		if c:type() == CREATURE_TYPE.NPC and c:name() == name then
+		if c:type() == CREATURE_TYPE_NPC and c:name() == name then
             local cPos = c:pos()
             local tile = gettiles(cPos.x, cPos.y, cPos.z)
             
