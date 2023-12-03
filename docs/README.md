@@ -1,8 +1,8 @@
 # Table of contents
 
 * [Overview](../overview/)
-  * [How HoGBot works?](../README/how-hogbot-works.md)
-  * [Script language](../README/script-language.md)
+  * [How HoGBot works?](../overview/how-hogbot-works.md)
+  * [Script language](../overview/script-language.md)
 * [Constants](../constants/)
   * [CREATURE\_TYPE](../constants/creature-type.md)
   * [DIRECTION](../constants/direction.md)
