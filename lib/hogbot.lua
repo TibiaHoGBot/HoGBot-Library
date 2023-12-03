@@ -284,3 +284,7 @@ function table.contains(table, element)
     end
     return false
   end
+
+--[[
+        Built-in functions (implemented in C++)
+--]]
