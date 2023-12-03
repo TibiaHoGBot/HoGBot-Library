@@ -1,2 +1,0 @@
-# PLAYER\_FLAGS
-

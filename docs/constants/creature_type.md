@@ -1,2 +1,0 @@
-# CREATURE\_TYPE
-
