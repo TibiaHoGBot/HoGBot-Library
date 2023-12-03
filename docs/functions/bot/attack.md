@@ -3,4 +3,3 @@
 ```lua
 attack(number creatureid)   
 ```
-

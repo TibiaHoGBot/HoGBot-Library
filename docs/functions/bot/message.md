@@ -3,4 +3,3 @@
 ```lua
 message(mode, msg)   
 ```
-

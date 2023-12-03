@@ -3,4 +3,3 @@
 ```lua
 follow(number creatureid)   
 ```
-

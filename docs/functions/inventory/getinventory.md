@@ -1,4 +1,4 @@
-# getinventory(slot)
+# getinventory
 
 ```lua
 item getinventory(slot)   
