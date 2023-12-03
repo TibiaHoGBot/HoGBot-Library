@@ -1,6 +1,6 @@
 # Table of contents
 
-* [Overview](../README/)
+* [Overview](../overview/)
   * [How HoGBot works?](../README/how-hogbot-works.md)
   * [Script language](../README/script-language.md)
 * [Constants](../constants/)
