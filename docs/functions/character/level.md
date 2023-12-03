@@ -1,11 +1,12 @@
-# level()
+# level
 
 Returns your character's current level.
 
 {% code lineNumbers="true" %}
 ```lua
 auto(200)
-if level >= 8 then
+
+if level() >= 8 then
     gotolabel('gotomainland')
 end
 ```
