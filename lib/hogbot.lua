@@ -15,7 +15,7 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 --]]
 
--- @name    	getrange
+-- @name    	distance
 -- @desc    	distance between two points
 -- @author     	spec8320
 -- @returns     number
