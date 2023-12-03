@@ -15,6 +15,22 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 --]]
 
+-- @name    	getrange
+-- @desc    	get rabnge between two points
+-- @author     	spec8320
+-- @returns     number
+
+function getrange(x1, y1, x2, y2)
+    -- Check if all arguments are numbers
+    if type(x1) ~= "number" or type(y1) ~= "number" or type(x2) ~= "number" or type(y2) ~= "number" then
+        error("All arguments must be numbers")
+    end
+    
+    -- Calculate the distance using the Euclidean formula
+    local distance = math.sqrt((x2 - x1)^2 + (y2 - y1)^2)
+    
+    return distance
+end
 
 
 -- @name    hppc

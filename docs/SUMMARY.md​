@@ -14,6 +14,7 @@
   * [Core](functions/core/README.md)
     * [auto](functions/core/auto.md)
     * [init](functions/core/init.md)
+    * [getrange](functions/core/getrange.md)
   * [Bot](functions/bot/README.md)
     * [attack](functions/bot/attack.md)
     * [follow](functions/bot/follow.md)
