@@ -39,7 +39,7 @@
     * [posz](functions/character/posz.md)
     * [premium](functions/character/premium.md)
     * [soul](functions/character/soul.md)
-    * [spells](functions/character/spells.md)
+    * [knownspells](functions/character/spells.md)
     * [playerflag](functions/character/playerflag.md)
     * [vocation](functions/character/vocation.md)
   * [Containers](functions/containers/README.md)
