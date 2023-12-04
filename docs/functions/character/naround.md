@@ -8,7 +8,7 @@ Returns count of NPCs in range, if name parameter is provided it will check if N
 local npc = "Frodo"
 
 if naround(5, npc) then
-    talk(MESSAGE_TYPE.SAY, "I can see " .. npc)
+    talk(MESSAGE_TYPE_SAY, "I can see " .. npc)
 end
 ```
 {% endcode %}

@@ -12,5 +12,5 @@ end
 ```
 {% endcode %}
 
-_Each 100 milliseconds, it will check if you have more than 20% of mana and if there's more than 2 . If yes it will use exura gran spell._
+_Each 100 milliseconds, it will check if you have more than 20% of mana and if there's more than 2 monsters. If yes it will use exura gran spell._
 

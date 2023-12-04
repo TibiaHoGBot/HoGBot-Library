@@ -1,16 +1,13 @@
-# hppc()
+# paround(range)
 
-Returns your character's health percentage
+Return number of players around you in in given range
 
 {% code lineNumbers="true" %}
 ```lua
-auto(100)
-if hppc() < 50 then
-    cast('exura gran')
-    wait(50, 100)
-end
+local message = "NUMBER OF PLAYERS: " .. paround(6) .. " + ME"
+talk(MESSAGE_TYPE.SAY, message)
 ```
 {% endcode %}
 
-_Each 100 milliseconds, it will check if you have less than 50% of health. If yes it will use exura gran spell._
+_It will say on local chat **NUMBER OF PLAYERS: 1 + ME** if there is another player with you on screen._
 

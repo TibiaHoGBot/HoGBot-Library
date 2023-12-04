@@ -135,7 +135,7 @@ function creatureonscreen(name)
 	local creatures = getcreatures()
 
 	for _, c in ipairs(creatures) do
-		if c:name() == name and c:dist() <= 7 then
+		if c:name() == name then
 			return true
 		end
 	end
@@ -268,13 +268,9 @@ function reachnpc(name)
 end
 
 
---   ______      __    __        ______     __                  _
---  /_  __/___ _/ /_  / /__     / ____/  __/ /____  ____  _____(_)___  ____
---   / / / __ `/ __ \/ / _ \   / __/ | |/_/ __/ _ \/ __ \/ ___/ / __ \/ __ \
---  / / / /_/ / /_/ / /  __/  / /____>  </ /_/  __/ / / (__  ) / /_/ / / / /
--- /_/  \__,_/_.___/_/\___/  /_____/_/|_|\__/\___/_/ /_/____/_/\____/_/ /_/
---
-
+--[[
+Extensions
+--]]
 
 function table.contains(table, element)
     for _, value in pairs(table) do
