@@ -1,0 +1,5 @@
+# getpotions
+
+```lua
+table getpotions()   
+```

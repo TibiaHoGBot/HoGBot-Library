@@ -1,0 +1,5 @@
+# getspells
+
+```lua
+table getspells()   
+```
