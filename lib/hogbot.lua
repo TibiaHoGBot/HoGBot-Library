@@ -141,25 +141,25 @@ function mppc()
     end
 end
 
--- @name    isss
--- @desc    check if its ss time (add 10 min to ss 10AM time)
+-- @name    sstime
+-- @desc    check if its ss time (from 9:55 AM till 10:10 AM)
 -- @author  spec8320
 -- @returns boolean
 
-function isss()
-    return 85800 <= sstime()
+function sstime()
+    return 600 >= secondtillss() or 85800 <= secondtillss()
 end
 
 --[[
         Helper functions
 --]]
 
--- @name    sstime
+-- @name    secondtillss
 -- @desc    returns time till ss in seconds if 0 means that its ss time and 86400 means that there is 24h till next
 -- @author  spec8320
 -- @returns number
 
-function sstime()
+function secondtillss()
     return (36000 - cettime()) % 86400
 end
 
