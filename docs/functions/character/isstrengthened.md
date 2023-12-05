@@ -6,8 +6,8 @@ Returns true if your character is strenghtened, false otherwise.
 ```lua
 auto(200)
 if not isstrengthened() then
-	cast('utito tempo')
-	wait(100, 200)
+    cast('utito tempo')
+    wait(100, 200)
 end
 ```
 {% endcode %}

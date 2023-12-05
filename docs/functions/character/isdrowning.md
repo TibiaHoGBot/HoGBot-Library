@@ -6,7 +6,7 @@ Returns true if your character is drowning (underwater), false otherwise.
 ```lua
 auto(200)
 if isdrowning() then
-	equipitem('helmet of the deep', 'head')
+    equipitem('helmet of the deep', 'head')
 end
 ```
 {% endcode %}

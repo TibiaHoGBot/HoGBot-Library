@@ -6,7 +6,7 @@ Returns true if your character is battle signed, false otherwise.
 ```lua
 auto(200)
 if not isbattlesigned() then
-	logout()
+    logout()
 end
 ```
 {% endcode %}

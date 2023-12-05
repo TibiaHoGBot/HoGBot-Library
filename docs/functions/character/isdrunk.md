@@ -6,8 +6,8 @@ Returns true if your character is drunk, false otherwise.
 ```lua
 auto(200)
 if isdrunk() then
-	equipitem('dwarven ring', 'finger')
-	wait(100, 200)
+    equipitem('dwarven ring', 'finger')
+    wait(100, 200)
 end
 ```
 {% endcode %}

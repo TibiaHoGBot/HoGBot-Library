@@ -6,8 +6,8 @@ Returns true if your character is poisoned, false otherwise.
 ```lua
 auto(200)
 if ispoisoned() and mp() >= 30 then
-	cast('exana pox')
-	wait(100, 200)
+    cast('exana pox')
+    wait(100, 200)
 end
 ```
 {% endcode %}

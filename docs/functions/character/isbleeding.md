@@ -6,8 +6,8 @@ Returns true if your character is bleeding, false otherwise.
 ```lua
 auto(200)
 if not isbleeding() and (vocation() == 'knight' or vocation() == 'druid') then
-	cast('exana kor') 
-	wait(100, 200)
+    cast('exana kor') 
+    wait(100, 200)
 end
 ```
 {% endcode %}

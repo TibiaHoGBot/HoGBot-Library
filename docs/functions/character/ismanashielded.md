@@ -6,8 +6,8 @@ Returns true if your character is protected by mana shield, false otherwise.
 ```lua
 auto(200)
 if not ismanashielded() then
-	cast('utamo vita')
-	wait(100, 200)
+    cast('utamo vita')
+    wait(100, 200)
 end
 ```
 {% endcode %}

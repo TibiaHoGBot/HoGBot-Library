@@ -6,8 +6,8 @@ Returns true if your character is electrified, false otherwise.
 ```lua
 auto(200)
 if islectrified() and mp() >= 30 and vocation() == 'druid' then
-	cast('exana vis')
-	wait(100, 200)
+    cast('exana vis')
+    wait(100, 200)
 end
 ```
 {% endcode %}

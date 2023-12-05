@@ -6,8 +6,8 @@ Returns true if your character is paralyzed, false otherwise.
 ```lua
 auto(200)
 if isparalysed() then
-	cast('exura')
-	wait(100, 200)
+    cast('exura')
+    wait(100, 200)
 end
 ```
 {% endcode %}

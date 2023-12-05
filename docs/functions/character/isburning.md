@@ -6,8 +6,8 @@ Returns true if your character is burning, false otherwise.
 ```lua
 auto(200)
 if isburning() and mp() >= 30 and vocation() == 'druid' then
-	cast('exana flam')
-	wait(100, 200)
+    cast('exana flam')
+    wait(100, 200)
 end
 ```
 {% endcode %}
