@@ -15,6 +15,7 @@
     * [auto](functions/core/auto.md)
     * [init](functions/core/init.md)
     * [distance](functions/core/distance.md)
+     * [distance](functions/core/isss.md)
   * [Bot](functions/bot/README.md)
     * [attack](functions/bot/attack.md)
     * [buyobject](functions/bot/buyobject.md)
