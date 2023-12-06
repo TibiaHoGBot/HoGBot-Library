@@ -150,8 +150,7 @@ function countitems(id)
     local count = 0
     
     for _, container in ipairs(containers) do
-        local items = container.items()
-        for _, item in ipairs(items) do
+        for _, item in ipairs(container.items) do
             if(item == id)
                 count += 1
         end
@@ -167,8 +166,7 @@ function hasitem(id)
     local containers = getcontainers()
     
     for _, container in ipairs(containers) do
-        local items = container.items()
-        for _, item in ipairs(items) do
+        for _, item in ipairs(container.items) do
             if(item == id)
                 return true
         end
