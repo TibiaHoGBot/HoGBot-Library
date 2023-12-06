@@ -141,6 +141,41 @@ function mppc()
     end
 end
 
+-- @name    countitems
+-- @desc    amount of items in cointainers by id
+-- @author  dulec
+-- @returns number
+function countitems(id)
+    local containers = getcontainers()
+    local count = 0
+    
+    for _, container in ipairs(containers) do
+        local items = container.items()
+        for _, item in ipairs(items) do
+            if(item == id)
+                count += 1
+        end
+    end
+    return count
+end
+
+-- @name    hasitem
+-- @desc    check if player has any item by id
+-- @author  dulec
+-- @returns boolean
+function hasitem(id)
+    local containers = getcontainers()
+    
+    for _, container in ipairs(containers) do
+        local items = container.items()
+        for _, item in ipairs(items) do
+            if(item == id)
+                return true
+        end
+    end
+    return false
+end
+
 --[[
         Built-in functions (implemented in C++)
 --]]

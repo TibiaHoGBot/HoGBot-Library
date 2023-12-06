@@ -35,6 +35,8 @@
     * [runeinfo](functions/bot/runeinfo.md)
   * [Character](functions/character/README.md)
     * [cap](functions/character/cap.md)
+    * [countitems](functions/character/countitems.md)
+    * [hasitem](functions/character/hasitem.md)
     * [hp](functions/character/hp.md)
     * [hppc](functions/character/hppc.md)
     * [id](functions/character/id.md)
