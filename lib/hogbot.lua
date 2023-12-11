@@ -151,8 +151,9 @@ function countitems(id)
     
     for _, container in ipairs(containers) do
         for _, item in ipairs(container.items) do
-            if(item == id)
+            if(item == id) then
                 count += 1
+            end
         end
     end
     return count
@@ -167,12 +168,14 @@ function hasitem(id)
     
     for _, container in ipairs(containers) do
         for _, item in ipairs(container.items) do
-            if(item == id)
+            if(item == id) then
                 return true
+            end
         end
     end
     return false
 end
+
 
 --[[
         Built-in functions (implemented in C++)
