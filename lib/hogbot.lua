@@ -176,7 +176,89 @@ function hasitem(id)
     return false
 end
 
+-- @name    cutgrass
+-- @desc    cut grass based on direction(for example you can use it like this: cutgrass('north east', 3308)). Second parameter is optional, so if you dont pass it script will check your backpacks for tool
+-- @author  dulec
+-- @returns void
+function cutgrass(direction, itemid)
+    itemid = itemid or 0
 
+    if(itemid == 0) then
+        local tools = {3308, 3330, 9598, 9596, 9594}
+        for _, tool in ipairs(tools) do
+            if(hasitem(tool)) then
+                itemid = tool
+                break
+            end
+        end
+    end
+
+    if(itemid == 0 || !hasitem(itemid)) then
+        error("You have no tool to cut grass")
+    end
+
+    local selfPosition = position()
+    local destination = selfPosition
+    direction = string.lower(direction)
+
+    if(string.find(direction, "north")) then
+        destination.x -= 1
+    end
+
+    if(string.find(direction, "south")) then
+        destination.x += 1
+    end
+    if(string.find(direction, "east")) then
+        destination.y += 1
+    end
+    if(string.find(direction, "west")) then
+        destination.y -= 1
+    end
+    moveitemstoyourposition(destination)
+    usetwoobjects(selfposition, itemid, 0, destination, number targetobjectid, 0)
+end
+
+-- @name    getitemsontile
+-- @desc    get all items on specific tile
+-- @author  dulec
+-- @returns array?
+function getitemsontile(position)
+    local tiles = gettiles()
+    for _, tile in ipairs(tiles) do
+        if(tile.position.x == position.x and tile.position.y == position.y) then
+            return tile
+        end
+    end
+end
+
+-- @name    moveitemstoyourposition
+-- @desc    move all items from position under yourself
+-- @author  dulec
+-- @returns void
+function moveitemstoyourposition(position)
+    local itemsToMove = getItemsOnTile(position)
+    local selfPosition = position()
+
+    while(table.getn(itemsToMove) > 2) do
+        moveobject(position, itemsToMove[-1], table.getn(itemsToMove), selfPosition, number amount)  
+    end
+end
+
+-- @name    getitempositionfrominventory
+-- @desc    search all you containers until find first item with itemid and returns its position
+-- @author  dulec
+-- @returns position
+function getitempositionfrominventory(itemid)
+    local containers = getcontainers()
+    for i, container in ipairs(containers) do
+        for j, item in ipairs(container.items) do
+            if(item == itemid) then
+                return new position(0xffff, i, j)
+            end
+        end
+    end
+    error("Item not found")
+end
 --[[
         Built-in functions (implemented in C++)
 --]]
