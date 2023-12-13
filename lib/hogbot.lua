@@ -412,6 +412,38 @@ function useitemonground(itemid, position)
     usetwoobjects(toolposition, itemid, 0x01, position, tile[-1].id, #tile)
 end
 
+-- @name    knowspell
+-- @desc    check if character know spell by id
+-- @author  dulec
+-- @returns bool
+function knowspell(spellid)
+    if type(spellid) ~= "number" then
+        error("itemid must be number")
+    end 
+
+    spells = knownspells()
+    for _, spell in ipairs(spells) do
+        if spellid == spell.id then
+            return true
+        end
+    end
+    return false
+end
+
+-- @name    levitate
+-- @desc    cast spell levitate until floor index changes
+-- @author  dulec
+-- @returns bool
+function levitate(spell)
+    if mp() > 50 and level() >= 12 and knownspells(81) then
+        local posz = posz()
+        while posz == posz() then
+            cast(spell) 
+            wait(1000)
+        end
+    end
+end
+
 --[[
         Built-in functions (implemented in C++)
 --]]
