@@ -365,7 +365,7 @@ function buyitemsupto(itemid, amount, ignorecap, withbackpacks)
 end
 
 -- @name    destroyobject
--- @desc    use itemid on object id until it exists in position
+-- @desc    use itemid on objectid until it exists in position
 -- @author  dulec
 -- @returns nil
 function destroyobject(position, objectid, itemid)
@@ -389,6 +389,27 @@ function destroyobject(position, objectid, itemid)
         objectindex = finditemindex(tile, objectid)
     end
 
+end
+
+-- @name    useitemonground
+-- @desc    use itemid on object on top of tile
+-- @author  dulec
+-- @returns nil
+function useitemonground(itemid, position)
+    if type(itemid) ~= "number" then
+        error("itemid must be number")
+    end 
+    if getmetatable(position) ~= Position then
+        error("position must be Position")
+    end
+
+    local toolposition = getitempositionfromcontainers(itemid)
+    if tool == nil then
+        error("You don't have specified tool")
+    end
+
+    tile = getitemsontile(position)
+    usetwoobjects(toolposition, itemid, 0x01, position, tile[-1].id, #tile)
 end
 
 --[[
