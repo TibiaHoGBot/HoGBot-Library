@@ -384,12 +384,13 @@ function destroyobject(position, objectid, itemid)
     local tile = getitemsontile(position)
     local objectindex = finditemindex(tile, objectid)
     while objectindex ~= -1 then
-        usetwoobjects(toolposition, itemid, 0, position, objectid, objectindex)
+        usetwoobjects(toolposition, itemid, 0x01, position, objectid, objectindex)
         tile = getitemsontile(position)
         objectindex = finditemindex(tile, objectid)
     end
 
 end
+
 --[[
         Built-in functions (implemented in C++)
 --]]
