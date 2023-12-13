@@ -363,6 +363,33 @@ function buyitemsupto(itemid, amount, ignorecap, withbackpacks)
     withbackpacks = withbackpacks or false
     buyobject(itemid, amount - countitems(itemid), ignorecap, withbackpacks)   
 end
+
+-- @name    destroyobject
+-- @desc    use itemid on object id until it exists in position
+-- @author  dulec
+-- @returns nil
+function destroyobject(position, objectid, itemid)
+    if type(itemid) ~= "number" or type(objectid) ~= "number" then
+        error("itemid and objectid must be numbers")
+    end 
+    if getmetatable(position) ~= Position then
+        error("position must be Position")
+    end
+
+    local toolposition = getitempositionfromcontainers(itemid)
+    if tool == nil then
+        error("You don't have specified tool")
+    end
+
+    local tile = getitemsontile(position)
+    local objectindex = finditemindex(tile, objectid)
+    while objectindex ~= -1 then
+        usetwoobjects(toolposition, itemid, 0, position, objectid, objectindex)
+        tile = getitemsontile(position)
+        objectindex = finditemindex(tile, objectid)
+    end
+
+end
 --[[
         Built-in functions (implemented in C++)
 --]]
