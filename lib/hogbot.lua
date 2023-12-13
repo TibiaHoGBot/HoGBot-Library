@@ -165,7 +165,7 @@ end
 -- @name    getitemsontile
 -- @desc    get all items on specific tile
 -- @author  dulec
--- @returns array
+-- @returns table
 function getitemsontile(position)
     if getmetatable(position) ~= Position then
         error('position must be Position')
@@ -182,7 +182,7 @@ end
 -- @name    moveallitemstoyourposition
 -- @desc    move all items from position to your position 
 -- @author  dulec
--- @returns void
+-- @returns nil
 function moveallitemstoyourposition(position)
     if getmetatable(position) ~= Position then
         error('position must be Position')
@@ -200,7 +200,7 @@ end
 -- @name    moveallitemsonground
 -- @desc    move all items from position to destination
 -- @author  dulec
--- @returns void
+-- @returns nil
 function moveallitemsonground(position, destination)
     if getmetatable(position) ~= Position or getmetatable(destination) ~= Position then
         error('All arguments must be Positions')
@@ -219,7 +219,7 @@ end
 -- @name    moveitemonground
 -- @desc    move items from position to destination
 -- @author  dulec
--- @returns void
+-- @returns nil
 function moveitemonground(position, destination, itemid, amount)
     if type(itemid) ~= "number" or type(amount) ~= "number" then
         error("itemid and amount must be numbers")
@@ -241,7 +241,7 @@ function moveitemonground(position, destination, itemid, amount)
 end
 
 -- @name    finditemindex
--- @desc    find item index in items array
+-- @desc    find item index in items table
 -- @author  dulec
 -- @returns number
 function finditemindex(itemlist, itemid)
@@ -310,7 +310,7 @@ end
 -- @name    dropitems
 -- @desc    drop specific items on floor, position optional(if nil will drop on self)
 -- @author  dulec
--- @returns void
+-- @returns nil
 function dropitems(itemid, amount, position)
     if type(itemid) ~= "number" or type(amount) ~= "number" and type(amount) ~= nil then
         error("All arguments must be numbers")
@@ -350,6 +350,19 @@ function selfposition()
     return Position:new(posx(), posy(),  posz())
 end
 
+-- @name    buyitemsupto
+-- @desc    buy specific items up to amount
+-- @author  dulec
+-- @returns nil
+function buyitemsupto(itemid, amount, ignorecap, withbackpacks)
+    if type(itemid) ~= "number" or type(amount) ~= "number" then
+        error("All arguments must be numbers")
+    end 
+
+    ignorecap = ignorecap or false
+    withbackpacks = withbackpacks or false
+    buyobject(itemid, amount - countitems(itemid), ignorecap, withbackpacks)   
+end
 --[[
         Built-in functions (implemented in C++)
 --]]
