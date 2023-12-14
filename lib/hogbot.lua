@@ -350,11 +350,11 @@ function selfposition()
     return Position:new(posx(), posy(),  posz())
 end
 
--- @name    buyitemsupto
+-- @name    buyobjectsupto
 -- @desc    buy specific items up to amount
 -- @author  dulec
 -- @returns nil
-function buyitemsupto(itemid, amount, ignorecap, withbackpacks)
+function buyobjectsupto(itemid, amount, ignorecap, withbackpacks)
     if type(itemid) ~= "number" or type(amount) ~= "number" then
         error("All arguments must be numbers")
     end 
@@ -388,7 +388,6 @@ function destroyobject(position, objectid, itemid)
         tile = getitemsontile(position)
         objectindex = finditemindex(tile, objectid)
     end
-
 end
 
 -- @name    useitemonground
