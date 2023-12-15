@@ -86,6 +86,8 @@ STEP_DIRECTION_SOUTH_WEST   = 6
 STEP_DIRECTION_SOUTH        = 7
 STEP_DIRECTION_SOUTH_EAST   = 8
 
+TILE_GLOWING_SWITCH = 0 --todo, red sqm next to dp
+
 --[[
         User functions
 --]]
@@ -434,6 +436,10 @@ end
 -- @author  dulec
 -- @returns bool
 function levitate(spell)
+    if type(spell) ~= "string" then
+        error("spell must be string")
+    end 
+
     if mp() > 50 and level() >= 12 and knownspells(81) then
         local posz = posz()
         while posz == posz() then
@@ -443,31 +449,39 @@ function levitate(spell)
     end
 end
 
--- @name    reachdp
--- @desc    check all visible tils for dp and try reach them
+-- @name    reachgrounditem
+-- @desc    reach itemid on ground
 -- @author  dulec
 -- @returns bool
-function reachdp()
-    local depoids = {[3497] = true, [3498] = true, [3499] = true, [3500] = true}
+function reachgrounditem(itemid, avoid)
+    if type(itemid) ~= "number" or type(avoid) ~= "number" and type(avoid) ~= nil then
+        error("itemid must be number")
+    end 
+
+    avoid = avoid or 0
     local tiles = gettiles()
-    local depopos = {}
     for _, tile in ipairs(tiles) do
-        for _, item in ipairs(tile) do
-            if(depoids[item]) then
-                table.insert(depopos, tile)
+        if finditemindex(tile, avoid) == -1 then
+            for _, item in ipairs(tile) do
+                if item == itemid then
+                    reachlocation(tile.x, tile.y, tile.z)
+                    local selfposition = selfposition()
+                    if distance(dp.x, dp.y, selfposition.x, selfposition.y) == 0 then
+                       return true
+                    end
+                end
             end
         end
     end
-
-    for _, dp in ipairs(depopos) do
-        reachlocation(dp.x, dp.y, dp.z)
-        wait(3000)
-        local selfposition = selfposition()
-        if distance(dp.x, dp.y, selfposition.x, selfposition.y) == 1 then
-            return true
-        end
-    end
     return false
+end
+
+-- @name    reachdp
+-- @desc    reaches dp
+-- @author  dulec
+-- @returns bool
+function reachdp()
+    return reachgrounditem(TILE_GLOWING_SWITCH, 99)
 end
 --[[
         Built-in functions (implemented in C++)

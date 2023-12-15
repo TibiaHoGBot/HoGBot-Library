@@ -1,15 +1,13 @@
 # reachdp()
 
-Check all visible tils for dp and try reach them
+Returns true if reached depo, false otherwise
 
 {% code lineNumbers="true" %}
 ```lua
-	repeat
-		reacheddp = reachdp()
-	until reacheddp
+local reacheddp = reachdp()
 
 ```
 
 {% endcode %}
 
-_Will try to reach depo until it stands next to it._
+_Will try to reach depo._
