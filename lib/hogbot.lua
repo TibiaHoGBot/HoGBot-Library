@@ -96,7 +96,6 @@ TILE_GLOWING_SWITCH = 0 --todo, red sqm next to dp
 -- @desc    	distance between two points
 -- @author     	spec8320
 -- @returns     number
-
 function distance(x1, y1, x2, y2)
     -- Check if all arguments are numbers
     if type(x1) ~= "number" or type(y1) ~= "number" or type(x2) ~= "number" or type(y2) ~= "number" then
@@ -113,7 +112,6 @@ end
 -- @desc    amount of current health percent
 -- @author  Dworak
 -- @returns number
-
 function hppc()
     local currentHP = hp()
     local maxHP = maxhp()
@@ -130,7 +128,6 @@ end
 -- @desc    amount of current mana percent
 -- @author  Dworak
 -- @returns number
-
 function mppc()
     local currentMP = mp()
     local maxMP = maxmp()
@@ -411,6 +408,38 @@ function useitemonground(itemid, position)
 
     tile = getitemsontile(position)
     usetwoobjects(toolposition, itemid, 0x01, position, tile[-1].id, #tile)
+end
+
+-- @name    pickupitems
+-- @desc    pickup amount of specified items from position to your backpack
+-- @author  dulec
+-- @returns nil
+function pickupitems(position, itemid, amount, containerid, containerindex)
+    if type(itemid) ~= "number" or type(amount) ~= "number" then
+        error("itemid and amount must be numbers")
+    end 
+    if getmetatable(position) ~= Position then
+        error("position must be Position")
+    end
+
+    containerid = containerid or 0
+    amount = amount or 100
+
+    local itemindex = finditemindex(getitemsontile(position))
+    if itemindex == -1 then 
+        return
+    end
+
+    local containers = getcontainers()
+    for i, container in ipairs(containers) do
+        if container.id == containerid then
+            for j, slot in container do
+                !iteminfo(slot.id).iscontainer then
+                    moveobject(position, itemid, itemindex, Position:new(0xffff, 0x40 + i,  j), amount)
+                end
+            end
+        end
+    end  
 end
 
 -- @name    knowspell
