@@ -42,6 +42,7 @@
     * [getpotions](functions/bot/getpotions.md)
     * [spellinfo](functions/bot/spellinfo.md)
     * [potioninfo](functions/bot/potioninfo.md)
+    * [reachdp](functions/bot/reachdp.md)
     * [runeinfo](functions/bot/runeinfo.md)
   * [Character](functions/character/README.md)
     * [cap](functions/character/cap.md)

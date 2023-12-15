@@ -232,7 +232,7 @@ function moveitemonground(position, destination, itemid, amount)
     while amount > 0 then
         if amount >= 100 then
             moveobject(position, itemid, 0, destination, 100)
-            amount -= 100 
+            amount = amount - 100 
         else
             moveobject(position, itemid, 0, destination, 100-amount) 
             amount = 0
@@ -281,7 +281,7 @@ function countitems(itemid)
     for _, container in ipairs(containers) do
         for _, item in ipairs(container.items) do
             if item.id == id then
-                count += item.count
+                count = count + item.count
             end
         end
     end
@@ -334,7 +334,7 @@ function dropitems(itemid, amount, position)
 
         if amount >= 100 then
             moveobject(itemposition, itemid, 0, selfposition, 100)
-            amount -= 100 
+            amount = amount - 100 
         else
             moveobject(itemposition, itemid, 0, selfposition, 100-amount) 
             amount = 0
@@ -443,6 +443,32 @@ function levitate(spell)
     end
 end
 
+-- @name    reachdp
+-- @desc    check all visible tils for dp and try reach them
+-- @author  dulec
+-- @returns bool
+function reachdp()
+    local depoids = {[3497] = true, [3498] = true, [3499] = true, [3500] = true}
+    local tiles = gettiles()
+    local depopos = {}
+    for _, tile in ipairs(tiles) do
+        for _, item in ipairs(tile) do
+            if(depoids[item]) then
+                table.insert(depopos, tile)
+            end
+        end
+    end
+
+    for _, dp in ipairs(depopos) do
+        reachlocation(dp.x, dp.y, dp.z)
+        wait(3000)
+        local selfposition = selfposition()
+        if distance(dp.x, dp.y, selfposition.x, selfposition.y) == 1 then
+            return true
+        end
+    end
+    return false
+end
 --[[
         Built-in functions (implemented in C++)
 --]]
