@@ -512,6 +512,39 @@ end
 function reachdp()
     return reachgrounditem(TILE_GLOWING_SWITCH, 99)
 end
+
+-- @name    openholeandwalkin
+-- @desc    keep trying to open hole and walk in until floor changes
+-- @author  dulec
+-- @returns bool
+function openholeandwalkin(direction, shovelid)
+    if type(direction) ~= "string" then
+        error("direction must be string")
+    end 
+
+    local selfposition = selfposition()
+    local diginposition = selfposition
+    direction = string.lower(direction)
+    if string.find(direction, "north") then
+        diginposition.y = diginposition.y + 1
+    end
+    if string.find(direction, "east") then
+        diginposition.x = diginposition.x + 1
+    end
+    if string.find(direction, "south") then
+        diginposition.y = diginposition.y - 1
+    end
+    if string.find(direction, "west") then
+        diginposition.x = diginposition.x - 1
+    end
+
+    while selfposition.z == selfposition().z then
+        reachlocation(selfposition.x, selfposition.y, selfposition.z)
+        useitemonground(shovelid, diginposition)
+        reachlocation(diginposition.x, diginposition.y, diginposition.z)
+    end
+end
+
 --[[
         Built-in functions (implemented in C++)
 --]]
