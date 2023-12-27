@@ -141,6 +141,151 @@ function mppc()
     end
 end
 
+-- @name    sstime
+-- @desc    check if its ss time (from 9:55 AM till 10:10 AM)
+-- @author  spec8320
+-- @returns boolean
+
+function sstime()
+    return 600 >= secondtillss() or 85800 <= secondtillss()
+end
+
+--[[
+        Helper functions
+--]]
+
+-- @name    secondtillss
+-- @desc    returns time till ss in seconds if 0 means that its ss time and 86400 means that there is 24h till next
+-- @author  spec8320
+-- @returns number
+
+function secondtillss()
+    return (36000 - cettime()) % 86400
+end
+
+-- @name    cettime
+-- @desc    get CET time
+-- @author  spec8320
+-- @returns number
+
+function cettime()
+    return utctime() - utcoffset() + cetoffset()
+end
+
+-- @name    utctime
+-- @desc    get UTC time
+-- @author  spec8320
+-- @returns number
+
+function utctime()
+    local t = os.date('!%X')
+
+    -- Apparently os.date('!%X') returns the time with AM/PM appended on some
+    -- computers; this ignores anything before and after the actual timestamp
+    t = t:match('(%d%d:%d%d:%d%d)')
+
+    return tosec(t)
+end
+
+-- @name    utcoffset
+-- @desc    get UTC timezone offset
+-- @author  spec8320
+-- @returns number
+
+function utcoffset()
+    local now = os.time()
+
+    return os.difftime(os.time(os.date("!*t", now)), now)
+end
+
+-- @name    cetoffset
+-- @desc    get CET timezone offset
+-- @author  spec8320
+-- @returns number
+
+function cetoffset()
+    -- See the difference an 'n' can do?
+    local function iscest()
+        -- List taken from http://www.timeanddate.com/time/zone/germany/frankfurt
+        local daylightDates = {
+            [2013] = {90, 300},
+            [2014] = {89, 299},
+            [2015] = {88, 298},
+            [2016] = {87, 304},
+            [2017] = {85, 302},
+            [2018] = {84, 301},
+            [2019] = {90, 300},
+            [2023] = {91, 301},
+            [2024] = {87, 302},
+            [2025] = {90, 300},
+        }
+
+        local now = os.date('!*t')
+        local daylightDate = daylightDates[now.year]
+
+        return now.yday >= daylightDate[1] and now.yday <= daylightDate[2]
+    end
+
+    return utcoffset() + tern(iscest(), 7200, 3600)
+end
+
+-- @name    tosec
+-- @desc    converting date format to seconds
+-- @author  spec8320
+-- @returns number
+
+function tosec(str)
+	local sum, time, units, index = 0, str:token(nil, ":"), {86400, 3600, 60, 1}, 1
+
+	for i = #units - #time + 1, #units do
+		sum, index = sum + ((tonumber(time[index]) or 0) * units[i]), index + 1
+	end
+
+	return math.max(sum, 0)
+end
+
+-- @name    tern
+-- @desc    Helper for the ternary operator that Lua lacks. Returns `expr2` if `expr1` is true, `expr3` otherwise.
+-- @author  spec8320
+--
+-- @param     {any}          expr1          - The expression to be evaluated
+-- @param     {any}          expr2          - The expression to be returned if
+--                                            `expr1` evaluates to true
+-- @param     {any}          expr3          - The expression to be returned if
+--                                            `expr1` evaluates to false
+--
+-- @returns   {any}                         - `expr2` or `expr3`
+--
+function tern(expr1, expr2, expr3)
+    if expr1 then
+        return expr2
+    else
+        return expr3
+    end
+end
+
+-- @name    token
+-- @desc    split token string with delimiter
+-- @author  spec8320
+-- @returns string
+
+function string:token(n,delimiter)
+	delimiter = delimiter or ' +'
+	local result = {}
+	local from = 1
+	local delim_from, delim_to = self:find(delimiter,from)
+	while delim_from do
+		table.insert(result, self:sub(from,delim_from-1))
+		from = delim_to + 1
+		delim_from, delim_to = self:find(delimiter,from)
+	end
+	table.insert(result,self:sub(from))
+	if n then
+		return result[n]
+	end
+	return result
+end
+
 -- @name    move
 -- @desc    move your's character with choosen amount of steps
 -- @author     Dworak
@@ -475,6 +620,7 @@ function reachlocation(x, y, z)
         wait(50)
     end
 end
+
 
 
 --[[
