@@ -124,10 +124,10 @@ function mppc()
     end
 end
 
--- @name    	distance
--- @desc    	distance between two points
--- @author     	spec8320
--- @returns     number
+-- @name    distance
+-- @desc    distance between two points
+-- @author  spec8320
+-- @returns number
 
 function distance(x1, y1, x2, y2)
     -- Check if all arguments are numbers
@@ -143,8 +143,8 @@ end
 
 -- @name    creatureonscreen
 -- @desc    check if monster/player/NPC is on screen
--- @author     Loro
--- @returns     bool
+-- @author  Loro
+-- @returns bool
 
 function creatureonscreen(name)
     if type(name) ~= "string" then error("Monster name must be a string") end
@@ -162,8 +162,8 @@ end
 
 -- @name    paround
 -- @desc    return number of players in range
--- @author     Loro
--- @returns     number
+-- @author  Loro
+-- @returns number
 
 function paround(range)
     if type(range) ~= "number" then error("Range must be a number") end
@@ -182,8 +182,8 @@ end
 
 -- @name    maround
 -- @desc    return number of players in range
--- @author     Loro
--- @returns     number
+-- @author  Loro
+-- @returns number
 
 function maround(range)
     if type(range) ~= "number" then error("Range must be a number") end
@@ -203,8 +203,8 @@ end
 
 -- @name    saround
 -- @desc    return number of summons in range
--- @author     Loro
--- @returns     number
+-- @author  Loro
+-- @returns number
 
 function saround(range)
     if type(range) ~= "number" then error("Range must be a number") end
@@ -224,8 +224,8 @@ end
 
 -- @name    naround
 -- @desc    return number of NPC in range
--- @author     Loro
--- @returns     number
+-- @author  Loro
+-- @returns number
 
 function naround(range, name)
     if type(range) ~= "number" then error("Range must be a number") end
@@ -249,8 +249,8 @@ end
 
 -- @name    reachnpc
 -- @desc    follows/reach npc range by name
--- @author     Loro
--- @returns     nothing
+-- @author  Loro
+-- @returns nothing
 
 function reachnpc(name)
     if type(name) ~= "string" then error("Npc name must be a string") end
@@ -283,6 +283,21 @@ function reachnpc(name)
 		end
 	end
 end
+
+-- @name    reachlocation
+-- @desc    reach location specified by params
+-- @author  szulak
+-- @returns nil
+
+function reachlocation(x, y, z)
+    while posx() ~= x or posy() ~= y do
+        steplocation(x,y,z)
+        wait(50)
+    end
+end
+
+
+
 
 
 --[[
