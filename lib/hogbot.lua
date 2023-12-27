@@ -86,6 +86,8 @@ STEP_DIRECTION_SOUTH_WEST   = 6
 STEP_DIRECTION_SOUTH        = 7
 STEP_DIRECTION_SOUTH_EAST   = 8
 
+TILE_GLOWING_SWITCH = 0 --todo, red sqm next to dp
+
 --[[
         User functions
 --]]
@@ -111,7 +113,6 @@ end
 -- @desc    amount of current health percent
 -- @author  Dworak
 -- @returns number
-
 function hppc()
     local currentHP = hp()
     local maxHP = maxhp()
@@ -128,7 +129,6 @@ end
 -- @desc    amount of current mana percent
 -- @author  Dworak
 -- @returns number
-
 function mppc()
     local currentMP = mp()
     local maxMP = maxmp()
@@ -140,6 +140,410 @@ function mppc()
         return 0
     end
 end
+
+-- @name    hasitem
+-- @desc    check if player has any item by id
+-- @author  dulec
+-- @returns boolean
+function hasitem(itemid)
+    if type(itemid) ~= "number" then
+        error("itemid must be number")
+    end
+
+    local containers = getcontainers()
+    
+    for _, container in ipairs(containers) do
+        for _, item in ipairs(container.items) do
+            if item.id == itemid then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+-- @name    getitemsontile
+-- @desc    get all items on specific tile
+-- @author  dulec
+-- @returns table
+function getitemsontile(position)
+    if getmetatable(position) ~= Position then
+        error('position must be Position')
+    end
+
+    local tiles = gettiles()
+    for _, tile in ipairs(tiles) do
+        if tile.position.x == position.x and tile.position.y == position.y then
+            return tile
+        end
+    end
+end
+
+-- @name    moveallitemstoyourposition
+-- @desc    move all items from position to your position 
+-- @author  dulec
+-- @returns nil
+function moveallitemstoyourposition(position)
+    if getmetatable(position) ~= Position then
+        error('position must be Position')
+    end
+
+    local itemsToMove = getItemsOnTile(position)
+    local selfPosition = selfposition()
+
+    while #itemsToMove > 0 do
+        moveobject(position, itemsToMove[-1], #itemsToMove, selfPosition, itemsToMove[-1].count)  
+        table.remove(itemsToMove, itemsToMove[-1]) 
+    end
+end
+
+-- @name    moveallitemsonground
+-- @desc    move all items from position to destination
+-- @author  dulec
+-- @returns nil
+function moveallitemsonground(position, destination)
+    if getmetatable(position) ~= Position or getmetatable(destination) ~= Position then
+        error('All arguments must be Positions')
+    end
+
+    local itemsToMove = getItemsOnTile(position)
+    itemsToMove = table.remove(itemsToMove, 0)
+    local selfPosition = selfposition()
+
+    while #itemsToMove > 0 do
+        moveobject(position, itemsToMove[-1], #itemsToMove, selfPosition, itemsToMove[-1].count) 
+        table.remove(itemsToMove, itemsToMove[-1]) 
+    end
+end
+
+-- @name    moveitemonground
+-- @desc    move items from position to destination
+-- @author  dulec
+-- @returns nil
+function moveitemonground(position, destination, itemid, amount)
+    if type(itemid) ~= "number" or type(amount) ~= "number" then
+        error("itemid and amount must be numbers")
+    end 
+
+    if getmetatable(position) ~= Position or getmetatable(destination) ~= Position then
+        error('position and destination arguments must be Positions')
+    end
+
+    while amount > 0 then
+        if amount >= 100 then
+            moveobject(position, itemid, 0, destination, 100)
+            amount = amount - 100 
+        else
+            moveobject(position, itemid, 0, destination, 100-amount) 
+            amount = 0
+        end
+    end
+end
+
+-- @name    finditemindex
+-- @desc    find item index in items table
+-- @author  dulec
+-- @returns number
+function finditemindex(itemlist, itemid)
+    if type(itemid) ~= "number" then
+        error("itemid must be number")
+    end
+
+    if type(itemlist) ~= "table" then
+        error("itemlist must be table")
+    end
+
+    if #itemlist < 1 then
+        return -1
+    end
+
+    for index, item in ipairs(itemlist) do
+        if item.id == itemid then
+            return index
+        end
+    end
+
+    return -1
+end
+
+-- @name    countitems
+-- @desc    amount of items in cointainers by id
+-- @author  dulec
+-- @returns number
+function countitems(itemid)
+    if type(itemid) ~= "number" then
+        error("All arguments must be numbers")
+    end 
+
+    local containers = getcontainers()
+    local count = 0
+    
+    for _, container in ipairs(containers) do
+        for _, item in ipairs(container.items) do
+            if item.id == id then
+                count = count + item.count
+            end
+        end
+    end
+    return count
+end
+
+-- @name    getitempositionfromcontainers
+-- @desc    search all your containers until find first item with itemid and returns its position
+-- @author  dulec
+-- @returns position
+function getitempositionfromcontainers(itemid)
+    if type(itemid) ~= "number" then
+        error("All arguments must be numbers")
+    end 
+
+    local containers = getcontainers()
+    for i, container in ipairs(containers) do
+        for j, item in ipairs(container.items) do
+            if item == itemid then
+                return Position:new(0xffff, 0x40 + i,  j)
+            end
+        end
+    end
+end
+
+-- @name    dropitems
+-- @desc    drop specific items on floor, position optional(if nil will drop on self)
+-- @author  dulec
+-- @returns nil
+function dropitems(itemid, amount, position)
+    if type(itemid) ~= "number" or type(amount) ~= "number" and type(amount) ~= nil then
+        error("All arguments must be numbers")
+    end 
+
+    if position == nil then
+        position = selfposition()
+    end
+
+    local itemscount = countitems(itemid)
+    if itemscount < amount then
+        amount = itemscount
+    end
+
+    while amount > 0 then
+        local itemposition = getitempositionfromcontainers(itemid)
+
+        if(itemposition == nil) then
+            return
+        end
+
+        if amount >= 100 then
+            moveobject(itemposition, itemid, 0, selfposition, 100)
+            amount = amount - 100 
+        else
+            moveobject(itemposition, itemid, 0, selfposition, 100-amount) 
+            amount = 0
+        end
+    end
+end
+
+-- @name    selfposition
+-- @desc    return self position
+-- @author  dulec
+-- @returns Position
+function selfposition()
+    return Position:new(posx(), posy(),  posz())
+end
+
+-- @name    buyobjectsupto
+-- @desc    buy specific items up to amount
+-- @author  dulec
+-- @returns nil
+function buyobjectsupto(itemid, amount, ignorecap, withbackpacks)
+    if type(itemid) ~= "number" or type(amount) ~= "number" then
+        error("All arguments must be numbers")
+    end 
+
+    ignorecap = ignorecap or false
+    withbackpacks = withbackpacks or false
+    buyobject(itemid, amount - countitems(itemid), ignorecap, withbackpacks)   
+end
+
+-- @name    destroyobject
+-- @desc    use itemid on objectid until it exists in position
+-- @author  dulec
+-- @returns nil
+function destroyobject(position, objectid, itemid)
+    if type(itemid) ~= "number" or type(objectid) ~= "number" then
+        error("itemid and objectid must be numbers")
+    end 
+    if getmetatable(position) ~= Position then
+        error("position must be Position")
+    end
+
+    local toolposition = getitempositionfromcontainers(itemid)
+    if tool == nil then
+        error("You don't have specified tool")
+    end
+
+    local tile = getitemsontile(position)
+    local objectindex = finditemindex(tile, objectid)
+    while objectindex ~= -1 then
+        usetwoobjects(toolposition, itemid, 0x01, position, objectid, objectindex)
+        tile = getitemsontile(position)
+        objectindex = finditemindex(tile, objectid)
+    end
+end
+
+-- @name    useitemonground
+-- @desc    use itemid on object on top of tile
+-- @author  dulec
+-- @returns nil
+function useitemonground(itemid, position)
+    if type(itemid) ~= "number" then
+        error("itemid must be number")
+    end 
+    if getmetatable(position) ~= Position then
+        error("position must be Position")
+    end
+
+    local toolposition = getitempositionfromcontainers(itemid)
+    if tool == nil then
+        error("You don't have specified tool")
+    end
+
+    tile = getitemsontile(position)
+    usetwoobjects(toolposition, itemid, 0x01, position, tile[-1].id, #tile)
+end
+
+-- @name    pickupitems
+-- @desc    pickup amount of specified items from position to your backpack
+-- @author  dulec
+-- @returns nil
+function pickupitems(position, itemid, amount, containerid, containerindex)
+    if type(itemid) ~= "number" or type(amount) ~= "number" then
+        error("itemid and amount must be numbers")
+    end 
+    if getmetatable(position) ~= Position then
+        error("position must be Position")
+    end
+
+    containerid = containerid or 0
+    amount = amount or 100
+
+    local itemindex = finditemindex(getitemsontile(position))
+    if itemindex == -1 then 
+        return
+    end
+
+    local containers = getcontainers()
+    for i, container in ipairs(containers) do
+        if container.id == containerid then
+            for j, slot in container do
+                !iteminfo(slot.id).iscontainer then
+                    moveobject(position, itemid, itemindex, Position:new(0xffff, 0x40 + i,  j), amount)
+                end
+            end
+        end
+    end  
+end
+
+-- @name    knowspell
+-- @desc    check if character know spell by id
+-- @author  dulec
+-- @returns bool
+function knowspell(spellid)
+    if type(spellid) ~= "number" then
+        error("itemid must be number")
+    end 
+
+    spells = knownspells()
+    for _, spell in ipairs(spells) do
+        if spellid == spell.id then
+            return true
+        end
+    end
+    return false
+end
+
+-- @name    levitate
+-- @desc    cast spell levitate until floor index changes
+-- @author  dulec
+-- @returns bool
+function levitate(spell)
+    if type(spell) ~= "string" then
+        error("spell must be string")
+    end 
+
+    if mp() > 50 and level() >= 12 and knownspells(81) then
+        local posz = posz()
+        while posz == posz() then
+            cast(spell) 
+            wait(1000)
+        end
+    end
+end
+
+-- @name    reachgrounditem
+-- @desc    reach itemid on ground
+-- @author  dulec
+-- @returns bool
+function reachgrounditem(itemid, avoid)
+    if type(itemid) ~= "number" or type(avoid) ~= "number" and type(avoid) ~= nil then
+        error("itemid must be number")
+    end 
+
+    avoid = avoid or 0
+    local tiles = gettiles()
+    for _, tile in ipairs(tiles) do
+        if finditemindex(tile, avoid) == -1 then
+            for _, item in ipairs(tile) do
+                if item == itemid then
+                    reachlocation(tile.x, tile.y, tile.z)
+                    local selfposition = selfposition()
+                    if distance(dp.x, dp.y, selfposition.x, selfposition.y) == 0 then
+                       return true
+                    end
+                end
+            end
+        end
+    end
+    return false
+end
+
+-- @name    reachdp
+-- @desc    reaches dp
+-- @author  dulec
+-- @returns bool
+function reachdp()
+    return reachgrounditem(TILE_GLOWING_SWITCH, 99)
+end
+
+-- @name    openholeandwalkin
+-- @desc    keep trying to open hole and walk in until floor changes
+-- @author  dulec
+-- @returns bool
+function openholeandwalkin(direction, shovelid)
+    if type(direction) ~= "string" then
+        error("direction must be string")
+    end 
+
+    local selfposition = selfposition()
+    local diginposition = selfposition
+    direction = string.lower(direction)
+    if string.find(direction, "north") then
+        diginposition.y = diginposition.y + 1
+    end
+    if string.find(direction, "east") then
+        diginposition.x = diginposition.x + 1
+    end
+    if string.find(direction, "south") then
+        diginposition.y = diginposition.y - 1
+    end
+    if string.find(direction, "west") then
+        diginposition.x = diginposition.x - 1
+    end
+
+    while selfposition.z == selfposition().z then
+        reachlocation(selfposition.x, selfposition.y, selfposition.z)
+        useitemonground(shovelid, diginposition)
+        reachlocation(diginposition.x, diginposition.y, diginposition.z)
+    end
 
 -- @name    sstime
 -- @desc    check if its ss time (from 9:55 AM till 10:10 AM)
