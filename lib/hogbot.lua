@@ -15,23 +15,6 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 --]]
 
--- @name    	distance
--- @desc    	distance between two points
--- @author     	spec8320
--- @returns     number
-
-function distance(x1, y1, x2, y2)
-    -- Check if all arguments are numbers
-    if type(x1) ~= "number" or type(y1) ~= "number" or type(x2) ~= "number" or type(y2) ~= "number" then
-        error("All arguments must be numbers")
-    end
-    
-    -- Calculate the distance using the Euclidean formula
-    local distance = math.sqrt((x2 - x1)^2 + (y2 - y1)^2)
-    
-    return distance
-end
-
 --[[
         Constants
 --]]
@@ -140,6 +123,180 @@ function mppc()
         return 0
     end
 end
+
+-- @name    	distance
+-- @desc    	distance between two points
+-- @author     	spec8320
+-- @returns     number
+
+function distance(x1, y1, x2, y2)
+    -- Check if all arguments are numbers
+    if type(x1) ~= "number" or type(y1) ~= "number" or type(x2) ~= "number" or type(y2) ~= "number" then
+        error("All arguments must be numbers")
+    end
+    
+    -- Calculate the distance using the Euclidean formula
+    local distance = math.sqrt((x2 - x1)^2 + (y2 - y1)^2)
+    
+    return distance
+end
+
+-- @name    creatureonscreen
+-- @desc    check if monster/player/NPC is on screen
+-- @author     Loro
+-- @returns     bool
+
+function creatureonscreen(name)
+    if type(name) ~= "string" then error("Monster name must be a string") end
+
+	local creatures = getcreatures()
+
+	for _, c in ipairs(creatures) do
+		if c:name() == name then
+			return true
+		end
+	end
+
+	return false
+end
+
+-- @name    paround
+-- @desc    return number of players in range
+-- @author     Loro
+-- @returns     number
+
+function paround(range)
+    if type(range) ~= "number" then error("Range must be a number") end
+	
+    local creatures = getcreatures()
+    local playersAround = 0
+
+	for _, c in ipairs(creatures) do
+		if math.floor(c:dist()) <= range and c:type() == CREATURE_TYPE_PLAYER then
+            playersAround = playersAround + 1
+		end
+	end
+
+	return playersAround
+end
+
+-- @name    maround
+-- @desc    return number of players in range
+-- @author     Loro
+-- @returns     number
+
+function maround(range)
+    if type(range) ~= "number" then error("Range must be a number") end
+
+	local creatures = getcreatures()
+    local monstersAround = 0
+    
+	for _, c in ipairs(creatures) do
+		if math.floor(c:dist()) <= range and c:type() == CREATURE_TYPE_MONSTER then
+
+            monstersAround = monstersAround + 1
+		end
+	end
+
+	return monstersAround
+end
+
+-- @name    saround
+-- @desc    return number of summons in range
+-- @author     Loro
+-- @returns     number
+
+function saround(range)
+    if type(range) ~= "number" then error("Range must be a number") end
+
+	local creatures = getcreatures()
+    local around = 0
+    
+	for _, c in ipairs(creatures) do
+		if math.floor(c:dist()) <= range and (c:type() == CREATURE_TYPE_PLAYER_SUMMON or c:type() == CREATURE_TYPE_OTHER_SUMMON) then
+            around = around + 1
+		end
+	end
+
+	return around
+end
+
+
+-- @name    naround
+-- @desc    return number of NPC in range
+-- @author     Loro
+-- @returns     number
+
+function naround(range, name)
+    if type(range) ~= "number" then error("Range must be a number") end
+
+	local creatures = getcreatures()
+    local around = 0
+    
+	for _, c in ipairs(creatures) do
+        if name ~= nil and c:name() == name  then
+            return 1;
+        end
+
+		if math.floor(c:dist()) <= range and c:type() == CREATURE_TYPE_NPC then
+            around = around + 1
+		end
+	end
+
+	return around
+end
+
+
+-- @name    reachnpc
+-- @desc    follows/reach npc range by name
+-- @author     Loro
+-- @returns     nothing
+
+function reachnpc(name)
+    if type(name) ~= "string" then error("Npc name must be a string") end
+
+	local creatures = getcreatures()
+    
+	for _, c in ipairs(creatures) do
+		if c:type() == CREATURE_TYPE_NPC and c:name() == name then
+            local cPos = c:pos()
+            local tile = gettiles(cPos.x, cPos.y, cPos.z)
+            
+            if tilereachable(tile) then 
+                follow(c:id())
+
+                return
+            end
+            -- TO FINISH WHEN GOTOXYZ WILL BE IMPLEMENTED
+            -- for x = 1, 3 do
+            --     for y = 1, 3 do 
+            --         local tile = gettiles(cPos.x + x, cPos.y + y, cPos.z) 
+                    
+            --         if tilereachable(tile) then 
+            --             walk(tile.x, tile.y, tile.z)
+
+            --             return
+            --         end
+            --     end
+            -- end
+
+		end
+	end
+end
+
+
+--[[
+Extensions
+--]]
+
+function table.contains(table, element)
+    for _, value in pairs(table) do
+      if value == element then
+        return true
+      end
+    end
+    return false
+  end
 
 --[[
         Built-in functions (implemented in C++)
