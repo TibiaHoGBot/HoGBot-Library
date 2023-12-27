@@ -90,6 +90,23 @@ STEP_DIRECTION_SOUTH_EAST   = 8
         User functions
 --]]
 
+-- @name    	distance
+-- @desc    	distance between two points
+-- @author     	spec8320
+-- @returns     number
+
+function distance(x1, y1, x2, y2)
+    -- Check if all arguments are numbers
+    if type(x1) ~= "number" or type(y1) ~= "number" or type(x2) ~= "number" or type(y2) ~= "number" then
+        error("All arguments must be numbers")
+    end
+    
+    -- Calculate the distance using the Euclidean formula
+    local distance = math.sqrt((x2 - x1)^2 + (y2 - y1)^2)
+    
+    return distance
+end
+
 -- @name    hppc
 -- @desc    amount of current health percent
 -- @author  Dworak
@@ -122,6 +139,169 @@ function mppc()
     else
         return 0
     end
+end
+
+-- @name    move
+-- @desc    move your's character with choosen amount of steps
+-- @author     Dworak
+-- @returns     nothing
+
+function move(direction, stepsAmount)
+  local dir
+  stepsAmount = stepsAmount or 1
+
+  if direction:lower() == "n" or direction:lower() == "north" then
+    dir = STEP_DIRECTION_NORTH
+  elseif direction:lower() == "ne" or direction:lower() == "north-east" or direction:lower() == "northeast" then
+    dir = STEP_DIRECTION_NORTH_EAST
+  elseif direction:lower() == "e" or direction:lower() == "east" then
+    dir = STEP_DIRECTION_EAST
+  elseif direction:lower() == "se" or direction:lower() == "south-east" or direction:lower() == "southeast" then
+    dir = STEP_DIRECTION_SOUTH_EAST
+  elseif direction:lower() == "s" or direction:lower() == "south" then
+    dir = STEP_DIRECTION_SOUTH
+  elseif direction:lower() == "sw" or direction:lower() == "south-west" or direction:lower() == "southwest" then
+    dir = STEP_DIRECTION_SOUTH_WEST
+  elseif direction:lower() == "w" or direction:lower() == "west" then
+    dir = STEP_DIRECTION_WEST
+  elseif direction:lower() == "nw" or direction:lower() == "north-west" or direction:lower() == "northwest" then
+    dir = STEP_DIRECTION_NORTH_WEST
+  else
+    return
+  end
+
+  for i = 1, stepsAmount do
+    step(dir)
+  end
+end
+
+
+-- @name    turn
+-- @desc    turn your's character with choosen direction
+-- @author     Dworak
+-- @returns     nothing
+
+function turn(direction)
+  local dir
+
+  if direction:lower() == "n" or direction:lower() == "north" then
+    dir = DIRECTION_NORTH
+  elseif direction:lower() == "e" or direction:lower() == "east" then
+    dir = DIRECTION_EAST
+  elseif direction:lower() == "s" or direction:lower() == "south" then
+    dir = DIRECTION_SOUTH
+  elseif direction:lower() == "w" or direction:lower() == "west" then
+    dir = DIRECTION_WEST
+  else
+    return
+  end
+
+  rotate(dir)
+end
+
+-- @name    Player Flags
+-- @desc    Return's player statuses
+-- @author     Dworak
+-- @returns     boolean or number
+
+function ispoisoned()
+  return playerflag(PLAYER_FLAGS_POISON)
+end
+
+function isburning()
+  return playerflag(PLAYER_FLAGS_FIRE)
+end
+
+function islectrified()
+  return playerflag(PLAYER_FLAGS_ENERGY)
+end
+
+function isdrunk()
+  return playerflag(PLAYER_FLAGS_DRUNK)
+end
+
+function ismanashielded()
+  return playerflag(PLAYER_FLAGS_MANA_SHIELD) or playerflag(PLAYER_FLAGS_MANA_SHIELD_NEW)
+end
+
+function isparalysed()
+  return playerflag(PLAYER_FLAGS_PARALYSED)
+end
+
+function ishasted()
+  return playerflag(PLAYER_FLAGS_HASTE)
+end
+
+function isbattlesigned()
+  return playerflag(PLAYER_FLAGS_BATTLE)
+end
+
+function isdrowning()
+  return playerflag(PLAYER_FLAGS_DROWNING)
+end
+
+function isfreezing()
+  return playerflag(PLAYER_FLAGS_FREEZING)
+end
+
+function isdazzled()
+  return playerflag(PLAYER_FLAGS_DAZZLING)
+end
+
+function iscursed()
+  return playerflag(PLAYER_FLAGS_CURSED)
+end
+
+function isstrengthened()
+  return playerflag(PLAYER_FLAGS_STRENGTHENED)
+end
+
+function ispvpsigned()
+  return playerflag(PLAYER_FLAGS_RED_SWORDS)
+end
+
+function ispzone()
+  return playerflag(PLAYER_FLAGS_PROTECTION_ZONE)
+end
+
+function isbleeding()
+  return playerflag(PLAYER_FLAGS_BLEEDING)
+end
+
+function ishexed() -- Returns Number
+  if playerflag(PLAYER_FLAGS_GREATER_HEX) then
+    return 3
+  elseif playerflag(PLAYER_FLAGS_INTENSE_HEX) then
+    return 2
+  elseif playerflag(PLAYER_FLAGS_LESSER_HEX) then
+    return 1
+  else
+    return false
+  end
+end
+
+function isrooted()
+  return playerflag(PLAYER_FLAGS_ROOTED)
+end
+
+function isfeared()
+  return playerflag(PLAYER_FLAGS_FEARED)
+end
+
+function isgoshnar() -- Returns Number
+  if playerflag(PLAYER_FLAGS_GOSHNAR_5) then
+    return 5
+  elseif playerflag(PLAYER_FLAGS_GOSHNAR_4) then
+    return 4
+  elseif playerflag(PLAYER_FLAGS_GOSHNAR_3) then
+    return 3
+  elseif playerflag(PLAYER_FLAGS_GOSHNAR_2) then
+    return 2
+  elseif playerflag(PLAYER_FLAGS_GOSHNAR_1) then
+    return 1
+  else
+    return false
+  end
 end
 
 -- @name    distance
@@ -295,9 +475,6 @@ function reachlocation(x, y, z)
         wait(50)
     end
 end
-
-
-
 
 
 --[[
