@@ -13,11 +13,9 @@
 
     You should have received a copy of the GNU General Public License 
     along with this program. If not, see <http://www.gnu.org/licenses/>.
---]]
---[[
+--]] --[[
         Constants
---]]
-CREATURE_TYPE_PLAYER = 0
+--]] CREATURE_TYPE_PLAYER = 0
 CREATURE_TYPE_MONSTER = 1
 CREATURE_TYPE_NPC = 2
 CREATURE_TYPE_PLAYER_SUMMON = 3
@@ -38,6 +36,62 @@ INVENTORY_LEGS = 7
 INVENTORY_SHOES = 8
 INVENTORY_RING = 9
 INVENTORY_TRINKET = 10
+
+ITEM_BANK = 1
+ITEM_CLIP = 2
+ITEM_BOTTOM = 3
+ITEM_TOP = 4
+ITEM_CONTAINER = 5
+ITEM_CUMULATIVE = 6
+ITEM_USABLE = 7
+ITEM_FORCEUSE = 8
+ITEM_MULTIUSE = 9
+ITEM_LIQUIDPOOL = 12
+ITEM_UNPASS = 13
+ITEM_UNMOVE = 14
+ITEM_UNSIGHT = 15
+ITEM_AVOID = 16
+ITEM_NO_MOVE_ANIMATION = 17
+ITEM_TAKE = 18
+ITEM_LIQUID_CONTAINER = 19
+ITEM_HANG = 20
+ITEM_HOOK = 21
+ITEM_ROTATE = 22
+ITEM_LIGHT = 23
+ITEM_DONT_HIDE = 24
+ITEM_TRANSLUCENT = 25
+ITEM_SHIFT = 26
+ITEM_HEIGHT = 27
+ITEM_LYING_OBJECT = 28
+ITEM_ANIMATE_ALWAYS = 29
+ITEM_AUTOMAP = 30
+ITEM_LENS_HELP = 31
+ITEM_FULLBANK = 32
+ITEM_IGNORE_LOOK = 33
+ITEM_CLOTHES = 34
+ITEM_DEFAULT_ACTION = 35
+ITEM_MARKET = 36
+ITEM_WRAP = 37
+ITEM_UNWRAP = 38
+ITEM_TOP_EFFECT = 39
+ITEM_NPC_SALE_DATA = 40
+ITEM_CHANGED_TO_EXPIRE = 41
+ITEM_CORPSE = 42
+ITEM_PLAYER_CORPSE = 43
+ITEM_CYCLOPEDIA_ITEM = 44
+ITEM_AMMO = 45
+ITEM_SHOW_OFF_SOCKET = 46
+ITEM_REPORTABLE = 47
+ITEM_UPGRADE_CLASSIFICATION = 48
+ITEM_REVERSE_ADDONS_EAST = 49
+ITEM_REVERSE_ADDONS_WEST = 50
+ITEM_REVERSE_ADDONS_SOUTH = 51
+ITEM_REVERSE_ADDONS_NORTH = 52
+ITEM_WEAROUT = 53
+ITEM_CLOCK_EXPIRE = 54
+ITEM_EXPIRE = 55
+ITEM_EXPIRE_STOP = 56
+ITEM_DECO_ITEM_KIT = 57
 
 MESSAGE_TYPE_SAY = 1
 MESSAGE_TYPE_WHISPER = 2
@@ -84,7 +138,7 @@ STEP_DIRECTION_SOUTH_WEST = 6
 STEP_DIRECTION_SOUTH = 7
 STEP_DIRECTION_SOUTH_EAST = 8
 
-TILE_GLOWING_SWITCH = 0 --todo, red sqm next to dp
+TILE_DEPOT_SWITCH = 31501
 
 --[[
         User functions
@@ -106,7 +160,6 @@ function hppc()
     end
 end
 
-
 -- @name    mppc
 -- @desc    amount of current mana percent
 -- @author  Dworak
@@ -124,29 +177,23 @@ function mppc()
     end
 end
 
-
 -- @name    hasitem
 -- @desc    check if player has any item by id
 -- @author  dulec
 -- @returns boolean
 
 function hasitem(itemid)
-    if type(itemid) ~= "number" then
-        error("itemid must be number")
-    end
+    if type(itemid) ~= "number" then error("itemid must be number") end
 
     local containers = getcontainers()
 
     for _, container in ipairs(containers) do
         for _, item in ipairs(container.items) do
-            if item.id == itemid then
-                return true
-            end
+            if item.id == itemid then return true end
         end
     end
     return false
 end
-
 
 -- @name    getitemsontile
 -- @desc    get all items on specific tile
@@ -154,39 +201,17 @@ end
 -- @returns table
 
 function getitemsontile(position)
-    if getmetatable(position) ~= Position then
-        error("position must be Position")
-    end
+    -- if getmetatable(position) ~= Position then
+    --    error("position must be Position")
+    -- end
 
     local tiles = gettiles()
     for _, tile in ipairs(tiles) do
         if tile.position.x == position.x and tile.position.y == position.y then
-            return tile
+            return tile.items
         end
     end
 end
-
-
--- @name    moveallitemstoyourposition
--- @desc    move all items from position to your position
--- @author  dulec
--- @returns nil
-
-function moveallitemstoyourposition(position)
-    if getmetatable(position) ~= Position then
-        error("position must be Position")
-    end
-
-    local itemsToMove = getitemsontile(position)
-    local selfPosition = selfposition()
-
-    while #itemsToMove > 0 do
-        moveobject(position, itemsToMove[-1], #itemsToMove, selfPosition, itemsToMove[-1].count)
-        table.remove(itemsToMove, itemsToMove[-1])
-        waitping()
-    end
-end
-
 
 -- @name    moveallitemsonground
 -- @desc    move all items from position to destination
@@ -194,21 +219,48 @@ end
 -- @returns nil
 
 function moveallitemsonground(position, destination)
-    if getmetatable(position) ~= Position or getmetatable(destination) ~= Position then
-        error("All arguments must be Positions")
-    end
+    -- if getmetatable(position) ~= Position or getmetatable(destination) ~= Position then
+    --    error("All arguments must be Positions")
+    -- end
 
     local itemsToMove = getitemsontile(position)
-    itemsToMove = table.remove(itemsToMove, 0)
-    local selfPosition = selfposition()
 
-    while #itemsToMove > 0 do
-        moveobject(position, itemsToMove[-1], #itemsToMove, selfPosition, itemsToMove[-1].count)
-        table.remove(itemsToMove, itemsToMove[-1])
+    -- TODO: refactor and use itempropety(itemId, ITEM_IS_MOVABLE) to skip
+    -- non-movable items
+    table.remove(itemsToMove, 1)
+
+    for i = 1, #itemsToMove, 1 do
+        local itemToRemove = itemsToMove[i]
+        local count = itemToRemove.count
+
+        if itemToRemove.count == 0 then count = 1 end
+
+        moveobject(position, itemToRemove.id, 1, destination, count)
         waitping()
     end
 end
 
+-- @name    moveallitemstoyourposition
+-- @desc    move all items from position to your position
+-- @author  dulec
+-- @returns nil
+
+function moveallitemstoyourposition(position)
+    return moveallitemsonground(position, selfposition())
+end
+
+-- @name    getitemstackpos
+-- @desc    get stackpost of item from the tile
+-- @author  szulak
+-- @returns stack pos of item
+
+function getitemstackpos(tile, itemid)
+    for i = 1, #tile.items, 1 do
+        if tile.items[i].id == itemid then return i - 1 end
+    end
+
+    return 0
+end
 
 -- @name    moveitemonground
 -- @desc    move items from position to destination
@@ -220,50 +272,26 @@ function moveitemonground(position, destination, itemid, amount)
         error("itemid and amount must be numbers")
     end
 
-    if getmetatable(position) ~= Position or getmetatable(destination) ~= Position then
-        error("position and destination arguments must be Positions")
-    end
+    -- if getmetatable(position) ~= Position or getmetatable(destination) ~= Position then
+    --    error("position and destination arguments must be Positions")
+    -- end
+
+    -- TODO: add check if there are enough items on position tile
+
+    local tile = gettile(position)
+    local stackpos = getitemstackpos(tile, itemid)
 
     while amount > 0 do
         if amount >= 100 then
-            moveobject(position, itemid, 0, destination, 100)
+            moveobject(position, itemid, stackpos, destination, 100)
             amount = amount - 100
         else
-            moveobject(position, itemid, 0, destination, 100 - amount)
+            moveobject(position, itemid, stackpos, destination, amount)
             amount = 0
         end
         waitping()
     end
 end
-
-
--- @name    finditemindex
--- @desc    find item index in items table
--- @author  dulec
--- @returns number
-
-function finditemindex(itemlist, itemid)
-    if type(itemid) ~= "number" then
-        error("itemid must be number")
-    end
-
-    if type(itemlist) ~= "table" then
-        error("itemlist must be table")
-    end
-
-    if #itemlist < 1 then
-        return -1
-    end
-
-    for index, item in ipairs(itemlist) do
-        if item.id == itemid then
-            return index
-        end
-    end
-
-    return -1
-end
-
 
 -- @name    countitems
 -- @desc    amount of items in cointainers by id
@@ -271,23 +299,24 @@ end
 -- @returns number
 
 function countitems(itemid)
-    if type(itemid) ~= "number" then
-        error("All arguments must be numbers")
-    end
+    if type(itemid) ~= "number" then error("All arguments must be numbers") end
 
     local containers = getcontainers()
     local count = 0
 
     for _, container in ipairs(containers) do
         for _, item in ipairs(container.items) do
-            if item.id == id then
-                count = count + item.count
+            if item.id == itemid then
+                if item.count == 0 then
+                    count = count + 1
+                else
+                    count = count + item.count
+                end
             end
         end
     end
     return count
 end
-
 
 -- @name    getitempositionfromcontainers
 -- @desc    search all your containers until find first item with itemid and returns its position
@@ -295,20 +324,17 @@ end
 -- @returns Position
 
 function getitempositionfromcontainers(itemid)
-    if type(itemid) ~= "number" then
-        error("All arguments must be numbers")
-    end
+    if type(itemid) ~= "number" then error("All arguments must be numbers") end
 
     local containers = getcontainers()
-    for i, container in ipairs(containers) do
+    for _, container in ipairs(containers) do
         for j, item in ipairs(container.items) do
-            if item == itemid then
-                return Position:new(0xffff, 0x40 + i, j)
+            if item.id == itemid then
+                return Position:new(0xffff, 0x40 + container.id, j - 1)
             end
         end
     end
 end
-
 
 -- @name    dropitems
 -- @desc    drop specific items on floor, position optional(if nil will drop on self)
@@ -316,54 +342,43 @@ end
 -- @returns nil
 
 function dropitems(itemid, amount, position)
-    if type(itemid) ~= "number" or type(amount) ~= "number" and type(amount) ~= nil then
-        error("All arguments must be numbers")
-    end
+    if type(itemid) ~= "number" or type(amount) ~= "number" and type(amount) ~=
+        nil then error("All arguments must be numbers") end
 
-    if position == nil then
-        position = selfposition()
-    end
+    if position == nil then position = selfposition() end
 
     local itemscount = countitems(itemid)
-    if itemscount < amount then
-        amount = itemscount
-    end
+    if itemscount < amount then amount = itemscount end
 
     while amount > 0 do
         local itemposition = getitempositionfromcontainers(itemid)
 
-        if (itemposition == nil) then
-            return
-        end
+        if (itemposition == nil) then return end
 
         if amount >= 100 then
-            moveobject(itemposition, itemid, 0, selfposition, 100)
+            moveobject(itemposition, itemid, itemposition.z, position, 100)
             amount = amount - 100
         else
-            moveobject(itemposition, itemid, 0, selfposition, 100 - amount)
+            moveobject(itemposition, itemid, itemposition.z, position, amount)
             amount = 0
         end
         waitping()
     end
 end
 
-
 -- @name    selfposition
 -- @desc    return self position
 -- @author  dulec
 -- @returns Position
 
-function selfposition()
-    return Position:new(posx(), posy(), posz())
-end
+function selfposition() return Position:new(posx(), posy(), posz()) end
 
-
--- @name    buyobjectsupto
+-- @name    buyitemsupto
 -- @desc    buy specific items up to amount
 -- @author  dulec
 -- @returns nil
 
-function buyobjectsupto(itemid, amount, ignorecap, withbackpacks)
+function buyitemsupto(itemid, amount, ignorecap, withbackpacks)
     if type(itemid) ~= "number" or type(amount) ~= "number" then
         error("All arguments must be numbers")
     end
@@ -374,7 +389,6 @@ function buyobjectsupto(itemid, amount, ignorecap, withbackpacks)
     waitping()
 end
 
-
 -- @name    destroyobject
 -- @desc    use itemid on objectid until it exists in position
 -- @author  dulec
@@ -383,76 +397,98 @@ function destroyobject(position, objectid, itemid)
     if type(itemid) ~= "number" or type(objectid) ~= "number" then
         error("itemid and objectid must be numbers")
     end
-    if getmetatable(position) ~= Position then
-        error("position must be Position")
-    end
+    -- if getmetatable(position) ~= Position then
+    --    error("position must be Position")
+    -- end
 
     local toolposition = getitempositionfromcontainers(itemid)
-    if tool == nil then
-        error("You don't have specified tool")
-    end
+    if toolposition == nil then error("You don't have specified tool") end
 
     local tile = getitemsontile(position)
     local objectindex = finditemindex(tile, objectid)
+
     while objectindex ~= -1 do
-        usetwoobjects(toolposition, itemid, 0x01, position, objectid, objectindex)
+        usetwoobjects(toolposition, itemid, toolposition.z, position, objectid,
+                      objectindex)
         tile = getitemsontile(position)
         objectindex = finditemindex(tile, objectid)
         waitping()
     end
 end
 
+-- @name    topitem
+-- @desc    top item id on tile
+-- @author  szulak
+-- @returns userdata
+
+function topitem(position)
+    local tile = gettile(position)
+    local checkflags = {ITEM_BANK, ITEM_CLIP, ITEM_BOTTOM, ITEM_TOP}
+
+    for i = 1, #tile.items, 1 do
+        local itemid = tile.items[i].id
+
+        skipitem = false
+        for j = 1, #checkflags, 1 do
+            if (itemproperty(itemid, checkflags[j])) then
+                skipitem = true
+            end
+        end
+
+        if skipitem == false then return tile.items[i] end
+    end
+
+    return tile.items[#tile.items]
+end
 
 -- @name    useitemonground
--- @desc    use itemid on object on top of tile
+-- @desc    use itemid on object on ground
 -- @author  dulec
 -- @returns nil
 
 function useitemonground(itemid, position)
-    if type(itemid) ~= "number" then
-        error("itemid must be number")
-    end
-    if getmetatable(position) ~= Position then
-        error("position must be Position")
-    end
+    if type(itemid) ~= "number" then error("itemid must be number") end
 
-    local toolposition = getitempositionfromcontainers(itemid)
-    if tool == nil then
-        error("You don't have specified tool")
-    end
+    -- if getmetatable(position) ~= Position then
+    --    error("position must be Position")
+    -- end
 
-    tile = getitemsontile(position)
-    usetwoobjects(toolposition, itemid, 0x01, position, tile[-1].id, #tile)
+    local itempos = getitempositionfromcontainers(itemid)
+    if itempos == nil then error("You don't have specified item") end
+
+    items = getitemsontile(position)
+    for i = 1, #items, 1 do print("item id: " .. items[i].id) end
+
+    usetwoobjects(itempos, itemid, itempos.z, position, items[1].id, 0)
 end
-
 
 -- @name    pickupitems
 -- @desc    pickup amount of specified items from position to your backpack
 -- @author  dulec
 -- @returns nil
 
-function pickupitems(position, itemid, amount, containerid, containerindex)
+function pickupitems(position, itemid, amount, containerid)
     if type(itemid) ~= "number" or type(amount) ~= "number" then
         error("itemid and amount must be numbers")
     end
-    if getmetatable(position) ~= Position then
-        error("position must be Position")
-    end
+    -- if getmetatable(position) ~= Position then
+    --    error("position must be Position")
+    -- end
 
     containerid = containerid or 0
     amount = amount or 100
 
-    local itemindex = finditemindex(getitemsontile(position))
-    if itemindex == -1 then
-        return
-    end
+    local itemindex = finditemindex(getitemsontile(position), itemid)
+    if itemindex == -1 then return end
 
     local containers = getcontainers()
     for i, container in ipairs(containers) do
         if container.id == containerid then
-            for j, slot in container do
-                if not iteminfo(slot.id).iscontainer then
-                    moveobject(position, itemid, itemindex, Position:new(0xffff, 0x40 + i, j), amount)
+            for j, slot in ipairs(container.items) do
+                if not itemproperty(slot.id, ITEM_CONTAINER) then
+                    moveobject(position, itemid, itemindex,
+                               Position:new(0xffff, 0x40 + container.id, j - 1),
+                               amount)
                     waitping()
                 end
             end
@@ -460,46 +496,37 @@ function pickupitems(position, itemid, amount, containerid, containerindex)
     end
 end
 
-
 -- @name    knowspell
 -- @desc    check if character know spell by id
 -- @author  dulec
 -- @returns boolean
 
 function knowspell(spellid)
-    if type(spellid) ~= "number" then
-        error("itemid must be number")
-    end
+    if type(spellid) ~= "number" then error("itemid must be number") end
 
     spells = knownspells()
     for _, spell in ipairs(spells) do
-        if spellid == spell.id then
-            return true
-        end
+        if spellid == spell.id then return true end
     end
     return false
 end
 
-
 -- @name    levitate
 -- @desc    cast spell levitate until floor index changes
 -- @author  dulec
--- @returns boolean
+-- @returns nil
 
 function levitate(spell)
-    if type(spell) ~= "string" then
-        error("spell must be string")
-    end
+    if type(spell) ~= "string" then error("spell must be string") end
 
     if mp() > 50 and level() >= 12 and knownspells(81) then
-        local posz = posz()
-        while posz == posz() do
-            cast(spell)
+        local currentz = posz()
+        while currentz == posz() do
+            talk(MESSAGE_TYPE_SAY, spell)
             wait(1000)
         end
     end
 end
-
 
 -- @name    reachgrounditem
 -- @desc    reach itemid on ground
@@ -507,21 +534,18 @@ end
 -- @returns boolean
 
 function reachgrounditem(itemid, avoid)
-    if type(itemid) ~= "number" or type(avoid) ~= "number" and type(avoid) ~= nil then
-        error("itemid must be number")
-    end
+    if type(itemid) ~= "number" or type(avoid) ~= "number" and type(avoid) ~=
+        nil then error("itemid must be number") end
 
     avoid = avoid or 0
     local tiles = gettiles()
     for _, tile in ipairs(tiles) do
-        if finditemindex(tile, avoid) == -1 then
-            for _, item in ipairs(tile) do
-                if item == itemid then
-                    reachlocation(tile.x, tile.y, tile.z)
-                    local selfposition = selfposition()
-                    if distance(dp.x, dp.y, selfposition.x, selfposition.y) == 0 then
-                        return true
-                    end
+        if finditemindex(tile.items, avoid) == -1 then
+            for _, item in ipairs(tile.items) do
+                if item.id == itemid then
+                    reachlocation(tile.position.x, tile.position.y,
+                                  tile.position.z)
+                    return true
                 end
             end
         end
@@ -529,28 +553,27 @@ function reachgrounditem(itemid, avoid)
     return false
 end
 
-
--- @name    reachdepo
+-- @name    reachdp
 -- @desc    reaches nearest available depot
 -- @author  dulec
 -- @returns boolean
 
-function reachdepo()
+function reachdp()
     local creatureid = 99
-    return reachgrounditem(TILE_GLOWING_SWITCH, creatureid)
-end
 
+    -- TODO: this needs to be a lil bit more fancy - as the depot
+    -- can be taken while the character is moving
+
+    return reachgrounditem(TILE_DEPOT_SWITCH, creatureid)
+end
 
 -- @name    openholeandwalkin
 -- @desc    keep trying to open hole and walk in until floor changes
 -- @author  dulec
 -- @returns boolean
 function openholeandwalkin(direction, shovelid)
-    if type(direction) ~= "string" then
-        error("direction must be string")
-    end
+    if type(direction) ~= "string" then error("direction must be string") end
 
-    local selfposition = selfposition()
     local diginposition = selfposition
     direction = string.lower(direction)
     if string.find(direction, "north") then
@@ -566,24 +589,17 @@ function openholeandwalkin(direction, shovelid)
         diginposition.x = diginposition.x - 1
     end
 
-    while selfposition.z == selfposition().z do
-        reachlocation(selfposition.x, selfposition.y, selfposition.z)
-        useitemonground(shovelid, diginposition)
-        reachlocation(diginposition.x, diginposition.y, diginposition.z)
-        waitping()
-    end
+    -- TODO: this is tricky, since changing floor up/down offsets player
+    -- .x and .y positon by +1 or -1 - thus, second reachlocation won't work
+
+    -- local originpos = selfposition()
+    -- while originpos.z == selfposition().z do
+    --    reachlocation(originpos.x, originpos.y, originpos.z)
+    --    useitemonground(shovelid, diginposition)
+    --    reachlocation(diginposition.x - 1, diginposition.y - 1, diginposition.z)
+    --    waitping()
+    -- end
 end
-
-
--- @name    sstime
--- @desc    check if its ss time (from 9:55 AM till 10:10 AM)
--- @author  spec8320
--- @returns boolean
-
-function sstime()
-    return 600 >= secondtillss() or 85800 <= secondtillss()
-end
-
 
 -- @name    move
 -- @desc    move your's character with choosen amount of steps
@@ -596,19 +612,23 @@ function move(direction, stepsAmount)
 
     if direction:lower() == "n" or direction:lower() == "north" then
         dir = STEP_DIRECTION_NORTH
-    elseif direction:lower() == "ne" or direction:lower() == "north-east" or direction:lower() == "northeast" then
+    elseif direction:lower() == "ne" or direction:lower() == "north-east" or
+        direction:lower() == "northeast" then
         dir = STEP_DIRECTION_NORTH_EAST
     elseif direction:lower() == "e" or direction:lower() == "east" then
         dir = STEP_DIRECTION_EAST
-    elseif direction:lower() == "se" or direction:lower() == "south-east" or direction:lower() == "southeast" then
+    elseif direction:lower() == "se" or direction:lower() == "south-east" or
+        direction:lower() == "southeast" then
         dir = STEP_DIRECTION_SOUTH_EAST
     elseif direction:lower() == "s" or direction:lower() == "south" then
         dir = STEP_DIRECTION_SOUTH
-    elseif direction:lower() == "sw" or direction:lower() == "south-west" or direction:lower() == "southwest" then
+    elseif direction:lower() == "sw" or direction:lower() == "south-west" or
+        direction:lower() == "southwest" then
         dir = STEP_DIRECTION_SOUTH_WEST
     elseif direction:lower() == "w" or direction:lower() == "west" then
         dir = STEP_DIRECTION_WEST
-    elseif direction:lower() == "nw" or direction:lower() == "north-west" or direction:lower() == "northwest" then
+    elseif direction:lower() == "nw" or direction:lower() == "north-west" or
+        direction:lower() == "northwest" then
         dir = STEP_DIRECTION_NORTH_WEST
     else
         return
@@ -619,7 +639,6 @@ function move(direction, stepsAmount)
         waitping()
     end
 end
-
 
 -- @name    turn
 -- @desc    turn your's character with choosen direction
@@ -644,46 +663,33 @@ function turn(direction)
     rotate(dir)
 end
 
-
 -- @name    ispoisoned
 -- @desc    returns true if your character is poisoned
 -- @author  Dworak
 -- @returns boolean
 
-function ispoisoned()
-    return playerflag(PLAYER_FLAGS_POISON)
-end
-
+function ispoisoned() return playerflag(PLAYER_FLAGS_POISON) end
 
 -- @name    isburning
 -- @desc    returns true if your character is burning
 -- @author  Dworak
 -- @returns boolean
 
-function isburning()
-    return playerflag(PLAYER_FLAGS_FIRE)
-end
-
+function isburning() return playerflag(PLAYER_FLAGS_FIRE) end
 
 -- @name    iselectrified
 -- @desc    returns true if your character is electrified
 -- @author  Dworak
 -- @returns boolean
 
-function iselectrified()
-    return playerflag(PLAYER_FLAGS_ENERGY)
-end
-
+function iselectrified() return playerflag(PLAYER_FLAGS_ENERGY) end
 
 -- @name    isdrunk
 -- @desc    returns true if your character is drunk
 -- @author  Dworak
 -- @returns boolean
 
-function isdrunk()
-    return playerflag(PLAYER_FLAGS_DRUNK)
-end
-
+function isdrunk() return playerflag(PLAYER_FLAGS_DRUNK) end
 
 -- @name    ismanashielded
 -- @desc    returns true if your character is manashielded
@@ -691,7 +697,8 @@ end
 -- @returns boolean
 
 function ismanashielded()
-    return playerflag(PLAYER_FLAGS_MANA_SHIELD) or playerflag(PLAYER_FLAGS_MANA_SHIELD_NEW)
+    return playerflag(PLAYER_FLAGS_MANA_SHIELD) or
+               playerflag(PLAYER_FLAGS_MANA_SHIELD_NEW)
 end
 
 -- @name    isparalysed
@@ -699,109 +706,77 @@ end
 -- @author  Dworak
 -- @returns boolean
 
-function isparalysed()
-    return playerflag(PLAYER_FLAGS_PARALYSED)
-end
-
+function isparalysed() return playerflag(PLAYER_FLAGS_PARALYSED) end
 
 -- @name    ishasted
 -- @desc    returns true if your character is hasted
 -- @author  Dworak
 -- @returns boolean
 
-function ishasted()
-    return playerflag(PLAYER_FLAGS_HASTE)
-end
-
+function ishasted() return playerflag(PLAYER_FLAGS_HASTE) end
 
 -- @name    isbattlesigned
 -- @desc    returns true if your character is battlesigned
 -- @author  Dworak
 -- @returns boolean
 
-function isbattlesigned()
-    return playerflag(PLAYER_FLAGS_BATTLE)
-end
-
+function isbattlesigned() return playerflag(PLAYER_FLAGS_BATTLE) end
 
 -- @name    isdrowning
 -- @desc    returns true if your character is drowning
 -- @author  Dworak
 -- @returns boolean
 
-function isdrowning()
-    return playerflag(PLAYER_FLAGS_DROWNING)
-end
-
+function isdrowning() return playerflag(PLAYER_FLAGS_DROWNING) end
 
 -- @name    isfreezing
 -- @desc    returns true if your character is freezing
 -- @author  Dworak
 -- @returns boolean
 
-function isfreezing()
-    return playerflag(PLAYER_FLAGS_FREEZING)
-end
-
+function isfreezing() return playerflag(PLAYER_FLAGS_FREEZING) end
 
 -- @name    isdazzled
 -- @desc    returns true if your character is dazzled
 -- @author  Dworak
 -- @returns boolean
 
-function isdazzled()
-    return playerflag(PLAYER_FLAGS_DAZZLING)
-end
-
+function isdazzled() return playerflag(PLAYER_FLAGS_DAZZLING) end
 
 -- @name    iscursed
 -- @desc    returns true if your character is cursed
 -- @author  Dworak
 -- @returns boolean
 
-function iscursed()
-    return playerflag(PLAYER_FLAGS_CURSED)
-end
-
+function iscursed() return playerflag(PLAYER_FLAGS_CURSED) end
 
 -- @name    isstrengthened
 -- @desc    returns true if your character is strengthened
 -- @author  Dworak
 -- @returns boolean
 
-function isstrengthened()
-    return playerflag(PLAYER_FLAGS_STRENGTHENED)
-end
-
+function isstrengthened() return playerflag(PLAYER_FLAGS_STRENGTHENED) end
 
 -- @name    ispvpsigned
 -- @desc    returns true if your character is pvp singed
 -- @author  Dworak
 -- @returns boolean
 
-function ispvpsigned()
-    return playerflag(PLAYER_FLAGS_RED_SWORDS)
-end
-
+function ispvpsigned() return playerflag(PLAYER_FLAGS_RED_SWORDS) end
 
 -- @name    ispzone
 -- @desc    returns true if your character is in protection zone
 -- @author  Dworak
 -- @returns boolean
 
-function ispzone()
-    return playerflag(PLAYER_FLAGS_PROTECTION_ZONE)
-end
-
+function ispzone() return playerflag(PLAYER_FLAGS_PROTECTION_ZONE) end
 
 -- @name    isbleeding
 -- @desc    returns true if your character is bleeding
 -- @author  Dworak
 -- @returns boolean
 
-function isbleeding()
-    return playerflag(PLAYER_FLAGS_BLEEDING)
-end
+function isbleeding() return playerflag(PLAYER_FLAGS_BLEEDING) end
 
 -- @name    ishexed
 -- @desc    returns hex level if your character is hexed
@@ -820,26 +795,19 @@ function ishexed()
     end
 end
 
+-- @name    isstrengthened
+-- @desc    returns true if your character is strengthened
+-- @author  Dworak
+-- @returns boolean
+
+function isrooted() return playerflag(PLAYER_FLAGS_ROOTED) end
 
 -- @name    isstrengthened
 -- @desc    returns true if your character is strengthened
 -- @author  Dworak
 -- @returns boolean
 
-function isrooted()
-    return playerflag(PLAYER_FLAGS_ROOTED)
-end
-
-
--- @name    isstrengthened
--- @desc    returns true if your character is strengthened
--- @author  Dworak
--- @returns boolean
-
-function isfeared()
-    return playerflag(PLAYER_FLAGS_FEARED)
-end
-
+function isfeared() return playerflag(PLAYER_FLAGS_FEARED) end
 
 -- @name    isgoshnar
 -- @desc    returns taint level if your character has taints
@@ -862,45 +830,20 @@ function isgoshnar()
     end
 end
 
-
--- @name    distance
--- @desc    distance between two points
--- @author  spec8320
--- @returns number
-
-function distance(x1, y1, x2, y2)
-    -- Check if all arguments are numbers
-    if type(x1) ~= "number" or type(y1) ~= "number" or type(x2) ~= "number" or type(y2) ~= "number" then
-        error("All arguments must be numbers")
-    end
-
-    -- Calculate the distance using the Euclidean formula
-    local distance = math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
-    return distance
-end
-
-
 -- @name    creatureonscreen
 -- @desc    check if monster/player/NPC is on screen
 -- @author  Loro
 -- @returns bool
 
 function creatureonscreen(name)
-    if type(name) ~= "string" then
-        error("Monster name must be a string")
-    end
+    if type(name) ~= "string" then error("Monster name must be a string") end
 
     local creatures = getcreatures()
 
-    for _, c in ipairs(creatures) do
-        if c.name == name then
-            return true
-        end
-    end
+    for _, c in ipairs(creatures) do if c.name == name then return true end end
 
     return false
 end
-
 
 -- @name    paround
 -- @desc    return number of players in range
@@ -908,9 +851,7 @@ end
 -- @returns number
 
 function paround(range)
-    if type(range) ~= "number" then
-        error("Range must be a number")
-    end
+    if type(range) ~= "number" then error("Range must be a number") end
 
     local creatures = getcreatures()
     local playersAround = 0
@@ -924,16 +865,13 @@ function paround(range)
     return playersAround
 end
 
-
 -- @name    maround
 -- @desc    return number of players in range
 -- @author  Loro
 -- @returns number
 
 function maround(range)
-    if type(range) ~= "number" then
-        error("Range must be a number")
-    end
+    if type(range) ~= "number" then error("Range must be a number") end
 
     local creatures = getcreatures()
     local monstersAround = 0
@@ -947,32 +885,25 @@ function maround(range)
     return monstersAround
 end
 
-
 -- @name    saround
 -- @desc    return number of summons in range
 -- @author  Loro
 -- @returns number
 
 function saround(range)
-    if type(range) ~= "number" then
-        error("Range must be a number")
-    end
+    if type(range) ~= "number" then error("Range must be a number") end
 
     local creatures = getcreatures()
     local around = 0
 
     for _, c in ipairs(creatures) do
-        if
-            math.floor(c.dist) <= range and
-                (c.type == CREATURE_TYPE_PLAYER_SUMMON or c.type == CREATURE_TYPE_OTHER_SUMMON)
-         then
-            around = around + 1
-        end
+        if math.floor(c.dist) <= range and
+            (c.type == CREATURE_TYPE_PLAYER_SUMMON or c.type ==
+                CREATURE_TYPE_OTHER_SUMMON) then around = around + 1 end
     end
 
     return around
 end
-
 
 -- @name    naround
 -- @desc    return number of NPC in range
@@ -980,17 +911,13 @@ end
 -- @returns number
 
 function naround(range, name)
-    if type(range) ~= "number" then
-        error("Range must be a number")
-    end
+    if type(range) ~= "number" then error("Range must be a number") end
 
     local creatures = getcreatures()
     local around = 0
 
     for _, c in ipairs(creatures) do
-        if name ~= nil and c.name == name then
-            return 1
-        end
+        if name ~= nil and c.name == name then return 1 end
 
         if math.floor(c.dist) <= range and c.type == CREATURE_TYPE_NPC then
             around = around + 1
@@ -1000,45 +927,36 @@ function naround(range, name)
     return around
 end
 
-
 -- @name    reachnpc
 -- @desc    follows/reach npc range by name
 -- @author  Loro
--- @returns nothing
+-- @returns nil
 
 function reachnpc(name)
-    if type(name) ~= "string" then
-        error("Npc name must be a string")
-    end
+    if type(name) ~= "string" then error("Npc name must be a string") end
 
     local creatures = getcreatures()
 
     for _, c in ipairs(creatures) do
         if c.type == CREATURE_TYPE_NPC and c.name == name then
-            local cPos = c.pos
-            local tile = gettiles(cPos.x, cPos.y, cPos.z)
+            local npcpos = c.position
 
-            if tilereachable(tile) then
+            if tilereachable(npcpos.x, npcpos.y, npcpos.z) then
                 follow(c.id)
-
                 return
             end
-        -- TO FINISH WHEN GOTOXYZ WILL BE IMPLEMENTED
-        -- for x = 1, 3 do
-        --     for y = 1, 3 do
-        --         local tile = gettiles(cPos.x + x, cPos.y + y, cPos.z)
 
-        --         if tilereachable(tile) then
-        --             walk(tile.x, tile.y, tile.z)
-
-        --             return
-        --         end
-        --     end
-        -- end
+            for x = 1, 3 do
+                for y = 1, 3 do
+                    if tilereachable(npcpos.x + x, npcpos.y + y, npcpos.z) then
+                        reachlocation(npcpos.x + x, npcpos.y + y, npcpos.z)
+                        return
+                    end
+                end
+            end
         end
     end
 end
-
 
 -- @name    reachlocation
 -- @desc    reach location specified by params
@@ -1054,6 +972,46 @@ function reachlocation(x, y, z)
     end
 end
 
+-- @name    finditemindex
+-- @desc    find item index in items table
+-- @author  dulec
+-- @returns number
+
+function finditemindex(itemlist, itemid)
+    if type(itemid) ~= "number" then error("itemid must be number") end
+
+    if type(itemlist) ~= "table" then error("itemlist must be table") end
+
+    if #itemlist < 1 then return -1 end
+
+    for index, item in ipairs(itemlist) do
+        if item.id == itemid then return index - 1 end
+    end
+
+    return -1
+end
+
+-- @name    sstime
+-- @desc    check if its ss time (from 9:55 AM till 10:10 AM)
+-- @author  spec8320
+-- @returns boolean
+
+function sstime() return 600 >= secondtillss() or 85800 <= secondtillss() end
+
+-- @name    distance
+-- @desc    distance between two points
+-- @author  spec8320
+-- @returns number
+
+function distance(x1, y1, x2, y2)
+    -- Check if all arguments are numbers
+    if type(x1) ~= "number" or type(y1) ~= "number" or type(x2) ~= "number" or
+        type(y2) ~= "number" then error("All arguments must be numbers") end
+
+    -- Calculate the distance using the Euclidean formula
+    local distance = math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
+    return distance
+end
 
 --[[
         Helper functions
@@ -1064,10 +1022,7 @@ end
 -- @author  spec8320
 -- @returns number
 
-function secondtillss()
-    return (36000 - cettime()) % 86400
-end
-
+function secondtillss() return (36000 - cettime()) % 86400 end
 
 -- @name    	distance
 -- @desc    	distance between two points
@@ -1076,9 +1031,8 @@ end
 
 function distance(x1, y1, x2, y2)
     -- Check if all arguments are numbers
-    if type(x1) ~= "number" or type(y1) ~= "number" or type(x2) ~= "number" or type(y2) ~= "number" then
-        error("All arguments must be numbers")
-    end
+    if type(x1) ~= "number" or type(y1) ~= "number" or type(x2) ~= "number" or
+        type(y2) ~= "number" then error("All arguments must be numbers") end
 
     -- Calculate the distance using the Euclidean formula
     local distance = math.sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
@@ -1086,16 +1040,12 @@ function distance(x1, y1, x2, y2)
     return distance
 end
 
-
 -- @name    cettime
 -- @desc    get CET time
 -- @author  spec8320
 -- @returns number
 
-function cettime()
-    return utctime() - utcoffset() + cetoffset()
-end
-
+function cettime() return utctime() - utcoffset() + cetoffset() end
 
 -- @name    utctime
 -- @desc    get UTC time
@@ -1112,7 +1062,6 @@ function utctime()
     return tosec(t)
 end
 
-
 -- @name    utcoffset
 -- @desc    get UTC timezone offset
 -- @author  spec8320
@@ -1122,7 +1071,6 @@ function utcoffset()
     local now = os.time()
     return os.difftime(os.time(os.date("!*t", now)), now)
 end
-
 
 -- @name    cetoffset
 -- @desc    get CET timezone offset
@@ -1155,14 +1103,14 @@ function cetoffset()
     return utcoffset() + tern(iscest(), 7200, 3600)
 end
 
-
 -- @name    tosec
 -- @desc    converting date format to seconds
 -- @author  spec8320
 -- @returns number
 
 function tosec(str)
-    local sum, time, units, index = 0, str:token(nil, ":"), {86400, 3600, 60, 1}, 1
+    local sum, time, units, index = 0, str:token(nil, ":"),
+                                    {86400, 3600, 60, 1}, 1
 
     for i = #units - #time + 1, #units do
         sum, index = sum + ((tonumber(time[index]) or 0) * units[i]), index + 1
@@ -1170,7 +1118,6 @@ function tosec(str)
 
     return math.max(sum, 0)
 end
-
 
 -- @name    tern
 -- @desc    Helper for the ternary operator that Lua lacks. Returns `expr2` if `expr1` is true, `expr3` otherwise.
@@ -1185,25 +1132,18 @@ function tern(expr1, expr2, expr3)
     end
 end
 
-
 --[[
 Extensions
 --]]
-
 -- @name    table.contains
 -- @desc    extension method for table.contains functionality
 -- @author  spec8320
 -- @returns boolean
 
 function table.contains(table, element)
-    for _, value in pairs(table) do
-        if value == element then
-            return true
-        end
-    end
+    for _, value in pairs(table) do if value == element then return true end end
     return false
 end
-
 
 -- @name    token
 -- @desc    split token string with delimiter
@@ -1221,8 +1161,6 @@ function string:token(n, delimiter)
         delim_from, delim_to = self:find(delimiter, from)
     end
     table.insert(result, self:sub(from))
-    if n then
-        return result[n]
-    end
+    if n then return result[n] end
     return result
 end
