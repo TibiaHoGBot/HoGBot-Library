@@ -145,16 +145,20 @@ end
 -- @desc    check if player has any item by id
 -- @author  dulec
 -- @returns boolean
-function hasitem(itemid)
-    if type(itemid) ~= "number" then
-        error("itemid must be number")
+function hasitem(item)
+    if type(item) ~= "number" and type(item) ~= "string" then
+        error("item must be number or string")
+    end
+
+    if type(item) == "string" then
+        item = itemid(item)
     end
 
     local containers = getcontainers()
     
     for _, container in ipairs(containers) do
-        for _, item in ipairs(container.items) do
-            if item.id == itemid then
+        for _, i in ipairs(container.items) do
+            if i.id == item then
                 return true
             end
         end
@@ -220,21 +224,29 @@ end
 -- @desc    move items from position to destination
 -- @author  dulec
 -- @returns nil
-function moveitemonground(position, destination, itemid, amount)
-    if type(itemid) ~= "number" or type(amount) ~= "number" then
-        error("itemid and amount must be numbers")
+function moveitemonground(position, destination, item, amount)
+    if type(item) ~= "number" and type(item) ~= "string" then
+        error("item must be number or string")
+    end 
+
+    if type(amount) ~= "number" then
+        error("amount must be number")
     end 
 
     if getmetatable(position) ~= Position or getmetatable(destination) ~= Position then
         error('position and destination arguments must be Positions')
     end
 
+    if type(item) == "string" then
+        item = itemid(item)
+    end
+
     while amount > 0 then
         if amount >= 100 then
-            moveobject(position, itemid, 0, destination, 100)
+            moveobject(position, item, 0, destination, 100)
             amount = amount - 100 
         else
-            moveobject(position, itemid, 0, destination, 100-amount) 
+            moveobject(position, item, 0, destination, 100-amount) 
             amount = 0
         end
     end
@@ -244,21 +256,25 @@ end
 -- @desc    find item index in items table
 -- @author  dulec
 -- @returns number
-function finditemindex(itemlist, itemid)
-    if type(itemid) ~= "number" then
-        error("itemid must be number")
+function finditemindex(itemlist, item)
+    if type(item) ~= "number" and type(item) ~= "string" then
+        error("item must be number or string")
     end
 
     if type(itemlist) ~= "table" then
         error("itemlist must be table")
     end
 
+    if type(item) == "string" then
+        item = itemid(item)
+    end
+
     if #itemlist < 1 then
         return -1
     end
 
-    for index, item in ipairs(itemlist) do
-        if item.id == itemid then
+    for index, i in ipairs(itemlist) do
+        if i.id == item then
             return index
         end
     end
@@ -270,18 +286,26 @@ end
 -- @desc    amount of items in cointainers by id
 -- @author  dulec
 -- @returns number
-function countitems(itemid)
-    if type(itemid) ~= "number" then
-        error("All arguments must be numbers")
-    end 
+function countitems(item)
+    if type(item) ~= "number" and type(item) ~= "string" then
+        error("item must be number or string")
+    end
+
+    if type(item) == "string" then
+        item = itemid(item)
+    end
 
     local containers = getcontainers()
     local count = 0
     
     for _, container in ipairs(containers) do
-        for _, item in ipairs(container.items) do
-            if item.id == id then
-                count = count + item.count
+        for _, i in ipairs(container.items) do
+            if i.id == item then
+                if i.count == 0 then
+                    count = count + 1
+                else
+                    count = count + i.count
+                end
             end
         end
     end
@@ -292,16 +316,20 @@ end
 -- @desc    search all your containers until find first item with itemid and returns its position
 -- @author  dulec
 -- @returns position
-function getitempositionfromcontainers(itemid)
-    if type(itemid) ~= "number" then
-        error("All arguments must be numbers")
-    end 
+function getitempositionfromcontainers(item)
+    if type(item) ~= "number" and type(item) ~= "string" then
+        error("item must be number or string")
+    end
+
+    if type(item) == "string" then
+        item = itemid(item)
+    end
 
     local containers = getcontainers()
-    for i, container in ipairs(containers) do
-        for j, item in ipairs(container.items) do
-            if item == itemid then
-                return Position:new(0xffff, 0x40 + i,  j)
+    for _, container in ipairs(containers) do
+        for j, i in ipairs(container.items) do
+            if i.id == item then
+                return Position:new(0xffff, 0x40 + container.id,  j - 1)
             end
         end
     end
@@ -311,32 +339,36 @@ end
 -- @desc    drop specific items on floor, position optional(if nil will drop on self)
 -- @author  dulec
 -- @returns nil
-function dropitems(itemid, amount, position)
-    if type(itemid) ~= "number" or type(amount) ~= "number" and type(amount) ~= nil then
-        error("All arguments must be numbers")
+function dropitems(item, amount, position)
+    if type(item) ~= "number" and type(item) ~= "string" or type(amount) ~= "number" and type(amount) ~= nil then
+        error("item must be number or string, amount must be number")
     end 
 
     if position == nil then
         position = selfposition()
     end
 
-    local itemscount = countitems(itemid)
+    if type(item) == "string" then
+        item = itemid(item)
+    end
+
+    local itemscount = countitems(item)
     if itemscount < amount then
         amount = itemscount
     end
 
     while amount > 0 then
-        local itemposition = getitempositionfromcontainers(itemid)
+        local itemposition = getitempositionfromcontainers(item)
 
         if(itemposition == nil) then
             return
         end
 
         if amount >= 100 then
-            moveobject(itemposition, itemid, 0, selfposition, 100)
+            moveobject(itemposition, item, 0, selfposition, 100)
             amount = amount - 100 
         else
-            moveobject(itemposition, itemid, 0, selfposition, 100-amount) 
+            moveobject(itemposition, item, 0, selfposition, 100-amount) 
             amount = 0
         end
     end
@@ -354,73 +386,93 @@ end
 -- @desc    buy specific items up to amount
 -- @author  dulec
 -- @returns nil
-function buyobjectsupto(itemid, amount, ignorecap, withbackpacks)
-    if type(itemid) ~= "number" or type(amount) ~= "number" then
-        error("All arguments must be numbers")
+function buyobjectsupto(item, amount, ignorecap, withbackpacks)
+    if type(item) ~= "number" and type(item) ~= "string" or type(amount) ~= "number" then
+        error("item must be number or string, amount must be number")
     end 
+
+    if type(item) == "string" then
+        item = itemid(item)
+    end
 
     ignorecap = ignorecap or false
     withbackpacks = withbackpacks or false
-    buyobject(itemid, amount - countitems(itemid), ignorecap, withbackpacks)   
+    buyobject(item, amount - countitems(item), ignorecap, withbackpacks)   
 end
 
 -- @name    destroyobject
--- @desc    use itemid on objectid until it exists in position
+-- @desc    use item on object until it exists in position
 -- @author  dulec
 -- @returns nil
-function destroyobject(position, objectid, itemid)
-    if type(itemid) ~= "number" or type(objectid) ~= "number" then
-        error("itemid and objectid must be numbers")
+function destroyobject(position, object, item)
+    if type(item) ~= "number" and type(item) ~= "string" or type(object) ~= "number" and type(object) ~= "string" then
+        error("item and object must be numbers or strings")
     end 
     if getmetatable(position) ~= Position then
         error("position must be Position")
     end
 
-    local toolposition = getitempositionfromcontainers(itemid)
+    if type(item) == "string" then
+        item = itemid(item)
+    end
+
+    if type(object) == "string" then
+        object = itemid(object)
+    end
+
+    local toolposition = getitempositionfromcontainers(item)
     if tool == nil then
         error("You don't have specified tool")
     end
 
     local tile = getitemsontile(position)
-    local objectindex = finditemindex(tile, objectid)
+    local objectindex = finditemindex(tile, j)
     while objectindex ~= -1 then
-        usetwoobjects(toolposition, itemid, 0x01, position, objectid, objectindex)
+        usetwoobjects(toolposition, item, 0x01, position, j, objectindex)
         tile = getitemsontile(position)
-        objectindex = finditemindex(tile, objectid)
+        objectindex = finditemindex(tile, j)
     end
 end
 
 -- @name    useitemonground
--- @desc    use itemid on object on top of tile
+-- @desc    use item on object on top of tile
 -- @author  dulec
 -- @returns nil
-function useitemonground(itemid, position)
-    if type(itemid) ~= "number" then
-        error("itemid must be number")
+function useitemonground(item, position)
+    if type(item) ~= "number" and type(item) ~= "string" then
+        error("item must be number or string")
     end 
     if getmetatable(position) ~= Position then
         error("position must be Position")
     end
 
-    local toolposition = getitempositionfromcontainers(itemid)
+    if type(item) == "string" then
+        item = itemid(item)
+    end
+
+    local toolposition = getitempositionfromcontainers(item)
     if tool == nil then
         error("You don't have specified tool")
     end
 
     tile = getitemsontile(position)
-    usetwoobjects(toolposition, itemid, 0x01, position, tile[-1].id, #tile)
+    usetwoobjects(toolposition, item, 0x01, position, tile[-1].id, #tile)
 end
 
 -- @name    pickupitems
 -- @desc    pickup amount of specified items from position to your backpack
 -- @author  dulec
 -- @returns nil
-function pickupitems(position, itemid, amount, containerid, containerindex)
-    if type(itemid) ~= "number" or type(amount) ~= "number" then
-        error("itemid and amount must be numbers")
+function pickupitems(position, item, amount, containerid, containerindex)
+    if type(item) ~= "number" and type(item) ~= "string" or type(amount) ~= "number" then
+        error("item and amount must be numbers")
     end 
     if getmetatable(position) ~= Position then
         error("position must be Position")
+    end
+
+    if type(item) == "string" then
+        item = itemid(item)
     end
 
     containerid = containerid or 0
@@ -432,11 +484,11 @@ function pickupitems(position, itemid, amount, containerid, containerindex)
     end
 
     local containers = getcontainers()
-    for i, container in ipairs(containers) do
+    for _, container in ipairs(containers) do
         if container.id == containerid then
             for j, slot in container do
                 !iteminfo(slot.id).iscontainer then
-                    moveobject(position, itemid, itemindex, Position:new(0xffff, 0x40 + i,  j), amount)
+                    moveobject(position, item, itemindex, Position:new(0xffff, 0x40 + container.id,  j - 1), amount)
                 end
             end
         end
@@ -449,7 +501,7 @@ end
 -- @returns bool
 function knowspell(spellid)
     if type(spellid) ~= "number" then
-        error("itemid must be number")
+        error("spellid must be number")
     end 
 
     spells = knownspells()
@@ -483,17 +535,21 @@ end
 -- @desc    reach itemid on ground
 -- @author  dulec
 -- @returns bool
-function reachgrounditem(itemid, avoid)
-    if type(itemid) ~= "number" or type(avoid) ~= "number" and type(avoid) ~= nil then
-        error("itemid must be number")
+function reachgrounditem(item, avoid)
+    if type(item) ~= "number" and type(item) ~= "string" or type(avoid) ~= "number" and type(avoid) ~= nil then
+        error("item must be number or string")
     end 
+
+    if type(item) == "string" then
+        item = itemid(item)
+    end
 
     avoid = avoid or 0
     local tiles = gettiles()
     for _, tile in ipairs(tiles) do
         if finditemindex(tile, avoid) == -1 then
-            for _, item in ipairs(tile) do
-                if item == itemid then
+            for _, i in ipairs(tile) do
+                if i == item then
                     reachlocation(tile.x, tile.y, tile.z)
                     local selfposition = selfposition()
                     if distance(dp.x, dp.y, selfposition.x, selfposition.y) == 0 then
@@ -518,10 +574,18 @@ end
 -- @desc    keep trying to open hole and walk in until floor changes
 -- @author  dulec
 -- @returns bool
-function openholeandwalkin(direction, shovelid)
+function openholeandwalkin(direction, shovel)
     if type(direction) ~= "string" then
         error("direction must be string")
     end 
+    
+    if type(shovel) ~= "number" and type(shovel) ~= "string" then
+        error("shovel must be number or string")
+    end 
+
+    if type(shovel) == "string" then
+        shovel = itemid(shovel)
+    end
 
     local selfposition = selfposition()
     local diginposition = selfposition
@@ -541,7 +605,7 @@ function openholeandwalkin(direction, shovelid)
 
     while selfposition.z == selfposition().z then
         reachlocation(selfposition.x, selfposition.y, selfposition.z)
-        useitemonground(shovelid, diginposition)
+        useitemonground(shovel, diginposition)
         reachlocation(diginposition.x, diginposition.y, diginposition.z)
     end
 
