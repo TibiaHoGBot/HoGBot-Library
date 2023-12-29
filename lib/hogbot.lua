@@ -566,8 +566,16 @@ end
 -- @desc    reaches dp
 -- @author  dulec
 -- @returns bool
-function reachdp()
-    return reachgrounditem(TILE_GLOWING_SWITCH, 99)
+function reachdp(tries)
+    local creatureid = 99
+    local reacheddp = false
+    tries = tries or 10
+
+    repeat
+        reacheddp = reachgrounditem(TILE_DEPOT_SWITCH, creatureid)
+        tries = tries - 1
+    until reacheddp == false or tries > 0
+    return reacheddp
 end
 
 -- @name    openholeandwalkin
