@@ -313,10 +313,10 @@ function countitems(item)
 end
 
 -- @name    getitempositionfromcontainers
--- @desc    search all your containers until find first item with itemid and returns its position
+-- @desc    search all your containers until find item with specified index and returns its position
 -- @author  dulec
 -- @returns position
-function getitempositionfromcontainers(item)
+function getitempositionfromcontainers(item, index)
     if type(item) ~= "number" and type(item) ~= "string" then
         error("item must be number or string")
     end
@@ -325,11 +325,17 @@ function getitempositionfromcontainers(item)
         item = itemid(item)
     end
 
+    index = index or 0
+    local founditems = 0
     local containers = getcontainers()
     for _, container in ipairs(containers) do
         for j, i in ipairs(container.items) do
             if i.id == item then
-                return Position:new(0xffff, 0x40 + container.id,  j - 1)
+                if founditems == index then
+                    return Position:new(0xffff, 0x40 + container.id,  j - 1)
+                else
+                    founditems = founditems + 1
+                end
             end
         end
     end
@@ -1097,8 +1103,98 @@ function reachlocation(x, y, z)
     end
 end
 
+-- @name    closeallcontainers
+-- @desc    close all containers
+-- @author  dulec
+-- @returns nil
+function closeallcontainers()
+    local containers = getcontainers()
+    for i, container in ipairs(containers) do
+        closecontainer(i - 1)
+    end
+end
 
+function openmainbp()
 
+end
+
+-- @name    opendp
+-- @desc    find dpid near you and open it
+-- @author  dulec
+-- @returns nil
+function opendp()
+    local position = selfposition()
+    local dpid = 0
+    for i = 3,1,-1 do
+        for j = 3,1,-1 do
+            local tile = getitemsontile(Position:new(i - 1, j - 1,  position.z))
+            if tile[1] == dpid then
+                useobject(Position:new(i - 1, j - 1,  position.z), dpid, tile[1], 0)
+            end
+        end
+    end
+end
+
+-- @name    deposititems
+-- @desc    deposit all items from bp to depo
+-- @author  dulec
+-- @returns nil
+function deposititems(backpack)
+    if type(backpack) ~= "string" or type(backpack) ~= "number" then error("backpack must be a string or a number") end
+
+    if type(backpack) == "string" then
+        backpack = itemid(backpack)
+    end
+
+    reachdp() 
+    closeallcontainers()
+    openmainbp()
+    opendp()
+
+    if backpack == nil then
+        error("")
+        return
+    end
+    
+    local bpposition = getitempositionfromcontainers(backpack)
+    local containers = getcontainers()
+    local index = finditemindex(containers[0], backpack)
+    if index == -1 then
+        error("")
+        return
+    end
+    useobject(bpposition, backpack, bpposition.z, index)
+
+    moveloottodp(backpack)
+
+end
+
+-- @name    moveloottodp
+-- @desc    move all loot from specified bp to depo
+-- @author  dulec
+-- @returns nil
+function moveloottodp(backpack)
+    local containers = getcontainers()
+    local foundnextbpid = 0
+    local destination = Position:new(0xffff, 0x41,  0)
+    for _, container in ipairs(containers) do
+        if container.id == backpack then
+            for _, item in container.items do
+                if item.iscontainer ~= true then
+                    moveobject(getitempositionfromcontainers(itemid, 0), itemid, 0, destination, item.count)
+                else
+                    foundnextbpid = item.id
+                end
+            end
+        end
+    end
+
+    if foundnextbpid ~= 0 then
+        local bpposition = getitempositionfromcontainers(foundnextbpid)
+        useobject(bpposition, foundnextbpid, bpposition.z, finditemindex(containers[0], foundnextbpid))
+        moveloottodp(foundnextbpid)
+    end
+end
 --[[
 Extensions
 --]]
