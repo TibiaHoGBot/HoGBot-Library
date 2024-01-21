@@ -908,7 +908,7 @@ end
 --- top item id on tile
 --- @author  szulak
 --- @param   extraFlags? number[] Array of additional flags to be checked
---- @return  userdata
+--- @return  Item
 function topitem(position, extraFlags)
     extraFlags = extraFlags or {}
 
@@ -944,7 +944,7 @@ end
 --- top usable item id on tile
 --- @author  mistgun
 --- @param   position Position
---- @return  userdata
+--- @return  Item
 function topuseitem(position)
     return topitem(position, { ITEM_USABLE })
 end
@@ -969,9 +969,6 @@ function useitemonground(itemid, position)
     end
 
     items = getitemsontile(position)
-    for i = 1, #items, 1 do
-        print("item id: " .. items[i].id)
-    end
 
     usetwoobjects(itempos, itemid, itempos.z, position, items[1].id, 0)
 end
@@ -1766,9 +1763,7 @@ function usedoor(position, action)
                 useobject(position, topUseId, 0, 0xFF)
                 waitping()
 
-                -- elseif not itemproperty(topUseId, ITEM_UNMOVE) then
-                -- local dir, dirx, diry = wheretomoveitem(x, y, z)
-                -- moveitems(topmoveitem(x, y, z).id, ground(x + dirx, y + diry, z), ground(x, y, z), 100)
+                -- # TODO: check if someone trashed the door spot, if so, move the trashed items
             else
                 return true
             end
@@ -1801,6 +1796,264 @@ end
 function isitemonposition(itemid, position)
     local tile = gettile(position.x, position.y, position.z)
     return isitemontile(itemid, tile)
+end
+
+--- returns container by name
+--- @author  mistgun
+--- @param	 name string
+--- @return  userdata|nil
+function getcontainer(name)
+    name = name:lower()
+
+    local containers = getcontainers()
+    for _, container in ipairs(containers) do
+        if container.name:lower() == name then
+            return container
+        end
+    end
+
+    return nil
+end
+
+--- returns direction from position given. If source position is not passed, it will return position from current character's position.
+--- @author  mistgun
+--- @param   direction string
+--- @param   position? Position
+--- @return  Position
+function getdirposition(direction, position)
+    x = position and position.x or posx()
+    y = position and position.y or posy()
+    z = position and position.z or posz()
+
+    local dir = {
+        x = { c = 0, n = 0, s = 0, w = -1, e = 1, nw = -1, ne = 1, sw = -1, se = 1 },
+        y = { c = 0, n = -1, s = 1, w = 0, e = 0, nw = -1, ne = -1, sw = 1, se = 1 }
+    }
+
+    if not dir.x[direction] then
+        error("Invalid direction specified")
+    end
+
+    return Position:new(x + dir.x[direction], y + dir.y[direction], z)
+end
+
+--- returns name of the depot box from it's corresponding index
+--- @author  mistgun
+--- @param	 index number
+--- @return  string
+function getdepotboxnamefromindex(index)
+    if index < 1 or index > 20 then
+        return ""
+    end
+
+    local romanNumerals = {
+        "I", "II", "III", "IV", "V",
+        "VI", "VII", "VIII", "IX", "X",
+        "XI", "XII", "XIII", "XIV", "XV",
+        "XVI", "XVII", "XVIII", "XIX", "XX"
+    }
+
+    return "depot box " .. romanNumerals[index]
+end
+
+--- returns ID of the depot box from it's corresponding index
+--- @author  mistgun
+--- @param	 index number
+--- @return  number
+function getdepotboxidfromindex(index)
+    if index < 1 or index > 20 then
+        return 0
+    end
+
+    if index < 18 then
+        return 22796 + index
+    end
+
+    -- last three boxes ids are not sequential
+    local boxesIds = { [18] = 31915, [19] = 39723, [20] = 39724 }
+    return boxesIds[index]
+end
+
+--- opens specific object
+--- @author  mistgun
+--- @param   itemID number itemID to open
+--- @param   locationFrom? string location name from where the given object should be opened, if none provided it will open the item from the first matching location
+--- @param   asNew? boolean if true, the objectid will be opened as a new instance
+--- @param   parentIndex? number index of parent object from which to open the given itemID (starts from 1)
+--- @param   stackIndex? number  index of the itemID in the stack
+--- @return  boolean
+function openobject(itemID, locationFrom, asNew, parentIndex, stackIndex)
+    local fromContainer, parentPos = nil, 0
+
+    if type(locationFrom) == "boolean" then
+        asNew = locationFrom
+        locationFrom = nil
+    end
+
+    local containers = getcontainers()
+    for i, cont in ipairs(containers) do
+        if locationFrom and cont.name == locationFrom then
+            fromContainer = cont
+            parentPos = i - 1
+        elseif not locationFrom then
+            for _, item in ipairs(cont.items) do
+                if item.id == itemID then
+                    fromContainer = cont
+                    parentPos = i - 1
+                    break
+                end
+            end
+        end
+
+        if fromContainer and not parentIndex or parentPos + 1 == parentIndex then
+            break
+        end
+    end
+
+    if not fromContainer then
+        return false
+    end
+
+    if asNew then
+        parentPos = #containers
+    end
+
+    local stackPos, index = -1, -1
+    for i, item in ipairs(fromContainer.items) do
+        if item.id == itemID then
+            stackPos = i - 1
+            index = index + 1
+        end
+
+        if index + 1 == stackIndex then
+            break
+        end
+    end
+
+    if stackPos == -1 then
+        return false
+    end
+
+    local objectPos = Position:new(0xffff, 0x40 + fromContainer.id, stackPos)
+    useobject(objectPos, itemID, stackPos, parentPos)
+
+    return true
+end
+
+--- opens depot
+--- @author  mistgun
+--- @param   openType? string|number "locker", "depot", or depot number (1..20), when no param is passed defaults to "depot"
+--- @return  boolean
+function opendepot(openType)
+    if type(openType) == "string" then
+        openType = openType:lower()
+
+        if openType ~= "locker" and openType ~= "depot" then
+            error("Valid options are 'locker' or 'depot'")
+        end
+    elseif type(openType) == "number" then
+        if openType < 1 or openType > 20 then
+            error("Depot box number must be between 1 and 20")
+        end
+    else
+        openType = "depot"
+    end
+
+
+    local depotBoxId = nil
+    if openType == "locker" and getcontainer("locker") or openType == "depot" and getcontainer("depot chest") then
+        return true
+    elseif type(openType) == "number" then
+        depotBoxName, depotBoxId = getdepotboxnamefromindex(openType), getdepotboxidfromindex(openType)
+
+        if getcontainer(depotBoxName) then
+            return true
+        end
+    end
+
+    local lockerPos, lockerSpot, lockerDist = nil, nil, math.huge
+
+    local lockers = { [3497] = 'n', [3499] = 's', [3498] = 'w', [3450] = 'e' }
+    local tiles = gettiles()
+    for _, tile in ipairs(tiles) do
+        local tilePos = tile.position
+        local posX, posY, posZ = tilePos.x, tilePos.y, tilePos.z
+        for id, dir in pairs(lockers) do
+            local spot = getdirposition(dir, tilePos)
+            -- TODO: simplify logic when tilereachable works properly for non-walkable tiles
+            if isitemontile(id, tile) and tilereachable(spot.x, spot.y, spot.z) then
+                local posDist = math.abs(posX - posx()) + math.abs(posY - posy())
+
+                if posDist < lockerDist then
+                    lockerPos = tile.position
+                    lockerSpot = spot
+                    lockerDist = posDist
+                    break
+                end
+            end
+        end
+    end
+
+    if lockerSpot and tilereachable(lockerSpot.x, lockerSpot.y, lockerSpot.z) then
+        reachlocation(lockerSpot.x, lockerSpot.y, lockerSpot.z)
+    else
+        return false
+    end
+
+    local openLockerTries = 0
+    while not getcontainer("locker") and openLockerTries < 5 do
+        if math.abs(lockerPos.x - posx()) > 1 or math.abs(lockerPos.y - posy()) > 1 then
+            break
+        end
+
+        local topUseId = topuseitem(lockerPos).id
+
+        useobject(lockerPos, topUseId, 0, 0xFF)
+        wait(300, 1000)
+
+        openLockerTries = openLockerTries + 1
+    end
+
+    local lockerContainer = getcontainer("locker")
+    if not lockerContainer then
+        return false
+    end
+
+    if openType == "locker" then
+        return true
+    end
+
+    local depotChestContainer = getcontainer("depot chest")
+    local openChestTries, depotChestId = 0, 3502
+    while lockerContainer and not depotChestContainer and openChestTries < 5 do
+        openobject(depotChestId, "locker")
+        wait(300, 1000)
+
+        lockerContainer = getcontainer("locker")
+        depotChestContainer = getcontainer("depot chest")
+        openChestTries = openChestTries + 1
+    end
+
+    if not depotChestContainer then
+        return false
+    end
+
+    if openType == "depot" then
+        return true
+    end
+
+    local depotBoxContainer = getcontainer(depotBoxName)
+    local openBoxTries = 0
+    while depotChestContainer and not depotBoxContainer and openBoxTries < 5 do
+        openobject(depotBoxId, "depot chest")
+        wait(300, 1000)
+
+        depotChestContainer = getcontainer("depot chest")
+        depotBoxContainer = getcontainer(depotBoxName)
+        openBoxTries = openBoxTries + 1
+    end
+
+    return depotBoxContainer ~= nil and depotBoxContainer.name == depotBoxName
 end
 
 --[[
