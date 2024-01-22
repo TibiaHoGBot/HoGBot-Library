@@ -1,10 +1,10 @@
 # finditemindex(itemlist, itemid)
 
-Retruns item index from list if found, -1 otherwise
+Returns item index from list if found, -1 otherwise
 
 {% code lineNumbers="true" %}
 ```lua
-local mainbp = getcontainers()[0] 
+local mainbp = getcontainers()[1] 
 local itemindex = finditemindex(mainbp, 3003)
 ```
 

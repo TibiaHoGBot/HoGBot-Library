@@ -9,6 +9,14 @@ openobject(2709)
 ```
 {% endcode %}
 
+### opens main backpack
+{% code lineNumbers="true" %}
+```lua
+local backItem = getinventory(INVENTORY_BACKPACK)
+openobject(backItem.id, "back")   
+```
+{% endcode %}
+
 ### opens item by it's ID in specific location (orange backpack)
 {% code lineNumbers="true" %}
 ```lua
