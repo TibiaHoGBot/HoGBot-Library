@@ -2115,16 +2115,6 @@ function deposititems(fromBpName, stackBoxIndex, nonStackBoxIndex)
         return false
     end
 
-    local function hasMoreItemsToStore()
-        for _, item in ipairs(lootBpContainer.items) do
-            if item.id ~= lootBpContainer.item.id then
-                return true
-            end
-        end
-
-        return false
-    end
-
     local function getFirstMatchingStorableItem()
         for index, item in ipairs(lootBpContainer.items) do
             local boxIndex = itemproperty(item.id, ITEM_CUMULATIVE) and stackBoxIndex or nonStackBoxIndex
@@ -2146,8 +2136,10 @@ function deposititems(fromBpName, stackBoxIndex, nonStackBoxIndex)
     while lootBpContainer and #lootBpContainer.items > 0 do
         lootBpContainer = getcontainer(fromBpName)
 
+        local position, itemID, itemStackPos, destPosition, itemCount = getFirstMatchingStorableItem()
+
         local nextLootBpItemIndex = -1
-        if not hasMoreItemsToStore() then
+        if not itemID then
             nextLootBpItemIndex = finditemindex(lootBpContainer.items, lootBpContainer.item.id)
 
             if nextLootBpItemIndex == -1 then
@@ -2158,12 +2150,9 @@ function deposititems(fromBpName, stackBoxIndex, nonStackBoxIndex)
         if nextLootBpItemIndex ~= -1 then
             openobject(lootBpContainer.item.id, fromBpName, false, lootBpContainer.id + 1, nextLootBpItemIndex + 1)
             waitping()
-        else
-            local position, itemID, itemStackPos, destPosition, itemCount = getFirstMatchingStorableItem()
-            if itemID then
-                moveobject(position, itemID, itemStackPos, destPosition, itemCount)
-                waitping()
-            end
+        elseif itemID then
+            moveobject(position, itemID, itemStackPos, destPosition, itemCount)
+            waitping()
         end
     end
 
