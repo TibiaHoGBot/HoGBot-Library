@@ -610,6 +610,12 @@ local OPENED_DOOR_IDS = {
 --- @field items Item[]
 --- @field position Position
 
+--- @class Container
+--- @field id number Index of the container
+--- @field item Item Item representation of the container
+--- @field items Item[] Array of items inside the container
+--- @field name string Name of the container
+
 --[[
         User functions
 --]]
@@ -770,10 +776,15 @@ end
 --- amount of items in cointainers by id
 --- @author  dulec
 --- @param   itemid number
+--- @param   sourceLocation string
 --- @return  number
-function countitems(itemid)
+function countitems(itemid, sourceLocation)
     if type(itemid) ~= "number" then
         error("All arguments must be numbers")
+    end
+
+    if type(sourceLocation) == "string" then
+        sourceLocation = sourceLocation:lower()
     end
 
     local containers = getcontainers()
@@ -781,7 +792,7 @@ function countitems(itemid)
 
     for _, container in ipairs(containers) do
         for _, item in ipairs(container.items) do
-            if item.id == itemid then
+            if item.id == itemid and not sourceLocation or container.name:lower() == sourceLocation then
                 if item.count == 0 then
                     count = count + 1
                 else
@@ -1559,10 +1570,6 @@ function finditemindex(itemlist, itemid)
         error("itemid must be number")
     end
 
-    if type(itemlist) ~= "table" then
-        error("itemlist must be table")
-    end
-
     if #itemlist < 1 then
         return -1
     end
@@ -1798,16 +1805,18 @@ function isitemonposition(itemid, position)
     return isitemontile(itemid, tile)
 end
 
---- returns container by name
+--- returns container by name or ID
 --- @author  mistgun
---- @param	 name string
---- @return  userdata|nil
-function getcontainer(name)
-    name = name:lower()
+--- @param	 nameOrID string|number
+--- @return  Container|nil
+function getcontainer(nameOrID)
+    if type(nameOrID) == "string" then
+        nameOrID = nameOrID:lower()
+    end
 
     local containers = getcontainers()
     for _, container in ipairs(containers) do
-        if container.name:lower() == name then
+        if container.name:lower() == nameOrID or container.item.id == nameOrID then
             return container
         end
     end
@@ -1880,7 +1889,7 @@ end
 --- @param   locationFrom? string location name from where the given object should be opened, if none provided it will open the item from the first matching location
 --- @param   asNew? boolean if true, the objectid will be opened as a new instance
 --- @param   parentIndex? number index of parent object from which to open the given itemID (starts from 1)
---- @param   stackIndex? number  index of the itemID in the stack
+--- @param   stackIndex? number  index of the itemID in the stack (starts from 1)
 --- @return  boolean
 function openobject(itemID, locationFrom, asNew, parentIndex, stackIndex)
     local fromContainer, parentPos = nil, 0
@@ -1888,6 +1897,10 @@ function openobject(itemID, locationFrom, asNew, parentIndex, stackIndex)
     if type(locationFrom) == "boolean" then
         asNew = locationFrom
         locationFrom = nil
+    elseif locationFrom == "back" then
+        local objectPos = Position:new(0xffff, INVENTORY_BACKPACK, 0)
+        useobject(objectPos, itemID, INVENTORY_BACKPACK, 0)
+        return true
     end
 
     local containers = getcontainers()
@@ -2054,6 +2067,96 @@ function opendepot(openType)
     end
 
     return depotBoxContainer ~= nil and depotBoxContainer.name == depotBoxName
+end
+
+--- closes all visible containers
+--- @author  mistgun
+function closecontainers()
+    local containers = getcontainers()
+
+    while #containers > 0 do
+        for _, cont in ipairs(containers) do
+            closecontainer(cont.id)
+            waitping()
+        end
+
+        containers = getcontainers()
+    end
+end
+
+--- reopens backpacks specified
+--- @author  mistgun
+--- @param	 ... table The backpacks list as {id, locationName, asNew}.
+--- @return  boolean
+function reopenbps(...)
+    local bps = { ... }
+
+    closecontainers()
+    waitping()
+
+    for _, bp in ipairs(bps) do
+        openobject(bp[1], bp[2], bp[3])
+        wait(500, 800)
+    end
+end
+
+--- puts items from given backpack to desired depot boxes
+--- @author  mistgun
+--- @param   fromBpName string name of the bp inside a main backpack from which the items will be deposited
+--- @param   stackBoxIndex number index of the depot box where stackable items will be deposited (defaults to 1)
+--- @param   nonStackBoxIndex number index of the depot box where non-stackable items will be deposited (defaults to 1)
+--- @return  boolean
+function deposititems(fromBpName, stackBoxIndex, nonStackBoxIndex)
+    stackBoxIndex = stackBoxIndex or 1
+    nonStackBoxIndex = nonStackBoxIndex or stackBoxIndex
+
+    local lootBpContainer, depotContainer = getcontainer(fromBpName), getcontainer("depot chest")
+    if not lootBpContainer or not depotContainer then
+        return false
+    end
+
+    local function getFirstMatchingStorableItem()
+        for index, item in ipairs(lootBpContainer.items) do
+            local boxIndex = itemproperty(item.id, ITEM_CUMULATIVE) and stackBoxIndex or nonStackBoxIndex
+            boxIndex = boxIndex - 1
+
+            local itemCount, itemStackPos = item.count == 0 and 1 or item.count, index - 1
+
+            if item.id ~= lootBpContainer.item.id and itemCount > 0 then
+                local position = Position:new(0xffff, 0x40 + lootBpContainer.id, itemStackPos)
+                local destPosition = Position:new(0xffff, 0x40 + depotContainer.id, boxIndex)
+
+                return position, item.id, itemStackPos, destPosition, itemCount
+            end
+        end
+
+        return nil
+    end
+
+    while lootBpContainer and #lootBpContainer.items > 0 do
+        lootBpContainer = getcontainer(fromBpName)
+
+        local position, itemID, itemStackPos, destPosition, itemCount = getFirstMatchingStorableItem()
+
+        local nextLootBpItemIndex = -1
+        if not itemID then
+            nextLootBpItemIndex = finditemindex(lootBpContainer.items, lootBpContainer.item.id)
+
+            if nextLootBpItemIndex == -1 then
+                return true
+            end
+        end
+
+        if nextLootBpItemIndex ~= -1 then
+            openobject(lootBpContainer.item.id, fromBpName, false, lootBpContainer.id + 1, nextLootBpItemIndex + 1)
+            waitping()
+        elseif itemID then
+            moveobject(position, itemID, itemStackPos, destPosition, itemCount)
+            waitping()
+        end
+    end
+
+    return true
 end
 
 --[[
