@@ -1904,15 +1904,15 @@ function openobject(itemID, locationFrom, asNew, parentIndex, stackIndex)
     end
 
     local containers = getcontainers()
-    for i, cont in ipairs(containers) do
+    for _, cont in ipairs(containers) do
         if locationFrom and cont.name == locationFrom then
             fromContainer = cont
-            parentPos = i - 1
+            parentPos = cont.id
         elseif not locationFrom then
             for _, item in ipairs(cont.items) do
                 if item.id == itemID then
                     fromContainer = cont
-                    parentPos = i - 1
+                    parentPos = cont.id
                     break
                 end
             end
@@ -2041,7 +2041,7 @@ function opendepot(openType)
     local depotChestContainer = getcontainer("depot chest")
     local openChestTries, depotChestId = 0, 3502
     while lockerContainer and not depotChestContainer and openChestTries < 5 do
-        openobject(depotChestId, "locker", true)
+        openobject(depotChestId, "locker")
         wait(300, 1000)
 
         lockerContainer = getcontainer("locker")
@@ -2060,7 +2060,7 @@ function opendepot(openType)
     local depotBoxContainer = getcontainer(depotBoxName)
     local openBoxTries = 0
     while depotChestContainer and not depotBoxContainer and openBoxTries < 5 do
-        openobject(depotBoxId, "depot chest", true)
+        openobject(depotBoxId, "depot chest")
         wait(300, 1000)
 
         depotChestContainer = getcontainer("depot chest")
