@@ -8,7 +8,7 @@ Moves all items from backpack to specified depot boxes until it reaches the last
 local mainBpItem = getinventory(INVENTORY_BACKPACK)
 local lootBpId = 2854 -- green backpack
 
-reopenbps({mainBpItem.id, "back"}, { 2854, "backpack", true}) waitping()
+reopenbps({ mainBpItem.id, "back" }, { lootBpId, "backpack", true }) waitping()
 opendepot("depot")
 deposititems("green backpack", 1, 2)
 ```

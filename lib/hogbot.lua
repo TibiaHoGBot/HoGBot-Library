@@ -1973,7 +1973,7 @@ function opendepot(openType)
     end
 
 
-    local depotBoxId = nil
+    local depotBoxId, depotBoxName = nil, nil
     if openType == "locker" and getcontainer("locker") or openType == "depot" and getcontainer("depot chest") then
         return true
     elseif type(openType) == "number" then
@@ -1986,7 +1986,7 @@ function opendepot(openType)
 
     local lockerPos, lockerSpot, lockerDist = nil, nil, math.huge
 
-    local lockers = { [3497] = 'n', [3499] = 's', [3498] = 'w', [3450] = 'e' }
+    local lockers = { [3497] = 'n', [3499] = 's', [3450] = 'w', [3498] = 'e' }
     local tiles = gettiles()
     for _, tile in ipairs(tiles) do
         local tilePos = tile.position
@@ -1994,7 +1994,7 @@ function opendepot(openType)
         for id, dir in pairs(lockers) do
             local spot = getdirposition(dir, tilePos)
             -- TODO: simplify logic when tilereachable works properly for non-walkable tiles
-            if isitemontile(id, tile) and tilereachable(spot.x, spot.y, spot.z) then
+            if not isitemontile(99, tile) and isitemontile(id, tile) and tilereachable(spot.x, spot.y, spot.z) then
                 local posDist = math.abs(posX - posx()) + math.abs(posY - posy())
 
                 if posDist < lockerDist then
@@ -2039,7 +2039,7 @@ function opendepot(openType)
     local depotChestContainer = getcontainer("depot chest")
     local openChestTries, depotChestId = 0, 3502
     while lockerContainer and not depotChestContainer and openChestTries < 5 do
-        openobject(depotChestId, "locker")
+        openobject(depotChestId, "locker", true)
         wait(300, 1000)
 
         lockerContainer = getcontainer("locker")
@@ -2058,7 +2058,7 @@ function opendepot(openType)
     local depotBoxContainer = getcontainer(depotBoxName)
     local openBoxTries = 0
     while depotChestContainer and not depotBoxContainer and openBoxTries < 5 do
-        openobject(depotBoxId, "depot chest")
+        openobject(depotBoxId, "depot chest", true)
         wait(300, 1000)
 
         depotChestContainer = getcontainer("depot chest")
