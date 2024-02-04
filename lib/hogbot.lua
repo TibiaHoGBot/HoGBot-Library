@@ -1993,8 +1993,10 @@ function opendepot(openType)
         local posX, posY, posZ = tilePos.x, tilePos.y, tilePos.z
         for id, dir in pairs(lockers) do
             local spot = getdirposition(dir, tilePos)
+            local spotTile = gettile(spot)
             -- TODO: simplify logic when tilereachable works properly for non-walkable tiles
-            if not isitemontile(99, tile) and isitemontile(id, tile) and tilereachable(spot.x, spot.y, spot.z) then
+            if (not isitemontile(99, spotTile) or (spot.x == posx() and spot.y == posy())) and
+                isitemontile(id, tile) and tilereachable(spot.x, spot.y, spot.z) then
                 local posDist = math.abs(posX - posx()) + math.abs(posY - posy())
 
                 if posDist < lockerDist then
