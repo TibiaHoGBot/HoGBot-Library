@@ -2084,6 +2084,17 @@ function closecontainers()
     end
 end
 
+--- reopens talk to npc
+--- @author  spec8320
+--- @param	 ... table Words list
+function npctalk(...)
+    local words = {...}
+    for _, word in ipairs(words) do
+        talk(12, word)
+        waitping()
+    end
+end
+
 --- reopens backpacks specified
 --- @author  mistgun
 --- @param	 ... table The backpacks list as {id, locationName, asNew}.
