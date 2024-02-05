@@ -2084,7 +2084,7 @@ function closecontainers()
     end
 end
 
---- reopens talk to npc
+--- talk to npc
 --- @author  spec8320
 --- @param	 ... table Words list
 function npctalk(...)
