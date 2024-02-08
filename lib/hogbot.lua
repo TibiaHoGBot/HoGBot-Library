@@ -2219,3 +2219,62 @@ function string:token(n, delimiter)
     end
     return result
 end
+
+--- look for training statue, if found reaches it and use
+--- @author  dulec
+--- @param   skill string
+--- @return  nil
+function trainskill(skill)
+    if type(skill) ~= "string" and skill ~= "sword" and skill ~= "axe" and skill ~= "club" and skill ~= "distance" and skill ~= "magic" then
+        error("Valid options are 'axe', 'club', 'sword', 'magic', 'distance'")
+    end
+
+    local trainstatue = 16198 --sword
+    if skill == "axe" then trainstatue = 16199 end
+
+    if skill == "club" then trainstatue = 16200 end
+
+    if skill == "distance" then trainstatue = 16201 end
+
+    if skill == "magic" then trainstatue = 16202 end
+
+    local statuepos = finditemonground(trainstatue)
+    if statuepos ~= nil then
+        local destination = findreachabletilearoundposition(statuepos)
+        if destination ~= nil then
+            reachlocation(destination.x, destination.y, destination.z)
+            wait(200)
+            useobject(statuepos, trainstatue, 0, 0xFF)
+        end
+    end
+end
+
+--- look for specified item on ground
+--- @author  dulec
+--- @param   id number
+--- @return  Position|nil
+function finditemonground(id)
+    local tiles = gettiles()
+    for _, tile in ipairs(tiles) do
+        for _, item in ipairs(tile.items) do
+            if item.id == id then
+                return Position:new(tile.position.x, tile.position.y,  tile.position.z)
+            end
+        end
+    end
+end
+
+--- look around specified Position for reachable tile
+--- @author  dulec
+--- @param   position Position
+--- @return  Position|nil
+function findreachabletilearoundposition(position)
+    for i=1,-1,-1 do 
+        for j=1,-1,-1 do
+            local pos = Position:new(position.x+i, position.y+j, position.z)
+            if tilereachable(pos.x, pos.y, pos.z) then
+                return pos
+            end
+        end
+    end
+end
