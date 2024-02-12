@@ -1904,15 +1904,15 @@ function openobject(itemID, locationFrom, asNew, parentIndex, stackIndex)
     end
 
     local containers = getcontainers()
-    for i, cont in ipairs(containers) do
+    for _, cont in ipairs(containers) do
         if locationFrom and cont.name == locationFrom then
             fromContainer = cont
-            parentPos = i - 1
+            parentPos = cont.id
         elseif not locationFrom then
             for _, item in ipairs(cont.items) do
                 if item.id == itemID then
                     fromContainer = cont
-                    parentPos = i - 1
+                    parentPos = cont.id
                     break
                 end
             end
@@ -1973,7 +1973,7 @@ function opendepot(openType)
     end
 
 
-    local depotBoxId = nil
+    local depotBoxId, depotBoxName = nil, nil
     if openType == "locker" and getcontainer("locker") or openType == "depot" and getcontainer("depot chest") then
         return true
     elseif type(openType) == "number" then
@@ -1986,15 +1986,17 @@ function opendepot(openType)
 
     local lockerPos, lockerSpot, lockerDist = nil, nil, math.huge
 
-    local lockers = { [3497] = 'n', [3499] = 's', [3498] = 'w', [3450] = 'e' }
+    local lockers = { [3497] = 'n', [3499] = 's', [3450] = 'w', [3498] = 'e' }
     local tiles = gettiles()
     for _, tile in ipairs(tiles) do
         local tilePos = tile.position
         local posX, posY, posZ = tilePos.x, tilePos.y, tilePos.z
         for id, dir in pairs(lockers) do
             local spot = getdirposition(dir, tilePos)
+            local spotTile = gettile(spot)
             -- TODO: simplify logic when tilereachable works properly for non-walkable tiles
-            if isitemontile(id, tile) and tilereachable(spot.x, spot.y, spot.z) then
+            if (not isitemontile(99, spotTile) or (spot.x == posx() and spot.y == posy())) and
+                isitemontile(id, tile) and tilereachable(spot.x, spot.y, spot.z) then
                 local posDist = math.abs(posX - posx()) + math.abs(posY - posy())
 
                 if posDist < lockerDist then
