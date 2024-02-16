@@ -2291,3 +2291,48 @@ function findreachabletilearoundposition(position)
         end
     end
 end
+
+--- returns true or false if specified bps are opened
+--- @author  dworak
+--- @param   backpack names or ids
+--- @return  bool
+function arewindowsopened(...)
+    local args = {...}
+    local containers = getcontainers()
+    local openedCount = 0
+
+    for _, cont in ipairs(containers) do
+        for _, arg in ipairs(args) do
+            if type(arg) == "string" then
+                if cont.name:lower() == arg:lower() then
+                    openedCount = openedCount + 1
+                    break
+                end
+            elseif type(arg) == "number" then
+                if cont.item.id == arg then
+                    openedCount = openedCount + 1
+                    break
+                end
+            end
+        end
+    end
+
+    return openedCount == #args
+end
+
+--- returns amount of containers opened
+--- @author  dworak
+--- @param   ---
+--- @return  number
+function windowcount()
+    local containers = getcontainers()
+    local contCount = 0
+    for _, cont in ipairs(containers) do
+        contCount = contCount + 1
+    end
+    if contCount > 0 then
+        return contCount
+    else
+        return 0
+    end
+end
