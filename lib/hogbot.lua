@@ -2291,3 +2291,65 @@ function findreachabletilearoundposition(position)
         end
     end
 end
+
+--- return details about spell
+--- @author  dworak
+--- @param   spellName
+--- @return  spell CooldownID, ManaRequired, CooldownGroup
+function getspelldetails(spellName)
+    if type(spellName) ~= "string" then
+        error("spellName must be a string")
+    end
+
+    local spells = getspells()
+    local spellName = string.lower(spellName)
+
+    for _, spell in ipairs(spells) do
+        if string.lower(spell['word']) == spellName or string.lower(spell['name']) == spellName then
+            return tonumber(spell['id']), tonumber(spell['mana']), spell['group']
+        end
+    end
+
+    return nil
+end
+
+--- check if can cast the spell returns true if yes
+--- @author  dworak
+--- @param   spellName
+--- @return  bool
+function cancast(spellName)
+    if type(spellName) ~= "string" then
+        error("spellName must be a string")
+    end
+
+    local cooldownId, minMana, spellGroup = getspelldetails(spellName)
+    
+    if not cooldown(cooldownId) or not cooldowngroup(spellGroup) or mp() < minMana then
+        return false
+    else
+        return true
+    end
+end
+
+--- casts spell
+--- @author  dworak
+--- @param   spellName
+--- @return  nil
+function cast(spellName)
+    if type(spellName) ~= "string" then
+        error("spellName must be a string")
+    end
+    talk(MESSAGE_TYPE_SAY, spellName)
+    waitping()
+end
+
+--- drop flasks
+--- @author  dworak
+--- @param   ---
+--- @return  nil
+function dropflask()
+    for i=283, 285 do
+        local flaskCount = countitems(i)
+        dropitems(i, flaskCount)
+    end
+end
