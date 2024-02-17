@@ -2354,7 +2354,7 @@ function needresupply(...)
 
     rules = args
 
-    if type(rules) == "table" and #rules[1] ~= 0 then
+    if #rules ~= 0 and type(rules) == "table" and #rules[1] ~= 0 then
         rules = rules[1]
     end
 
