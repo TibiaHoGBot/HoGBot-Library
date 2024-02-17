@@ -36,6 +36,7 @@
     * [moveallitemstoyourposition](functions/bot/moveallitemstoyourposition.md)
     * [moveitemonground](functions/bot/moveitemonground.md)
     * [moveobject](functions/bot/moveobject.md)
+    * [needresupply](functions/bot/needresupply.md)
     * [npctalk](functions/bot/npctalk.md)
     * [opendepot](functions/bot/opendepot.md)
     * [openholeandwalkin](functions/bot/openholeandwalkin.md)

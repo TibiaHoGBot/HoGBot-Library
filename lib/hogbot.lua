@@ -792,7 +792,7 @@ function countitems(itemid, sourceLocation)
 
     for _, container in ipairs(containers) do
         for _, item in ipairs(container.items) do
-            if item.id == itemid and not sourceLocation or container.name:lower() == sourceLocation then
+            if item.id == itemid and (not sourceLocation or container.name:lower() == sourceLocation) then
                 if item.count == 0 then
                     count = count + 1
                 else
@@ -2337,6 +2337,38 @@ function withdrawitems(fromContName, ...)
     end
 
     return true
+end
+
+--- checks if cap is below given level or if any of the items count is below specified limit
+--- @author  mistgun
+--- @param   ... table List of rules, e.g 50, {id = 1234, count = 100, source = "backpack" }, {id = 2345, count = 50}
+--- @return  boolean
+function needresupply(...)
+    local args = { ... }
+    local capMin, rules = -1, {}
+
+    if type(args[1]) == "number" then
+        capMin = args[1]
+        table.remove(args, 1)
+    end
+
+    rules = args
+
+    if type(rules) == "table" and #rules[1] ~= 0 then
+        rules = rules[1]
+    end
+
+    if cap() < capMin then
+        return true
+    end
+
+    for _, rule in ipairs(rules) do
+        if countitems(rule.id, rule.source) < rule.count then
+            return true
+        end
+    end
+
+    return false
 end
 
 --[[
