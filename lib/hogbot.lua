@@ -2090,7 +2090,7 @@ end
 --- @author  spec8320
 --- @param	 ... table Words list
 function npctalk(...)
-    local words = {...}
+    local words = { ... }
     for _, word in ipairs(words) do
         talk(12, word)
         waitping()
@@ -2167,6 +2167,173 @@ function deposititems(fromBpName, stackBoxIndex, nonStackBoxIndex)
             moveobject(position, itemID, itemStackPos, destPosition, itemCount)
             waitping()
         end
+    end
+
+    return true
+end
+
+--- takes items from given container to specified total count or cap
+--- @author  mistgun
+--- @param   fromContName string name of the container from which the items will be taken
+--- @param   ... table List of rules, e.g {id = 1234, tocap = 100, dest = "backpack", weight = 25}, {id = 2345, uptocount = 100, dest = "backpack"}
+--- @return  boolean
+function withdrawitems(fromContName, ...)
+    local rules = { ... }
+
+    if not rules[1] then
+        error("rules param must be specified")
+    end
+
+    if type(rules[1]) == "table" then
+        rules = table.unpack(rules)
+    end
+
+    if #rules == 0 then
+        error("there must be at least one rule specified")
+    end
+
+    for i, rule in ipairs(rules) do
+        local message = nil
+
+        if not rule.id then
+            message = "rule.id must be set"
+        elseif not rule.dest then
+            message = "rule.dest must be set"
+        elseif not rule.tocap and not rule.uptocount then
+            message = "rule.tocap or rule.uptocount must be set"
+        elseif rule.tocap and rule.uptocount then
+            message = "rule.tocap and rule.uptocount can't be set together"
+        elseif not getcontainer(rule.dest) then
+            message = "rule.dest container is not opened"
+        end
+
+        if message then
+            error(("Rule #%d: %s"):format(i, message))
+        end
+    end
+
+    local fromContainer = getcontainer(fromContName)
+
+    if not fromContainer then
+        return false
+    end
+
+    local function getItemCount(id, cont)
+        local count = 0
+        for _, item in ipairs(cont.items) do
+            if item.id == id then
+                count = count + item.count
+            end
+        end
+
+        return count
+    end
+
+    local function getAmountNeeded(rule, destCont)
+        if rule.tocap then
+            return math.floor((cap() - rule.tocap) / rule.weight)
+        end
+
+        return rule.uptocount - getItemCount(rule.id, destCont)
+    end
+
+    local function findEmptyStackPos(destCont)
+        for i = 1, destCont.numslots do
+            if not destCont.items[i] then
+                return i - 1
+            end
+        end
+
+        return -1
+    end
+
+    local function getAvailableSlotsForItem(id, destCont)
+        local slots, maxSlots = 0, 100
+        for i = 1, destCont.numslots do
+            local item = destCont.items[i]
+            if not item then
+                return maxSlots
+            end
+
+            if item.id == id then
+                slots = slots + (maxSlots - item.count)
+            end
+        end
+
+        return math.min(slots, maxSlots)
+    end
+
+    local function getItemDestPosition(id, destCont)
+        local stackPos = findEmptyStackPos(destCont)
+        local isItemStackable = itemproperty(id, ITEM_CUMULATIVE)
+
+        if not isItemStackable and stackPos == -1 then
+            return nil, 0
+        end
+
+        if not isItemStackable then
+            return Position:new(0xffff, 0x40 + destCont.id, stackPos), 1
+        end
+
+        local slots = getAvailableSlotsForItem(id, destCont)
+
+        if slots <= 0 then
+            return nil, 0
+        end
+
+        stackPos = stackPos ~= -1 and stackPos or finditemindex(destCont.items, id)
+
+        return Position:new(0xffff, 0x40 + destCont.id, stackPos), slots
+    end
+
+    local function findWithdrawableItem(id)
+        for index, item in ipairs(fromContainer.items) do
+            if item.id == id then
+                local itemCount, itemStackPos = item.count == 0 and 1 or item.count, index - 1
+                local position = Position:new(0xffff, 0x40 + fromContainer.id, itemStackPos)
+
+                return position, item.id, itemStackPos, itemCount
+            end
+        end
+
+        return nil
+    end
+
+    while fromContainer ~= nil do
+        local needMoreItems = false
+        for _, rule in ipairs(rules) do
+            repeat
+                fromContainer = getcontainer(fromContName)
+
+                local destCont = getcontainer(rule.dest)
+                if not destCont or not fromContainer then
+                    break
+                end
+
+                local amount = getAmountNeeded(rule, destCont)
+
+                if amount <= 0 then
+                    break
+                end
+
+                local position, itemID, itemStackPos, itemCount = findWithdrawableItem(rule.id)
+                local destPosition, slots = getItemDestPosition(rule.id, destCont)
+
+                if itemID and itemCount > 0 and slots > 0 then
+                    moveobject(position, itemID, itemStackPos, destPosition, math.min(slots, amount, itemCount))
+                    wait(200, 600)
+                else
+                    needMoreItems = true
+                end
+            until needMoreItems
+        end
+
+        if not needMoreItems then
+            break
+        end
+
+        -- TODO: go to next page if more items needed
+        break
     end
 
     return true
@@ -2271,7 +2438,7 @@ function finditemonground(id)
     for _, tile in ipairs(tiles) do
         for _, item in ipairs(tile.items) do
             if item.id == id then
-                return Position:new(tile.position.x, tile.position.y,  tile.position.z)
+                return Position:new(tile.position.x, tile.position.y, tile.position.z)
             end
         end
     end
@@ -2282,9 +2449,9 @@ end
 --- @param   position Position
 --- @return  Position|nil
 function findreachabletilearoundposition(position)
-    for i=1,-1,-1 do 
-        for j=1,-1,-1 do
-            local pos = Position:new(position.x+i, position.y+j, position.z)
+    for i = 1, -1, -1 do
+        for j = 1, -1, -1 do
+            local pos = Position:new(position.x + i, position.y + j, position.z)
             if tilereachable(pos.x, pos.y, pos.z) then
                 return pos
             end
