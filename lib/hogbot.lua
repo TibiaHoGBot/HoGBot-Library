@@ -2291,3 +2291,35 @@ function findreachabletilearoundposition(position)
         end
     end
 end
+
+--- selling all available flasks on character
+--- @author  dworak
+--- @param   ---
+--- @return  nil
+function sellflasks()
+    for i=283,285 do
+        local count = countitems(i)
+        while count > 0 do
+            sellobject(i,count)
+            waitping()
+            count = countitems(i)
+            waitping()
+        end
+    end
+end
+
+--- sell items with given ID's
+--- @author  dworak
+--- @param   item ids
+--- @return  nil
+function sellitems(itemsForSale)
+    for _, item in ipairs(itemsForSale) do
+        local count = countitems(item)
+        while count > 0 do
+            sellobject(item,count)
+            waitping()
+            count = countitems(item)
+            waitping()
+        end
+    end
+end
