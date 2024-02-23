@@ -1040,13 +1040,17 @@ end
 
 --- cast spell levitate until floor index changes
 --- @author  dulec
---- @param   spell string
+--- @param   direction The direction as 'n' or 'north', 'e' or 'east', 's' or 'south', 'w' or 'west'
+--- @param   updown The floor as 'up' or 'down'
 --- @return  nil
-function levitate(spell)
-    if type(spell) ~= "string" then
-        error("spell must be string")
+function levitate(direction, updown)
+    local spell = "exani hur up"
+    if updown == "down" then
+        spell = "exani hur down"
     end
-
+    
+    turn(direction)
+    wait(200)
     if mp() > 50 and level() >= 12 and knownspells(81) then
         local currentz = posz()
         while currentz == posz() do
