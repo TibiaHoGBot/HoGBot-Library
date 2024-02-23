@@ -2121,8 +2121,13 @@ end
 --- @param   ignoredItemIDs? number[] array of item ids that should not be deposited
 --- @return  boolean
 function deposititems(fromBpName, stackBoxIndex, nonStackBoxIndex, ignoredItemIDs)
-    stackBoxIndex = stackBoxIndex or 1
-    nonStackBoxIndex = nonStackBoxIndex or stackBoxIndex
+    if type(stackBoxIndex) == "table" or type(nonStackBoxIndex) == "table" then
+        ignoredItemIDs = stackBoxIndex or nonStackBoxIndex
+        stackBoxIndex, nonStackBoxIndex = 1, 1
+    else
+        stackBoxIndex = stackBoxIndex or 1
+        nonStackBoxIndex = nonStackBoxIndex or stackBoxIndex
+    end
 
     local lootBpContainer, depotContainer = getcontainer(fromBpName), getcontainer("depot chest")
     if not lootBpContainer or not depotContainer then
