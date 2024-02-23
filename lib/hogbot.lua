@@ -2118,8 +2118,9 @@ end
 --- @param   fromBpName string name of the bp inside a main backpack from which the items will be deposited
 --- @param   stackBoxIndex number index of the depot box where stackable items will be deposited (defaults to 1)
 --- @param   nonStackBoxIndex number index of the depot box where non-stackable items will be deposited (defaults to 1)
+--- @param   ignoredItemIDs? number[] array of item ids that should not be deposited
 --- @return  boolean
-function deposititems(fromBpName, stackBoxIndex, nonStackBoxIndex)
+function deposititems(fromBpName, stackBoxIndex, nonStackBoxIndex, ignoredItemIDs)
     stackBoxIndex = stackBoxIndex or 1
     nonStackBoxIndex = nonStackBoxIndex or stackBoxIndex
 
@@ -2135,7 +2136,8 @@ function deposititems(fromBpName, stackBoxIndex, nonStackBoxIndex)
 
             local itemCount, itemStackPos = item.count == 0 and 1 or item.count, index - 1
 
-            if item.id ~= lootBpContainer.item.id and itemCount > 0 then
+            if (not ignoredItemIDs or not table.contains(ignoredItemIDs, item.id)) and
+                item.id ~= lootBpContainer.item.id and itemCount > 0 then
                 local position = Position:new(0xffff, 0x40 + lootBpContainer.id, itemStackPos)
                 local destPosition = Position:new(0xffff, 0x40 + depotContainer.id, boxIndex)
 
