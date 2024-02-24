@@ -2153,8 +2153,8 @@ function deposititems(fromBpName, stackBoxIndex, nonStackBoxIndex, ignoredItemID
         return nil
     end
 
-    while lootBpContainer and #lootBpContainer.items > 0 do
-        lootBpContainer = getcontainer(fromBpName)
+    while #lootBpContainer.items > 0 do
+        lootBpContainer, depotContainer = getcontainer(fromBpName), getcontainer("depot chest")
 
         local position, itemID, itemStackPos, destPosition, itemCount = getFirstMatchingStorableItem()
 
