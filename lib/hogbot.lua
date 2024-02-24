@@ -2134,7 +2134,7 @@ function deposititems(fromBpName, stackBoxIndex, nonStackBoxIndex, ignoredItemID
         return false
     end
 
-    local function getFirstMatchingStorableItem()
+    local function getFirstMatchingStorableItem(lootBpContainer, depotContainer)
         for index, item in ipairs(lootBpContainer.items) do
             local boxIndex = itemproperty(item.id, ITEM_CUMULATIVE) and stackBoxIndex or nonStackBoxIndex
             boxIndex = boxIndex - 1
@@ -2153,10 +2153,11 @@ function deposititems(fromBpName, stackBoxIndex, nonStackBoxIndex, ignoredItemID
         return nil
     end
 
-    while #lootBpContainer.items > 0 do
+    while lootBpContainer and depotContainer and #lootBpContainer.items > 0 do
         lootBpContainer, depotContainer = getcontainer(fromBpName), getcontainer("depot chest")
 
-        local position, itemID, itemStackPos, destPosition, itemCount = getFirstMatchingStorableItem()
+        local position, itemID, itemStackPos, destPosition, itemCount = getFirstMatchingStorableItem(lootBpContainer,
+            depotContainer)
 
         local nextLootBpItemIndex = -1
         if not itemID then
