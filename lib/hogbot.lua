@@ -2294,7 +2294,7 @@ function withdrawitems(fromContName, ...)
         return Position:new(0xffff, 0x40 + destCont.id, stackPos), slots
     end
 
-    local function findWithdrawableItem(id)
+    local function findWithdrawableItem(id, fromContainer)
         for index, item in ipairs(fromContainer.items) do
             if item.id == id then
                 local itemCount, itemStackPos = item.count == 0 and 1 or item.count, index - 1
@@ -2324,7 +2324,7 @@ function withdrawitems(fromContName, ...)
                     break
                 end
 
-                local position, itemID, itemStackPos, itemCount = findWithdrawableItem(rule.id)
+                local position, itemID, itemStackPos, itemCount = findWithdrawableItem(rule.id, fromContainer)
                 local destPosition, slots = getItemDestPosition(rule.id, destCont)
 
                 if itemID and itemCount > 0 and slots > 0 then
