@@ -615,6 +615,8 @@ local OPENED_DOOR_IDS = {
 --- @field item Item Item representation of the container
 --- @field items Item[] Array of items inside the container
 --- @field name string Name of the container
+--- @field subcontainer number 1 if container is a sub container, 0 otherwise
+--- @field numslots number Max slots of the container
 
 --[[
         User functions
@@ -1816,7 +1818,7 @@ function getcontainer(nameOrID)
 
     local containers = getcontainers()
     for _, container in ipairs(containers) do
-        if container.name:lower() == nameOrID or container.item.id == nameOrID then
+        if container.name:lower() == nameOrID or container.item.id == nameOrID or container.id == nameOrID then
             return container
         end
     end
@@ -1901,11 +1903,14 @@ function openobject(itemID, locationFrom, asNew, parentIndex, stackIndex)
         local objectPos = Position:new(0xffff, INVENTORY_BACKPACK, 0)
         useobject(objectPos, itemID, INVENTORY_BACKPACK, 0)
         return true
+    elseif type(locationFrom) == "string" then
+        locationFrom = locationFrom:lower()
     end
+
 
     local containers = getcontainers()
     for _, cont in ipairs(containers) do
-        if locationFrom and cont.name == locationFrom then
+        if locationFrom and cont.name:lower() == locationFrom then
             fromContainer = cont
             parentPos = cont.id
         elseif not locationFrom then
@@ -1918,7 +1923,7 @@ function openobject(itemID, locationFrom, asNew, parentIndex, stackIndex)
             end
         end
 
-        if fromContainer and not parentIndex or parentPos + 1 == parentIndex then
+        if fromContainer and (not parentIndex or parentPos + 1 == parentIndex) then
             break
         end
     end
@@ -1948,6 +1953,7 @@ function openobject(itemID, locationFrom, asNew, parentIndex, stackIndex)
     end
 
     local objectPos = Position:new(0xffff, 0x40 + fromContainer.id, stackPos)
+
     useobject(objectPos, itemID, stackPos, parentPos)
 
     return true
@@ -2111,6 +2117,46 @@ function reopenbps(...)
         openobject(bp[1], bp[2], bp[3])
         wait(500, 800)
     end
+end
+
+--- restarts given backpack
+--- @author  mistgun
+--- @param	 nameOrId string|number
+--- @return  boolean
+function restartbp(nameOrId)
+    local container = getcontainer(nameOrId)
+
+    if not container or container.subcontainer == 0 then
+        return false
+    end
+
+    local id, itemID = container.id, container.item.id
+
+    while container and container.subcontainer == 1 do
+        upcontainer(container.id)
+        wait(500, 800)
+
+        container = getcontainer(nameOrId)
+    end
+
+    local container = getcontainer(id)
+
+    if not container then
+        return false
+    end
+
+    local contIndex = finditemindex(container.items, itemID)
+
+    if contIndex ~= -1 then
+        repeat
+            openobject(itemID, container.name, false, id + 1, contIndex + 1)
+            wait(500, 800)
+
+            container = getcontainer(id)
+        until not container or (container.item.id == itemID and container.subcontainer == 1)
+    end
+
+    return true
 end
 
 --- puts items from given backpack to desired depot boxes

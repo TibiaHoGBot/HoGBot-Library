@@ -52,6 +52,7 @@
     * [useoncreature](functions/bot/useoncreature.md)
     * [usedoor](functions/bot/usedoor.md)
     * [reachnpc](functions/bot/reachnpc.md)
+    * [restartbp](functions/bot/restartbp.md)
     * [getspells](functions/bot/getspells.md)
     * [getrunes](functions/bot/getrunes.md)
     * [getpotions](functions/bot/getpotions.md)
