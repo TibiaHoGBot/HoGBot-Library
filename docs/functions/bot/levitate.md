@@ -1,6 +1,6 @@
 # levitate(spell)
 
-Truns to specified direction and cast levitate spell
+Turns to specified direction and cast levitate spell
 
 {% code lineNumbers="true" %}
 ```lua
