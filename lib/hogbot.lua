@@ -2330,9 +2330,5 @@ function windowcount()
     for _, cont in ipairs(containers) do
         contCount = contCount + 1
     end
-    if contCount > 0 then
-        return contCount
-    else
-        return 0
-    end
+    return contCount
 end
