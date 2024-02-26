@@ -2342,7 +2342,6 @@ end
 
 --- drop flasks
 --- @author  dworak
---- @param   ---
 --- @return  nil
 function dropflask()
     for i=283, 285 do
