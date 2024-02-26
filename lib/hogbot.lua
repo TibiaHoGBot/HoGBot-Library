@@ -2303,7 +2303,6 @@ function sellflasks()
             sellobject(i,count)
             waitping()
             count = countitems(i)
-            waitping()
         end
     end
 end
@@ -2319,7 +2318,6 @@ function sellitems(itemsForSale)
             sellobject(item,count)
             waitping()
             count = countitems(item)
-            waitping()
         end
     end
 end
