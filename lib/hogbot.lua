@@ -2294,7 +2294,7 @@ end
 
 --- return details about spell
 --- @author  dworak
---- @param   spellName
+--- @param  spellName string
 --- @return  spell CooldownID, ManaRequired, CooldownGroup
 function getspelldetails(spellName)
     if type(spellName) ~= "string" then
@@ -2315,7 +2315,7 @@ end
 
 --- check if can cast the spell returns true if yes
 --- @author  dworak
---- @param   spellName
+--- @param   spellName string
 --- @return  bool
 function cancast(spellName)
     if type(spellName) ~= "string" then
@@ -2324,11 +2324,8 @@ function cancast(spellName)
 
     local cooldownId, minMana, spellGroup = getspelldetails(spellName)
     
-    if not cooldown(cooldownId) or not cooldowngroup(spellGroup) or mp() < minMana then
-        return false
-    else
-        return true
-    end
+
+return cooldown(cooldownId) and cooldowngroup(spellGroup) and mp() >= minMana
 end
 
 --- casts spell
