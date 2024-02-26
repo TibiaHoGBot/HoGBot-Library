@@ -2323,9 +2323,7 @@ function cancast(spellName)
     end
 
     local cooldownId, minMana, spellGroup = getspelldetails(spellName)
-    
-
-return cooldown(cooldownId) and cooldowngroup(spellGroup) and mp() >= minMana
+    return cooldown(cooldownId) and cooldowngroup(spellGroup) and mp() >= minMana
 end
 
 --- casts spell
