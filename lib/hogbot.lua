@@ -2337,9 +2337,7 @@ end
 --- @author  dworak
 --- @return  boolean
 function isontemple(range)
-    if range == nil then
-        range = 5
-    end
+    range = range or 5
     for _, area in ipairs(cityTemples) do
         if #area == 4 then
             local x, y, z = table.unpack(area)
@@ -2356,9 +2354,7 @@ end
 --- @param	x,y,z of hole and optional pickid
 --- @returns boolean
 function fishinice(x, y, z, pickid)
-    if pickid == nil then
-        pickid = 3456
-    end
+    pickid = pickid or 3456
     local ignoreids = {2886, 2887}
     local fishpos = Position:new(x, y, z)
     local destination = findreachabletilearoundposition(fishpos)
