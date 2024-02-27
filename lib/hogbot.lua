@@ -2378,8 +2378,7 @@ end
 --- @param	itemid, itemoz, mincap
 --- @returns nil
 function buyitemsuptocap(itemid, itemoz, mincap)
-    local capleft = cap()-mincap
-    local itemsToBuy = math.floor(capleft/itemoz)
+    local amount = math.floor((cap()-mincap)/itemoz)
     buyitemsupto(itemid, itemsToBuy)
     wait(200,400)
 end
