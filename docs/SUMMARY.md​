@@ -55,6 +55,7 @@
     * [getpotions](functions/bot/getpotions.md)
     * [spellinfo](functions/bot/spellinfo.md)
     * [potioninfo](functions/bot/potioninfo.md)
+    * [rashidlocation](functions/bot/rashidlocation.md)
     * [reachdp](functions/bot/reachdp.md)
     * [reachgrounditem](functions/bot/reachgrounditem.md)
     * [runeinfo](functions/bot/runeinfo.md)
