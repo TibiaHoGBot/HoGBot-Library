@@ -1,12 +1,13 @@
 # levitate(spell)
 
-Drops amount of specified items on position
+Turns to specified direction and cast levitate spell
 
 {% code lineNumbers="true" %}
 ```lua
-levitate('exani hur "up')
+levitate("s", "up")
+levitate("south", "up")
 ```
 
 {% endcode %}
 
-_Will try to cast 'exani hur "up' until your position.z change._
+_Will turn south and cast exani hur up spell._
