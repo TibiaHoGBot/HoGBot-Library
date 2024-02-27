@@ -2399,3 +2399,23 @@ function sio(hppc, ...)
         end
     end
 end
+
+--- @desc returns city in which rashid is today
+--- @author  dworak
+--- @returns string
+function rashidlocation()
+    local currentTime = os.time()
+    local currentHour = tonumber(os.date("%H", currentTime))
+    local weekday = tonumber(os.date("%w", currentTime))
+    local cities = {"Carlin", "Svargrond", "Liberty Bay", "Port Hope", "Ankrahmun", "Darashia", "Edron"}
+
+    if currentHour >= 10 then
+        return cities[weekday % 7 + 1]
+    elseif currentHour < 10 then
+        if weekday == 0 then
+            return cities[#cities]
+        else
+            return cities[(weekday - 1) % 7 + 1]
+        end
+    end
+end
