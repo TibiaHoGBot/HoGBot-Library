@@ -2295,3 +2295,25 @@ function findreachabletilearoundposition(position)
         end
     end
 end
+
+--- returns Position of specified inventory
+--- @author  dulec
+--- @param   slot Position
+--- @return  Position
+function getinventoryposition(slot)
+    if type(slot) ~= "number" or slot < 1 or slot > 10 then
+        error("Slot must be number between 1 and 10")
+    end
+
+    return Position:new(0xffff, 0x0000 + slot, 0x00)
+end
+
+--- opens quiver
+--- @author  dulec
+--- @return  nil
+function openquiver()
+    if itemproperty(getinventory(INVENTORY_SHIELD).id, ITEM_CONTAINER) then
+        waitping()
+        useobject(getinventoryposition(INVENTORY_SHIELD), getinventory(INVENTORY_SHIELD).id, 0, 0xFF)
+    end
+end
