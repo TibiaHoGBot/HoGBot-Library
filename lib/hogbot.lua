@@ -2382,3 +2382,20 @@ function buyitemsuptocap(itemid, itemoz, mincap)
     buyitemsupto(itemid, itemsToBuy)
     wait(200,400)
 end
+
+--- @desc Uses sio to heal the players found on the list.
+--- @author  dworak
+--- @param	hppc, name¹, name², name*, ...
+--- @returns nil
+function sio(hppc, ...)
+    if not cancast('heal friend') then
+        return false
+    end
+    local creatures = getcreatures()
+    local friendNames = { ... }
+    for _, c in ipairs(creatures) do
+        if c.type == CREATURE_TYPE_PLAYER and table.contains(friendNames, c.name) and c.hppc <= hppc then
+            cast('exura sio "' .. c.name)
+        end
+    end
+end
