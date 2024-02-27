@@ -2636,8 +2636,10 @@ end
 --- @returns nil
 function buyitemsuptocap(itemid, itemoz, mincap)
     local amount = math.floor((cap()-mincap)/itemoz)
-    buyitemsupto(itemid, itemsToBuy)
-    wait(200,400)
+    if amount > 0 then
+        buyitemsupto(itemid, itemsToBuy)
+        wait(200,400)
+    end
 end
 
 --- @desc Uses sio to heal the players found on the list.
@@ -2668,11 +2670,9 @@ function rashidlocation()
 
     if currentHour >= 10 then
         return cities[weekday % 7 + 1]
-    elseif currentHour < 10 then
-        if weekday == 0 then
-            return cities[#cities]
-        else
-            return cities[(weekday - 1) % 7 + 1]
-        end
+    elseif currentHour < 10 and weekday == 0 then
+        return cities[#cities]
+    else
+        return cities[(weekday - 1) % 7 + 1]
     end
 end
