@@ -614,6 +614,10 @@ local cityAreas = {
    {"rathleton", 33627, 31913, 50}
 }
 
+local cityTemples = {
+    {32369, 32241, 7}, --thais
+}
+
 --[[
         Type definitions
 --]]
@@ -2318,15 +2322,33 @@ end
 --- @author  dworak
 --- @return  string
 function currentcity()
-   for _, area in ipairs(cityAreas) do
-		if #area == 4 then
-			local city, x, y, ray = table.unpack(area)
-			if math.abs(posx() - x) < ray and math.abs(posy() - y) < ray then
-				return city
-			end
-		end
-	end
-   	return ''
+    for _, area in ipairs(cityAreas) do
+    if #area == 4 then
+        local city, x, y, ray = table.unpack(area)
+            if math.abs(posx() - x) < ray and math.abs(posy() - y) < ray then
+                return city
+            end
+        end
+    end
+    return ''
+end
+
+--- returns if you are in temple or not
+--- @author  dworak
+--- @return  boolean
+function isontemple(range)
+    if range == nil then
+        range = 5
+    end
+    for _, area in ipairs(cityTemples) do
+        if #area == 4 then
+            local x, y, z = table.unpack(area)
+            if math.abs(posx() - x) < range and math.abs(posy() - y) < range and posz() == z then
+                return true
+            end
+        end
+    end
+    return false
 end
 
 --- @desc Fishes on ice spots.
