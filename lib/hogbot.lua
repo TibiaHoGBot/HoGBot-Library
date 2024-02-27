@@ -593,6 +593,27 @@ local OPENED_DOOR_IDS = {
     20460
 }
 
+local cityAreas = {
+   {"thais", 32369, 32241, 100},
+   {"carlin", 32343, 31791, 60},
+   {"kazordoon", 32629, 31925, 60},
+   {"kazordoon", 32826, 31762, 15},
+   {"ab'dendriel", 32681, 31637, 70},
+   {"edron", 33205, 31819, 60},
+   {"darashia", 33238, 32435, 60},
+   {"venore", 32957, 32076, 100},
+   {"ankrahmun", 33158, 32829, 100},
+   {"port hope", 32623, 32763, 60},
+   {"liberty bay", 32317, 32826, 80},
+   {"svargrond", 32273, 31149, 80},
+   {"yalahar", 32802, 31206, 80},
+   {"travora", 32067, 32354, 20},
+   {"farmine", 33023, 31453, 60},
+   {"gray beach", 33447, 31323, 30},
+   {"roshamuul", 33553, 32379, 50},
+   {"rathleton", 33627, 31913, 50}
+}
+
 --[[
         Type definitions
 --]]
@@ -2290,4 +2311,57 @@ function findreachabletilearoundposition(position)
             end
         end
     end
+end
+
+
+--- returns name of the city in which you are currently
+--- @author  dworak
+--- @return  string
+function currentcity()
+   for _, area in ipairs(cityAreas) do
+		if #area == 4 then
+			local city, x, y, ray = table.unpack(area)
+			if math.abs(posx() - x) < ray and math.abs(posy() - y) < ray then
+				return city
+			end
+		end
+	end
+   	return ''
+end
+
+--- @desc Fishes on ice spots.
+--- @author  dworak
+--- @param	x,y,z of hole and optional pickid
+--- @returns boolean
+function fishinice(x, y, z, pickid)
+    if pickid == nil then
+        pickid = 3456
+    end
+    local ignoreids = {2886, 2887}
+    local fishpos = Position:new(x, y, z)
+    local destination = findreachabletilearoundposition(fishpos)
+    if destination ~= nil then
+        reachlocation(destination.x, destination.y, destination.z)
+    else
+        return false
+    end
+    while topitem(fishpos).id ~= 7200 and topitem(fishpos).id ~= 7236 and not table.contains(ignoreids, topitem(fishpos).id) do
+        moveallitemstoyourposition(fishpos)
+    end
+    if topitem(fishpos).id == 7200 or table.contains(ignoreids, topitem(fishpos).id) then
+        useitemonground(pickid, fishpos)
+        return true
+    end
+    return false
+end
+
+--- @desc Buying items up to x cap left
+--- @author  dworak
+--- @param	itemid, itemoz, mincap
+--- @returns nil
+function buyitemsuptocap(itemid, itemoz, mincap)
+    local capleft = cap()-mincap
+    local itemsToBuy = math.floor(capleft/itemoz)
+    buyitemsupto(itemid, itemsToBuy)
+    wait(200,400)
 end
