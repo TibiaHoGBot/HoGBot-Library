@@ -2596,7 +2596,7 @@ end
 function isontemple(range)
     range = range or 5
     for _, area in ipairs(cityTemples) do
-        if #area == 4 then
+        if #area == 3 then
             local x, y, z = table.unpack(area)
             if math.abs(posx() - x) < range and math.abs(posy() - y) < range and posz() == z then
                 return true
