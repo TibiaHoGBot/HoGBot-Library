@@ -2652,8 +2652,11 @@ function sio(hppc, ...)
     end
     local creatures = getcreatures()
     local friendNames = { ... }
+    for i, name in ipairs(friendNames) do
+        friendNames[i] = name:lower()
+    end
     for _, c in ipairs(creatures) do
-        if c.type == CREATURE_TYPE_PLAYER and table.contains(friendNames, c.name) and c.hppc <= hppc then
+        if c.type == CREATURE_TYPE_PLAYER and table.contains(friendNames, c.name:lower()) and c.hppc <= hppc then
             cast('exura sio "' .. c.name)
         end
     end
