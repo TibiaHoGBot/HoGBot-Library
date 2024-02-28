@@ -1,4 +1,4 @@
-# cap()
+# currentcity()
 
 Returns your character's current city location.
 
