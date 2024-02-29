@@ -1522,6 +1522,8 @@ function reachnpc(name)
                 for y = 1, 3 do
                     if tilereachable(npcpos.x + x, npcpos.y + y, npcpos.z) then
                         reachlocation(npcpos.x + x, npcpos.y + y, npcpos.z)
+                        wait(50,100)
+                        cancel()
                         return
                     end
                 end
@@ -1582,7 +1584,7 @@ function reachlocation(x, y, z, dist)
         end
 
         steplocation(bestSpotX, bestSpotY, z)
-        waitping()
+        wait(50,100)
 
         if posx() == currX and posy() == currY then
             tries = tries + 1
