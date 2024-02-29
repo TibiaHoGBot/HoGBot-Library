@@ -2134,7 +2134,7 @@ function npctalk(...)
     local words = { ... }
     for _, word in ipairs(words) do
         talk(12, word)
-        waitping()
+        wait(200,400)
     end
 end
 
