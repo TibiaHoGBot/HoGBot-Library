@@ -2611,6 +2611,7 @@ function windowcount()
         contCount = contCount + 1
     end
     return contCount
+end
 
 --- return details about spell
 --- @author  dworak
