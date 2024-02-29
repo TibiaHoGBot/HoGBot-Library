@@ -2565,11 +2565,13 @@ end
 --- @author  dulec
 --- @return  nil
 function openquiver()
-    if itemproperty(getinventory(INVENTORY_SHIELD).id, ITEM_CONTAINER) then
+    local inventoryShield = getinventory(INVENTORY_SHIELD)
+    if inventoryShield and itemproperty(inventoryShield.id, ITEM_CONTAINER) then
         waitping()
-        useobject(getinventoryposition(INVENTORY_SHIELD), getinventory(INVENTORY_SHIELD).id, 0, 0xFF)
+        useobject(getinventoryposition(INVENTORY_SHIELD), inventoryShield.id, 0, 0xFF)
     end
 end
+
 --- returns true or false if specified bps are opened
 --- @author  dworak
 --- @param   backpack names or ids
