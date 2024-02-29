@@ -1396,24 +1396,55 @@ function paround(range)
     return playersAround
 end
 
---- return number of players in range
+--- return number of all or selected monsters in range
 --- @author  Loro
 --- @param   range number
 --- @return  number
-function maround(range)
-    if type(range) ~= "number" then
-        error("Range must be a number")
-    end
-
+function maround(monsters, range)
+    range = range or 10
     local creatures = getcreatures()
     local monstersAround = 0
 
-    for _, c in ipairs(creatures) do
-        if math.floor(c.dist) <= range and c.type == CREATURE_TYPE_MONSTER then
-            monstersAround = monstersAround + 1
+    if monsters ~= nil then
+        for _, m in ipairs(monsters) do
+            for _, c in ipairs(creatures) do
+                if math.floor(c.dist) <= range and c.type == CREATURE_TYPE_MONSTER and c.name == m:lower() then
+                    monstersAround = monstersAround + 1
+                end
+            end
+        end
+    else
+        for _, c in ipairs(creatures) do
+            if math.floor(c.dist) <= range and c.type == CREATURE_TYPE_MONSTER then
+                monstersAround = monstersAround + 1
+            end
         end
     end
+    return monstersAround
+end
 
+--- return number of selected or all monsters with x hppc and min max range
+--- @author  dulec
+--- @param   monsters, minrange, maxrange, hppc
+--- @return  number
+function minrangelowhppc(monsters, minrange, maxrange, hppc)
+    local creatures = getcreatures()
+    local monstersAround = 0
+    if monsters ~= nil then
+        for _, m in ipairs(monsters) do
+            for _, c in ipairs(creatures) do
+                if math.floor(c.dist) >= minrange and math.floor(c.dist) <= maxrange and c.type == CREATURE_TYPE_MONSTER and c.name == m:lower() and c.hppc <= hppc then
+                    monstersAround = monstersAround + 1
+                end
+            end
+        end        
+    else
+        for _, c in ipairs(creatures) do
+            if math.floor(c.dist) >= minrange and math.floor(c.dist) <= maxrange and c.type == CREATURE_TYPE_MONSTER and c.hppc <= hppc then
+                monstersAround = monstersAround + 1
+            end
+        end
+    end
     return monstersAround
 end
 
@@ -1479,7 +1510,7 @@ function reachnpc(name)
     local creatures = getcreatures()
 
     for _, c in ipairs(creatures) do
-        if c.type == CREATURE_TYPE_NPC and c.name == name then
+        if c.type == CREATURE_TYPE_NPC and c.name:lower() == name:lower() then
             local npcpos = c.position
 
             if tilereachable(npcpos.x, npcpos.y, npcpos.z) then
