@@ -2677,3 +2677,34 @@ function dropflask()
         dropitems(i, flaskCount)
     end
 end
+
+
+--- sell loots and open next loot Backpacks to sell everything
+--- @author  dulec
+--- @param   mainBpName, lootBpId, lootBpName, items
+--- @return  nil
+function sellLoot(mainBpName, lootBpId, lootBpName, items)
+    if #items == 0 then return end
+    local mainBp = getinventory(INVENTORY_BACKPACK)
+
+    if not mainBp then return end
+    while windowcount() < 2 do
+        reopenbps({mainBp.id, "back"}, { lootBpId, mainBpName, true})
+    end
+
+    npctalk("hi","trade")
+    wait(200,400)
+    local lootBp = getcontainer(lootBpId)
+    local foundNextBp = true
+
+    while lootBp and foundNextBp do    
+        sellitems(items)
+        lootBp = getcontainer(lootBpId)
+        waitping()
+        if #lootBp.items > 1 then
+            openobject(lootBpId, lootBpName, false)
+        else
+            foundNextBp = false
+        end
+    end
+end
