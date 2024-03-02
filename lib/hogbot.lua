@@ -2688,6 +2688,8 @@ function sellLoot(mainBpName, lootBpId, lootBpName, items)
     local mainBp = getinventory(INVENTORY_BACKPACK)
 
     if not mainBp then return end
+    closecontainers()
+    wait(400,800)
     while windowcount() < 2 do
         reopenbps({mainBp.id, "back"}, { lootBpId, mainBpName, true})
     end
