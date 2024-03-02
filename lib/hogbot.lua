@@ -2693,9 +2693,7 @@ function sellLoot(mainBpName, lootBpId, lootBpName, items)
     while windowcount() < 2 do
         reopenbps({mainBp.id, "back"}, { lootBpId, mainBpName, true})
     end
-
-    npctalk("hi","trade")
-    wait(200,400)
+        
     local lootBp = getcontainer(lootBpId)
     local foundNextBp = true
 
