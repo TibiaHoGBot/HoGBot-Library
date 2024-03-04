@@ -2701,9 +2701,10 @@ function sellLoot(mainBpName, lootBpId, lootBpName, items)
     while lootBp and foundNextBp do    
         sellitems(items)
         lootBp = getcontainer(lootBpId)
-        waitping()
+        wait(200,400)
         if #lootBp.items > 1 then
             openobject(lootBpId, lootBpName, false)
+            wait(200,400)
         else
             foundNextBp = false
         end
