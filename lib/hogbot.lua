@@ -2630,17 +2630,28 @@ function arewindowsopened(...)
     return openedCount == #args
 end
 
---- returns amount of containers opened
+--- returns amount of containers opened or if selected backpacks are opened
 --- @author  dworak
 --- @param   ---
 --- @return  number
-function windowcount()
+function windowcount(...)
     local containers = getcontainers()
-    local contCount = 0
-    for _, cont in ipairs(containers) do
-        contCount = contCount + 1
+    local bpNames = {...}
+    local count = 0
+    
+    if #bpNames == 0 then
+        return #containers
     end
-    return contCount
+    
+    for _, name in ipairs(bpNames) do
+        for _, cont in ipairs(containers) do
+            if cont.name:lower() == name:lower() then
+                count = count + 1
+                break
+            end
+        end
+    end
+    return count == #bpNames
 end
 
 --- return details about spell
