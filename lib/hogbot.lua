@@ -2722,7 +2722,7 @@ end
 --- @author  dulec
 --- @param   mainBpName, lootBpId, lootBpName, items
 --- @return  nil
-function sellLoot(mainBpName, lootBpId, lootBpName, items)
+function sellloot(mainBpName, lootBpId, lootBpName, items)
     if #items == 0 then return end
     local mainBp = getinventory(INVENTORY_BACKPACK)
 
