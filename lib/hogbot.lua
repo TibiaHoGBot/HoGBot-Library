@@ -615,7 +615,23 @@ local cityAreas = {
 }
 
 local cityTemples = {
-    {32369, 32241, 7}, --thais
+    {32369, 32241, 7},  -- Thais
+    {33513, 32363, 6},  -- Roshamuul
+    {32360, 31782, 7},  -- Carlin
+    {32732, 31634, 7},  -- Ab'dendriel
+    {32957, 32076, 7},  -- Venore
+    {32649, 31925, 11}, -- Kazordoon
+    {33217, 31814, 8},  -- Edron
+    {33594, 31899, 6},  -- Rathleton
+    {32595, 32742, 7},  -- Port hope
+    {33213, 32454, 1},  -- Darashia
+    {32213, 31133, 7},  -- Svargrond
+    {32787, 31276, 7},  -- Yalahar
+    {33028, 31520, 11}, -- Farmine
+    {33195, 32853, 8},  -- Ankrahmun
+    {32317, 32826, 7},  -- Liberty Bay
+    {33447, 31323, 9},  -- Gray Island
+    {33921, 31477, 5}   -- Issavi
 }
 
 --[[
