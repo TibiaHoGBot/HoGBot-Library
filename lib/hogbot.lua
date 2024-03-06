@@ -2727,10 +2727,13 @@ function sellloot(mainBpName, lootBpId, lootBpName, items)
     local mainBp = getinventory(INVENTORY_BACKPACK)
 
     if not mainBp then return end
-    closecontainers()
-    wait(400,800)
+	while windowcount() > 0 do
+		closecontainers()
+		wait(400,800)
+	end
     while windowcount() < 2 do
-        reopenbps({mainBp.id, "back"}, { lootBpId, mainBpName, true})
+        reopenbps({mainBp.id, "back"}, {lootBpId, mainBpName, true})
+        wait(200,400)
     end
         
     local lootBp = getcontainer(lootBpId)
@@ -2740,9 +2743,9 @@ function sellloot(mainBpName, lootBpId, lootBpName, items)
         sellitems(items)
         lootBp = getcontainer(lootBpId)
         wait(200,400)
-        if #lootBp.items > 1 then
+        if finditemindex(lootBp.items, lootBpId) >= 0 then
             openobject(lootBpId, lootBpName, false)
-            wait(200,400)
+			wait(200,400)
         else
             foundNextBp = false
         end
