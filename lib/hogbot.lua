@@ -1452,7 +1452,10 @@ end
 
 --- return number of selected or all monsters with x hppc and min max range
 --- @author  dulec
---- @param   monsters, minrange, maxrange, hppc
+--- @param monsters?, table
+--- @param minrange, number
+--- @param maxrange, number
+--- @param hppc, number
 --- @return  number
 function minrangelowhppc(monsters, minrange, maxrange, hppc)
     local creatures = getcreatures()
