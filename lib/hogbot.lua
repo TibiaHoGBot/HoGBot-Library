@@ -619,6 +619,46 @@ ITEMS_FLINT                = {21173, 21166, 21175, 21174, 21169, 21171, 21167, 2
 ITEMS_ODEMARA              = {3027, 3004, 9057, 3029, 3030, 3032, 3028, 3033, 22194, 22193, 5799, 9058, 282, 281, 16120, 16126, 16122, 16121, 16127, 16125, 16123, 16124, 16119, 3026}
 ITEMS_ALAISTAR             = {21194, 21800, 21747, 21801, 21195, 21196, 21200, 21202, 21198, 21193, 21103, 21182, 21199, 21201, 21204}
 
+local cityAreas = {
+   {"thais", 32369, 32241, 100},
+   {"carlin", 32343, 31791, 60},
+   {"kazordoon", 32629, 31925, 60},
+   {"kazordoon", 32826, 31762, 15},
+   {"ab'dendriel", 32681, 31637, 70},
+   {"edron", 33205, 31819, 60},
+   {"darashia", 33238, 32435, 60},
+   {"venore", 32957, 32076, 100},
+   {"ankrahmun", 33158, 32829, 100},
+   {"port hope", 32623, 32763, 60},
+   {"liberty bay", 32317, 32826, 80},
+   {"svargrond", 32273, 31149, 80},
+   {"yalahar", 32802, 31206, 80},
+   {"travora", 32067, 32354, 20},
+   {"farmine", 33023, 31453, 60},
+   {"gray beach", 33447, 31323, 30},
+   {"roshamuul", 33553, 32379, 50},
+   {"rathleton", 33627, 31913, 50}
+}
+
+local cityTemples = {
+    {32369, 32241, 7},  -- Thais
+    {33513, 32363, 6},  -- Roshamuul
+    {32360, 31782, 7},  -- Carlin
+    {32732, 31634, 7},  -- Ab'dendriel
+    {32957, 32076, 7},  -- Venore
+    {32649, 31925, 11}, -- Kazordoon
+    {33217, 31814, 8},  -- Edron
+    {33594, 31899, 6},  -- Rathleton
+    {32595, 32742, 7},  -- Port hope
+    {33213, 32454, 1},  -- Darashia
+    {32213, 31133, 7},  -- Svargrond
+    {32787, 31276, 7},  -- Yalahar
+    {33028, 31520, 11}, -- Farmine
+    {33195, 32853, 8},  -- Ankrahmun
+    {32317, 32826, 7},  -- Liberty Bay
+    {33447, 31323, 9},  -- Gray Island
+    {33921, 31477, 5}   -- Issavi
+}
 
 --[[
         Type definitions
@@ -2612,6 +2652,164 @@ function findreachabletilearoundposition(position)
     end
 end
 
+--- returns Position of specified inventory
+--- @author  dulec
+--- @param   slot Position
+--- @return  Position
+function getinventoryposition(slot)
+    if type(slot) ~= "number" or slot < 1 or slot > 10 then
+        error("Slot must be number between 1 and 10")
+    end
+
+    return Position:new(0xffff, 0x0000 + slot, 0x00)
+end
+
+--- opens quiver
+--- @author  dulec
+--- @return  nil
+function openquiver()
+    local inventoryShield = getinventory(INVENTORY_SHIELD)
+    if inventoryShield and itemproperty(inventoryShield.id, ITEM_CONTAINER) then
+        waitping()
+        useobject(getinventoryposition(INVENTORY_SHIELD), inventoryShield.id, 0, 0xFF)
+    end
+end
+
+--- returns name of the city in which you are currently
+--- @author  dworak
+--- @return  string
+function currentcity()
+    for _, area in ipairs(cityAreas) do
+    if #area == 4 then
+        local city, x, y, ray = table.unpack(area)
+            if math.abs(posx() - x) < ray and math.abs(posy() - y) < ray then
+                return city
+            end
+        end
+    end
+    return ''
+end
+
+--- returns if you are in temple or not
+--- @author  dworak
+--- @return  boolean
+function isontemple(range)
+    range = range or 5
+    for _, area in ipairs(cityTemples) do
+        if #area == 3 then
+            local x, y, z = table.unpack(area)
+            if math.abs(posx() - x) < range and math.abs(posy() - y) < range and posz() == z then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+--- @desc Fishes on ice spots.
+--- @author  dworak
+--- @param	x,y,z of hole and optional pickid
+--- @returns boolean
+function fishinice(x, y, z, pickid)
+    pickid = pickid or 3456
+    local ignoreids = {2886, 2887}
+    local fishpos = Position:new(x, y, z)
+    local destination = findreachabletilearoundposition(fishpos)
+    if destination ~= nil then
+        reachlocation(destination.x, destination.y, destination.z)
+    else
+        return false
+    end
+    while topitem(fishpos).id ~= 7200 and topitem(fishpos).id ~= 7236 and not table.contains(ignoreids, topitem(fishpos).id) do
+        moveallitemstoyourposition(fishpos)
+    end
+    if topitem(fishpos).id == 7200 or table.contains(ignoreids, topitem(fishpos).id) then
+        useitemonground(pickid, fishpos)
+        return true
+    end
+    return false
+end
+
+--- @desc Buying items up to x cap left
+--- @author  dworak
+--- @param	itemid, itemoz, mincap
+--- @returns nil
+function buyitemsuptocap(itemid, itemoz, mincap)
+    local amount = math.floor((cap()-mincap)/itemoz)
+    if amount > 0 then
+        buyitemsupto(itemid, itemsToBuy)
+        wait(200,400)
+    end
+end
+
+--- @desc Uses sio to heal the players found on the list.
+--- @author  dworak
+--- @param	hppc, name¹, name², name*, ...
+--- @returns nil
+function sio(hppc, ...)
+    if not cancast('heal friend') then
+        return false
+    end
+    local creatures = getcreatures()
+    local friendNames = { ... }
+    for i, name in ipairs(friendNames) do
+        friendNames[i] = name:lower()
+    end
+    for _, c in ipairs(creatures) do
+        if c.type == CREATURE_TYPE_PLAYER and table.contains(friendNames, c.name:lower()) and c.hppc <= hppc then
+            cast('exura sio "' .. c.name)
+        end
+    end
+end
+
+--- @desc returns city in which rashid is today
+--- @author  dworak
+--- @returns string
+function rashidlocation()
+    local currentTime = os.time()
+    local currentHour = tonumber(os.date("%H", currentTime))
+    local weekday = tonumber(os.date("%w", currentTime))
+    local cities = {"Carlin", "Svargrond", "Liberty Bay", "Port Hope", "Ankrahmun", "Darashia", "Edron"}
+
+    if currentHour >= 10 then
+        return cities[weekday % 7 + 1]
+    elseif currentHour < 10 and weekday == 0 then
+        return cities[#cities]
+    else
+        return cities[(weekday - 1) % 7 + 1]
+    end
+end
+
+--- selling all available flasks on character
+--- @author  dworak
+--- @param   ---
+--- @return  nil
+function sellflasks()
+    for i=283,285 do
+        local count = countitems(i)
+        while count > 0 do
+            sellobject(i,count)
+            waitping()
+            count = countitems(i)
+        end
+    end
+end
+
+--- sell items with given ID's
+--- @author  dworak
+--- @param   item ids
+--- @return  nil
+function sellitems(itemsForSale)
+    for _, item in ipairs(itemsForSale) do
+        local count = countitems(item)
+        while count > 0 do
+            sellobject(item,count)
+            waitping()
+            count = countitems(item)
+        end
+    end
+end
+
 --- returns true or false if specified bps are opened
 --- @author  dworak
 --- @param   backpack names or ids
@@ -2790,5 +2988,7 @@ function uselever(x,y,z,id)
 	    local topUseId = topuseitem(itemposition).id
         useobject(itemposition, topUseId, 0, 0xFF)
         wait(400,600)
-    end
+  end  
 end
+
+
