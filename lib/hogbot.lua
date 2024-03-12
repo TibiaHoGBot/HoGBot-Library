@@ -2321,7 +2321,7 @@ function withdrawitems(fromContName, ...)
         local count = 0
         for _, item in ipairs(cont.items) do
             if item.id == id then
-                count = count + item.count
+                count = count + (item.count == 0 and 1 or item.count)
             end
         end
 
