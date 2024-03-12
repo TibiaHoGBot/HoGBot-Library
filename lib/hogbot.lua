@@ -2590,7 +2590,6 @@ function findreachabletilearoundposition(position)
     end
 end
 
-
 --- returns name of the city in which you are currently
 --- @author  dworak
 --- @return  string
@@ -2693,5 +2692,131 @@ function rashidlocation()
         return cities[#cities]
     else
         return cities[(weekday - 1) % 7 + 1]
+    end
+end
+
+--- selling all available flasks on character
+--- @author  dworak
+--- @param   ---
+--- @return  nil
+function sellflasks()
+    for i=283,285 do
+        local count = countitems(i)
+        while count > 0 do
+            sellobject(i,count)
+            waitping()
+            count = countitems(i)
+        end
+    end
+end
+
+--- sell items with given ID's
+--- @author  dworak
+--- @param   item ids
+--- @return  nil
+function sellitems(itemsForSale)
+    for _, item in ipairs(itemsForSale) do
+        local count = countitems(item)
+        while count > 0 do
+            sellobject(item,count)
+            waitping()
+            count = countitems(item)
+        end
+    end
+end
+
+--- returns true or false if specified bps are opened
+--- @author  dworak
+--- @param   backpack names or ids
+--- @return  bool
+function arewindowsopened(...)
+    local args = {...}
+    local containers = getcontainers()
+    local openedCount = 0
+
+    for _, cont in ipairs(containers) do
+        for _, arg in ipairs(args) do
+            if type(arg) == "string" then
+                if cont.name:lower() == arg:lower() then
+                    openedCount = openedCount + 1
+                    break
+                end
+            elseif type(arg) == "number" then
+                if cont.item.id == arg then
+                    openedCount = openedCount + 1
+                    break
+                end
+            end
+        end
+    end
+
+    return openedCount == #args
+end
+
+--- returns amount of containers opened
+--- @author  dworak
+--- @param   ---
+--- @return  number
+function windowcount()
+    local containers = getcontainers()
+    local contCount = 0
+    for _, cont in ipairs(containers) do
+        contCount = contCount + 1
+    end
+    return contCount
+
+--- return details about spell
+--- @author  dworak
+--- @param  spellName string
+--- @return  spell CooldownID, ManaRequired, CooldownGroup
+function getspelldetails(spellName)
+    if type(spellName) ~= "string" then
+        error("spellName must be a string")
+    end
+
+    local spells = getspells()
+    local spellName = string.lower(spellName)
+
+    for _, spell in ipairs(spells) do
+        if string.lower(spell['word']) == spellName or string.lower(spell['name']) == spellName then
+            return tonumber(spell['id']), tonumber(spell['mana']), spell['group']
+        end
+    end
+
+    return nil
+end
+
+--- check if can cast the spell returns true if yes
+--- @author  dworak
+--- @param   spellName string
+--- @return  bool
+function cancast(spellName)
+    if type(spellName) ~= "string" then
+        error("spellName must be a string")
+    end
+
+    local cooldownId, minMana, spellGroup = getspelldetails(spellName)
+    return cooldown(cooldownId) and cooldowngroup(spellGroup) and mp() >= minMana
+end
+
+--- casts spell
+--- @author  dworak
+--- @param   spellName
+--- @return  nil
+function cast(spellName)
+    if type(spellName) ~= "string" then
+        error("spellName must be a string")
+    end
+    talk(MESSAGE_TYPE_SAY, spellName)
+    waitping()
+end
+
+--- drop flasks
+--- @author  dworak
+--- @return  nil
+function dropflask()
+    for i=283, 285 do
+        local flaskCount = countitems(i)
+        dropitems(i, flaskCount)
     end
 end
