@@ -886,7 +886,7 @@ function getitempositionfromcontainers(itemid)
     for _, container in ipairs(containers) do
         for j, item in ipairs(container.items) do
             if item.id == itemid then
-                return Position:new(0xffff, 0x40 + container.id, j - 1)
+                return Position:new(0xffff, 0x40 | container.id, j - 1)
             end
         end
     end
@@ -1081,7 +1081,7 @@ function pickupitems(position, itemid, amount, containerid)
         if container.id == containerid then
             for j, slot in ipairs(container.items) do
                 if not itemproperty(slot.id, ITEM_CONTAINER) then
-                    moveobject(position, itemid, itemindex, Position:new(0xffff, 0x40 + container.id, j - 1), amount)
+                    moveobject(position, itemid, itemindex, Position:new(0xffff, 0x40 | container.id, j - 1), amount)
                     waitping()
                 end
             end
@@ -1117,7 +1117,7 @@ function levitate(direction, updown)
     if updown == "down" then
         spell = "exani hur down"
     end
-    
+
     turn(direction)
     wait(200)
     if mp() > 50 and level() >= 12 and knownspells(81) then
@@ -1507,7 +1507,7 @@ function minrangelowhppc(monsters, minrange, maxrange, hppc)
                     monstersAround = monstersAround + 1
                 end
             end
-        end        
+        end
     else
         for _, c in ipairs(creatures) do
             if math.floor(c.dist) >= minrange and math.floor(c.dist) <= maxrange and c.type == CREATURE_TYPE_MONSTER and c.hppc <= hppc then
@@ -2059,7 +2059,7 @@ function openobject(itemID, locationFrom, asNew, parentIndex, stackIndex)
         return false
     end
 
-    local objectPos = Position:new(0xffff, 0x40 + fromContainer.id, stackPos)
+    local objectPos = Position:new(0xffff, 0x40 | fromContainer.id, stackPos)
 
     useobject(objectPos, itemID, stackPos, parentPos)
 
@@ -2296,8 +2296,8 @@ function deposititems(fromBpName, stackBoxIndex, nonStackBoxIndex, ignoredItemID
 
             if (not ignoredItemIDs or not table.contains(ignoredItemIDs, item.id)) and
                 item.id ~= lootBpContainer.item.id and itemCount > 0 then
-                local position = Position:new(0xffff, 0x40 + lootBpContainer.id, itemStackPos)
-                local destPosition = Position:new(0xffff, 0x40 + depotContainer.id, boxIndex)
+                local position = Position:new(0xffff, 0x40 | lootBpContainer.id, itemStackPos)
+                local destPosition = Position:new(0xffff, 0x40 | depotContainer.id, boxIndex)
 
                 return position, item.id, itemStackPos, destPosition, itemCount
             end
@@ -2433,7 +2433,7 @@ function withdrawitems(fromContName, ...)
         end
 
         if not isItemStackable then
-            return Position:new(0xffff, 0x40 + destCont.id, stackPos), 1
+            return Position:new(0xffff, 0x40 | destCont.id, stackPos), 1
         end
 
         local slots = getAvailableSlotsForItem(id, destCont)
@@ -2444,14 +2444,14 @@ function withdrawitems(fromContName, ...)
 
         stackPos = stackPos ~= -1 and stackPos or finditemindex(destCont.items, id)
 
-        return Position:new(0xffff, 0x40 + destCont.id, stackPos), slots
+        return Position:new(0xffff, 0x40 | destCont.id, stackPos), slots
     end
 
     local function findWithdrawableItem(id, fromContainer)
         for index, item in ipairs(fromContainer.items) do
             if item.id == id then
                 local itemCount, itemStackPos = item.count == 0 and 1 or item.count, index - 1
-                local position = Position:new(0xffff, 0x40 + fromContainer.id, itemStackPos)
+                local position = Position:new(0xffff, 0x40 | fromContainer.id, itemStackPos)
 
                 return position, item.id, itemStackPos, itemCount
             end
@@ -2846,11 +2846,11 @@ function windowcount(...)
     local containers = getcontainers()
     local bpNames = {...}
     local count = 0
-    
+
     if #bpNames == 0 then
         return #containers
     end
-    
+
     for _, name in ipairs(bpNames) do
         for _, cont in ipairs(containers) do
             if cont.name:lower() == name:lower() then
@@ -2928,25 +2928,25 @@ function sellloot(mainBpName, lootBpId, lootBpName, items)
     local mainBp = getinventory(INVENTORY_BACKPACK)
 
     if not mainBp then return end
-	while windowcount() > 0 do
-		closecontainers()
-		wait(400,800)
-	end
+        while windowcount() > 0 do
+                closecontainers()
+                wait(400,800)
+        end
     while windowcount() < 2 do
         reopenbps({mainBp.id, "back"}, {lootBpId, mainBpName, true})
         wait(200,400)
     end
-        
+
     local lootBp = getcontainer(lootBpId)
     local foundNextBp = true
 
-    while lootBp and foundNextBp do    
+    while lootBp and foundNextBp do
         sellitems(items)
         lootBp = getcontainer(lootBpId)
         wait(200,400)
         if finditemindex(lootBp.items, lootBpId) >= 0 then
             openobject(lootBpId, lootBpName, false)
-			wait(200,400)
+                        wait(200,400)
         else
             foundNextBp = false
         end
@@ -2979,16 +2979,14 @@ end
 --- @return  nil
 function uselever(x,y,z,id)
     local levers = {2772, 2773}
-	if id then
-		levers = {id}
-	end
-	local curPosz = posz()
-	local itemposition = Position:new(x, y, z)
-	while curPosz == posz() do
-	    local topUseId = topuseitem(itemposition).id
+    if id then
+            levers = {id}
+    end
+    local curPosz = posz()
+    local itemposition = Position:new(x, y, z)
+    while curPosz == posz() do
+        local topUseId = topuseitem(itemposition).id
         useobject(itemposition, topUseId, 0, 0xFF)
         wait(400,600)
-  end  
+    end
 end
-
-
