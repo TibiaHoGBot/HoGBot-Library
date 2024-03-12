@@ -43,6 +43,8 @@
     * [openobject](functions/bot/openobject.md)
     * [pickupitems](functions/bot/pickupitems.md)
     * [sellobject](functions/bot/sellobject.md)
+    * [sellitems](functions/bot/sellitems.md)
+    * [sellflasks](functions/bot/sellflasks.md)
     * [step](functions/bot/step.md)
     * [talk](functions/bot/talk.md)
     * [trainskill](functions/bot/trainskill.md)
