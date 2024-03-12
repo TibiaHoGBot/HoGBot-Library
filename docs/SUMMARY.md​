@@ -75,6 +75,7 @@
     * [cancast](functions/character/cancast.md)
     * [cast](functions/character/cast.md)
     * [dropflask](functions/character/dropflask.md)
+    * [dropflask](functions/character/equipitem.md)
     * [hp](functions/character/hp.md)
     * [hppc](functions/character/hppc.md)
     * [id](functions/character/id.md)

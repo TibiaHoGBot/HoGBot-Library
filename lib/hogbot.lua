@@ -593,6 +593,32 @@ local OPENED_DOOR_IDS = {
     20460
 }
 
+-- Items bought by npcs
+ITEMS_ASNARUS              = {283, 284, 285, 2874, 3277, 3349, 3350, 20183, 20184, 20198, 20199, 20200, 20201, 20202, 20203, 20204, 20205, 20206, 20207}
+ITEMS_BLUE_DJINN           = {660, 674, 679, 693, 779, 793, 794, 810, 3046, 3049, 3050, 3056, 3060, 3061, 3062, 3071, 3072, 3073, 3074, 3075, 3079, 3081, 3082, 3083, 3091, 3092, 3093, 3271, 3279, 3280, 3284, 3301, 3302, 3313, 3320, 3380, 3381, 3382, 3385, 3391, 3392, 3415, 3416, 3418, 3419, 3439, 3567, 7391, 7410, 7412, 7436, 7451, 7454, 8092, 8093, 8094, 16096, 16115}
+ITEMS_BRENGUS              = {3264, 3265, 3266, 3267, 3268, 3269, 3270, 3271, 3272, 3273, 3274, 3275, 3276, 3277, 3279, 3280, 3282, 3283, 3285, 3286, 3293, 3294, 3298, 3300, 3304, 3305, 3316, 3336, 3337, 3338, 3345, 3346, 3347, 3348, 3349, 3350, 3351, 3352, 3353, 3354, 3355, 3357, 3358, 3359, 3361, 3362, 3367, 3372, 3374, 3375, 3376, 3377, 3378, 3379, 3403, 3404, 3405, 3406, 3407, 3408, 3409, 3410, 3411, 3413, 3425, 3426, 3430, 3431, 3443, 3444, 3445, 3462, 3552, 3556, 3557, 3558, 3559, 3560, 3561, 3562, 11471, 11511, 17824}
+ITEMS_ESRIK                = {3264, 3265, 3266, 3267, 3268, 3269, 3270, 3272, 3273, 3274, 3275, 3276, 3282, 3283, 3285, 3286, 3293, 3294, 3298, 3300, 3304, 3305, 3316, 3336, 3337, 3338, 3351, 3352, 3353, 3354, 3355, 3357, 3358, 3359, 3361, 3362, 3367, 3372, 3374, 3375, 3376, 3377, 3378, 3379, 3409, 3410, 3411, 3412, 3413, 3425, 3426, 3430, 3431, 3462, 3552, 3557, 3558, 3559, 3561, 3562, 4033, 10323, 10384, 10385, 10386, 10387, 10388, 10389, 10390, 10391, 10392, 10404, 10405, 10406, 10408, 10410, 10412, 10414, 10416, 10418, 11651, 11657, 11659, 11660, 11661, 17824}
+ITEMS_FIONA                = {5804, 5808, 5879, 5881, 5882, 5884, 5885, 5890, 5891, 5893, 5894, 5895, 5898, 5899, 5902, 5904, 5905, 5906, 5919, 5920, 5921, 5922, 5925, 5930, 5943, 5954, 7439, 7440, 7443, 9053, 9054, 9055, 9636, 9642, 9644, 9647, 9649, 9660, 9661, 9665, 9666, 10275, 10276, 10277, 10278, 10280, 10304, 10312, 10397, 10444, 11454, 11457, 11463, 11464, 11465, 11474, 11512, 11658, 11702, 11703, 14008, 14009, 14013, 16131, 16139, 16140, 17809, 17817, 17826, 17827, 17831, 17847, 17848, 17849, 17850, 17851, 17853, 17854, 17855, 17856, 17857, 18928, 22728, 22729, 22730}
+ITEMS_GNOMISSION           = {645, 902, 2848, 2852, 3013, 3014, 3068, 3249, 3295, 3306, 3323, 3341, 3387, 3398, 3424, 5080, 5791, 5803, 6103, 6527, 6561, 7183, 7416, 7417, 7453, 8021, 8025, 8029, 8039, 8041, 8055, 9394, 9606, 9613, 9616, 9617, 9618, 9619, 11679, 11693}
+ITEMS_GREEN_DJINN          = {666, 685, 785, 802, 3045, 3048, 3051, 3052, 3053, 3054, 3065, 3066, 3067, 3069, 3070, 3077, 3078, 3084, 3085, 3097, 3098, 3281, 3297, 3299, 3307, 3318, 3322, 3324, 3369, 3370, 3371, 3373, 3383, 3384, 3428, 3429, 3432, 3434, 3574, 7407, 7411, 7413, 7419, 7421, 7428, 8082, 8083, 8084, 16117, 16118}
+ITEMS_GRIZZLY              = {7393, 7394, 7396, 7397, 7398, 7399, 7400, 7401, 9631, 9633, 9648, 9657, 9662, 10244, 10272, 10273, 10282, 10297, 10311, 10398, 10419, 10421, 10452, 10454, 10455, 10456, 11487, 11488, 11489, 11490, 11491, 11514, 11539, 12039, 12040, 12172, 12309, 12312, 12313, 12314, 12315, 12316, 12317, 17461, 17462, 17818, 18993, 18994}
+ITEMS_IRMANA               = {3568, 5876, 5877, 5878, 5883, 5886, 5909, 5910, 5911, 5912, 5913, 5914, 5948, 8923, 9045, 9658, 9684, 9689, 9690, 9691, 9694, 10274, 10279, 10292, 10293, 10295, 10299, 10307, 10317, 10318, 10319, 10407, 11448, 11456, 11458, 11470, 11473, 11475, 11486, 11492, 11493, 11684, 17819}
+ITEMS_JEWELRY              = {281, 282, 3004, 3026, 3027, 3028, 3029, 3030, 3032, 3033, 9057, 9058, 16119, 16120, 16121, 16122, 16123, 16124, 16125, 16126, 16127, 22193, 22194}
+ITEMS_MALUNGA              = {8031, 8143, 9634, 9637, 9640, 9641, 9643, 9651, 9659, 9663, 9667, 9668, 9683, 9693, 10281, 10283, 10291, 10301, 10306, 10308, 10309, 10313, 10411, 10420, 10449, 10450, 11446, 11467, 11475, 11481, 11484, 11485, 11513, 11666, 11671, 11672, 11673, 11680, 12541, 12601, 12730, 12742, 12805, 14011, 14012, 14017, 14041, 14044, 14076, 14078, 14079, 14080, 14081, 14082, 14083, 16132, 16134, 17458, 17463, 17822, 17823, 17830, 18924, 18925, 18926, 18927, 18929, 18930, 18995, 18996, 18997, 19110, 19111}
+ITEMS_MUGRUU               = {22171, 22172, 22183, 22184, 22188, 22189, 22191, 22192}
+ITEMS_ROCK_IN_A_HARD_PLACE = {283, 284, 285, 2874, 2906, 3003, 3264, 3265, 3266, 3267, 3268, 3269, 3270, 3271, 3272, 3273, 3274, 3275, 3276, 3277, 3279, 3280, 3282, 3283, 3285, 3286, 3293, 3294, 3298, 3300, 3304, 3304, 3305, 3308, 3316, 3336, 3337, 3338, 3349, 3350, 3351, 3352, 3353, 3354, 3355, 3357, 3358, 3359, 3361, 3362, 3367, 3372, 3374, 3375, 3376, 3377, 3378, 3379, 3409, 3410, 3411, 3412, 3413, 3425, 3426, 3430, 3431, 3453, 3456, 3457, 3459, 3462, 3481, 3483, 3552, 3557, 3558, 3559, 3561, 3562, 12730, 13987, 13990, 13991, 13993, 13994, 13995, 13996, 13997, 13998, 13999, 14000, 14001, 14008, 14009, 14010, 14011, 14012, 14013, 14017, 14040, 14041, 14042, 14043, 14044, 14076, 14077, 14078, 14079, 14080, 14081, 14082, 14083, 14086, 14087, 14088, 14089, 14225, 14246, 14247, 14250, 17824}
+ITEMS_TAMORIL              = {2903, 3036, 3037, 3038, 3039, 3041}
+ITEMS_TELAS                = {5887, 5888, 5889, 5892, 8775, 9027, 9028, 9063, 9064, 9065, 9066, 9067, 9632, 9654, 9655, 9656, 9664, 10298, 10310, 10315, 11447, 12600, 12806, 16130, 16133, 16135, 16137, 16138}
+ITEMS_RASHID               = {661, 662, 664, 667, 668, 669, 672, 673, 680, 681, 682, 683, 686, 687, 688, 691, 692, 780, 781, 783, 786, 787, 788, 791, 792, 795, 796, 798, 803, 804, 805, 808, 809, 811, 812, 813, 814, 815, 816, 817, 818, 819, 820, 821, 822, 823, 824, 825, 826, 827, 828, 829, 830, 2958, 2991, 3002, 3006, 3007, 3008, 3010, 3016, 3017, 3018, 3019, 3025, 3055, 3063, 3290, 3314, 3315, 3326, 3327, 3328, 3330, 3332, 3333, 3334, 3339, 3340, 3342, 3344, 3356, 3360, 3364, 3366, 3386, 3397, 3404, 3408, 3414, 3420, 3421, 3435, 3436, 3440, 3441, 3442, 3550, 3554, 3556, 5461, 5710, 5741, 5810, 5917, 5918, 6095, 6096, 6131, 6299, 6553, 7379, 7380, 7381, 7382, 7383, 7384, 7386, 7387, 7388, 7389, 7390, 7392, 7402, 7403, 7404, 7406, 7408, 7414, 7415, 7418, 7422, 7424, 7425, 7426, 7427, 7429, 7430, 7432, 7434, 7437, 7438, 7449, 7452, 7456, 7457, 7460, 7461, 7462, 7463, 7464, 8022, 8027, 8045, 8049, 8050, 8052, 8057, 8061, 8063, 9013, 9014, 9015, 9017, 9302, 9303, 9304, 9653, 10457, 11674, 12683, 16163, 16164, 17828, 17829, 17852, 22726, 22727, 22866, 22867}
+ITEMS_YASIR                = {647, 2933, 3044, 3058, 3735, 3736, 3741, 5479, 5804, 5809, 5875, 5876, 5877, 5878, 5879, 5880, 5881, 5882, 5883, 5884, 5885, 5890, 5891, 5893, 5894, 5895, 5896, 5897, 5898, 5899, 5901, 5902, 5904, 5905, 5906, 5909, 5910, 5911, 5912, 5913, 5914, 5919, 5920, 5921, 5922, 5925, 5930, 5948, 5954, 6491, 6525, 6534, 6535, 6536, 6537, 6539, 6540, 6546, 8031, 8143, 9035, 9053, 9054, 9055, 9631, 9633, 9634, 9635, 9636, 9637, 9638, 9639, 9640, 9641, 9642, 9643, 9644, 9645, 9646, 9647, 9648, 9649, 9650, 9651, 9652, 9657, 9658, 9659, 9660, 9661, 9662, 9663, 9665, 9666, 9667, 9668, 9683, 9684, 9685, 9686, 9688, 9689, 9690, 9691, 9692, 9693, 9694, 10196, 10272, 10273, 10274, 10275, 10276, 10277, 10278, 10279, 10280, 10281, 10282, 10283, 10291, 10292, 10293, 10295, 10296, 10297, 10299, 10300, 10301, 10302, 10303, 10304, 10305, 10306, 10307, 10308, 10309, 10311, 10312, 10313, 10314, 10316, 10317, 10318, 10319, 10320, 10321, 10397, 10404, 10405, 10407, 10408, 10409, 10410, 10411, 10413, 10414, 10415, 10416, 10417, 10418, 10420, 10444, 10449, 10450, 10452, 10453, 10454, 10455, 10456, 11443, 11444, 11445, 11446, 11448, 11449, 11450, 11451, 11452, 11453, 11454, 11455, 11456, 11457, 11458, 11463, 11464, 11465, 11466, 11467, 11469, 11470, 11471, 11472, 11473, 11474, 11475, 11476, 11477, 11478, 11479, 11480, 11481, 11482, 11483, 11484, 11485, 11486, 11487, 11488, 11489, 11490, 11491, 11492, 11493, 11510, 11511, 11512, 11513, 11514, 11515, 11539, 11652, 11658, 11659, 11660, 11661, 11666, 11671, 11672, 11673, 11680, 11684, 11702, 11703, 12541, 12730, 12737, 12742, 14008, 14009, 14010, 14011, 14012, 14013, 14017, 14041, 14044, 14076, 14077, 14078, 14079, 14080, 14081, 14082, 14083, 14225, 16131, 16132, 16134, 16139, 16140, 17458, 17461, 17462, 17463, 17809, 17817, 17818, 17819, 17822, 17823, 17826, 17827, 17830, 17831, 17847, 17848, 17849, 17850, 17851, 17853, 17854, 17855, 17856, 17857, 18924, 18925, 18926, 18927, 18928, 18929, 18930, 18993, 18994, 18995, 18996, 18997, 19110, 19111, 20183, 20184, 20199, 20200, 20201, 20202, 20203, 20204, 20205, 20206, 20207}
+ITEMS_RAFZAN               = {17846, 17813, 17812, 17810, 17859}
+ITEMS_ROCK                 = {14247, 14001, 14088, 14087, 13991, 14250, 13987, 13996, 13998, 14043, 14246, 14089, 13990, 14040, 14042, 14083, 14079, 14011, 14044, 14010, 14041, 14017, 14012, 14013, 14225, 12730, 14009, 14077, 14008, 14082, 14078, 14076, 14080, 14081}
+ITEMS_LAILENE              = {9103, 8064, 8043, 10451, 10438, 8042, 10439}
+ITEMS_TOTHDRAL             = {9645, 10320, 9646, 11652, 9638, 12737, 9639, 11455, 10303, 9635, 11466, 3058, 10316, 9652}
+ITEMS_FLINT                = {21173, 21166, 21175, 21174, 21169, 21171, 21167, 21172, 21178, 21164, 21179, 21180, 21183, 21170, 21176, 21177, 21168}
+ITEMS_ODEMARA              = {3027, 3004, 9057, 3029, 3030, 3032, 3028, 3033, 22194, 22193, 5799, 9058, 282, 281, 16120, 16126, 16122, 16121, 16127, 16125, 16123, 16124, 16119, 3026}
+ITEMS_ALAISTAR             = {21194, 21800, 21747, 21801, 21195, 21196, 21200, 21202, 21198, 21193, 21103, 21182, 21199, 21201, 21204}
+
 local cityAreas = {
    {"thais", 32369, 32241, 100},
    {"carlin", 32343, 31791, 60},
@@ -1437,24 +1463,58 @@ function paround(range)
     return playersAround
 end
 
---- return number of players in range
+--- return number of all or selected monsters in range
 --- @author  Loro
 --- @param   range number
 --- @return  number
-function maround(range)
-    if type(range) ~= "number" then
-        error("Range must be a number")
-    end
-
+function maround(monsters, range)
+    range = range or 10
     local creatures = getcreatures()
     local monstersAround = 0
 
-    for _, c in ipairs(creatures) do
-        if math.floor(c.dist) <= range and c.type == CREATURE_TYPE_MONSTER then
-            monstersAround = monstersAround + 1
+    if monsters ~= nil then
+        for _, m in ipairs(monsters) do
+            for _, c in ipairs(creatures) do
+                if math.floor(c.dist) <= range and c.type == CREATURE_TYPE_MONSTER and c.name == m:lower() then
+                    monstersAround = monstersAround + 1
+                end
+            end
+        end
+    else
+        for _, c in ipairs(creatures) do
+            if math.floor(c.dist) <= range and c.type == CREATURE_TYPE_MONSTER then
+                monstersAround = monstersAround + 1
+            end
         end
     end
+    return monstersAround
+end
 
+--- return number of selected or all monsters with x hppc and min max range
+--- @author  dulec
+--- @param monsters?, table
+--- @param minrange, number
+--- @param maxrange, number
+--- @param hppc, number
+--- @return  number
+function minrangelowhppc(monsters, minrange, maxrange, hppc)
+    local creatures = getcreatures()
+    local monstersAround = 0
+    if monsters ~= nil then
+        for _, m in ipairs(monsters) do
+            for _, c in ipairs(creatures) do
+                if math.floor(c.dist) >= minrange and math.floor(c.dist) <= maxrange and c.type == CREATURE_TYPE_MONSTER and c.name == m:lower() and c.hppc <= hppc then
+                    monstersAround = monstersAround + 1
+                end
+            end
+        end        
+    else
+        for _, c in ipairs(creatures) do
+            if math.floor(c.dist) >= minrange and math.floor(c.dist) <= maxrange and c.type == CREATURE_TYPE_MONSTER and c.hppc <= hppc then
+                monstersAround = monstersAround + 1
+            end
+        end
+    end
     return monstersAround
 end
 
@@ -1520,7 +1580,7 @@ function reachnpc(name)
     local creatures = getcreatures()
 
     for _, c in ipairs(creatures) do
-        if c.type == CREATURE_TYPE_NPC and c.name == name then
+        if c.type == CREATURE_TYPE_NPC and c.name:lower() == name:lower() then
             local npcpos = c.position
 
             if tilereachable(npcpos.x, npcpos.y, npcpos.z) then
@@ -1532,6 +1592,8 @@ function reachnpc(name)
                 for y = 1, 3 do
                     if tilereachable(npcpos.x + x, npcpos.y + y, npcpos.z) then
                         reachlocation(npcpos.x + x, npcpos.y + y, npcpos.z)
+                        wait(50,100)
+                        cancel()
                         return
                     end
                 end
@@ -1592,7 +1654,7 @@ function reachlocation(x, y, z, dist)
         end
 
         steplocation(bestSpotX, bestSpotY, z)
-        waitping()
+        wait(50,100)
 
         if posx() == currX and posy() == currY then
             tries = tries + 1
@@ -2144,7 +2206,7 @@ function npctalk(...)
     local words = { ... }
     for _, word in ipairs(words) do
         talk(12, word)
-        waitping()
+        wait(200,400)
     end
 end
 
@@ -2776,17 +2838,28 @@ function arewindowsopened(...)
     return openedCount == #args
 end
 
---- returns amount of containers opened
+--- returns amount of containers opened or if selected backpacks are opened
 --- @author  dworak
 --- @param   ---
 --- @return  number
-function windowcount()
+function windowcount(...)
     local containers = getcontainers()
-    local contCount = 0
-    for _, cont in ipairs(containers) do
-        contCount = contCount + 1
+    local bpNames = {...}
+    local count = 0
+    
+    if #bpNames == 0 then
+        return #containers
     end
-    return contCount
+    
+    for _, name in ipairs(bpNames) do
+        for _, cont in ipairs(containers) do
+            if cont.name:lower() == name:lower() then
+                count = count + 1
+                break
+            end
+        end
+    end
+    return count == #bpNames
 end
 
 --- return details about spell
@@ -2820,7 +2893,7 @@ function cancast(spellName)
     end
 
     local cooldownId, minMana, spellGroup = getspelldetails(spellName)
-    return cooldown(cooldownId) and cooldowngroup(spellGroup) and mp() >= minMana
+    return (not cooldown(cooldownId)) and (not cooldowngroup(spellGroup)) and mp() >= minMana
 end
 
 --- casts spell
@@ -2844,3 +2917,78 @@ function dropflask()
         dropitems(i, flaskCount)
     end
 end
+
+
+--- sell loots and open next loot Backpacks to sell everything
+--- @author  dulec
+--- @param   mainBpName, lootBpId, lootBpName, items
+--- @return  nil
+function sellloot(mainBpName, lootBpId, lootBpName, items)
+    if #items == 0 then return end
+    local mainBp = getinventory(INVENTORY_BACKPACK)
+
+    if not mainBp then return end
+	while windowcount() > 0 do
+		closecontainers()
+		wait(400,800)
+	end
+    while windowcount() < 2 do
+        reopenbps({mainBp.id, "back"}, {lootBpId, mainBpName, true})
+        wait(200,400)
+    end
+        
+    local lootBp = getcontainer(lootBpId)
+    local foundNextBp = true
+
+    while lootBp and foundNextBp do    
+        sellitems(items)
+        lootBp = getcontainer(lootBpId)
+        wait(200,400)
+        if finditemindex(lootBp.items, lootBpId) >= 0 then
+            openobject(lootBpId, lootBpName, false)
+			wait(200,400)
+        else
+            foundNextBp = false
+        end
+    end
+end
+
+
+--- equip inventory item and unequip old if there is anything
+--- @author  dworak
+--- @param   itemID, inventorySlot
+--- @return  nil
+function equipitem(itemID, inventorySlot)
+    local currentId = getinventory(inventorySlot).id
+    local invetoryPos = getinventoryposition(inventorySlot)
+    if currentId ~= itemID then
+        while currentId ~= itemID and countitems(itemID) > 0 do
+            equipobject(getinventory(inventorySlot).id, 0)
+            wait(400,900)
+            local itemPos = getitempositionfromcontainers(itemID)
+            moveobject(itemPos, itemID, itemPos.z, invetoryPos, 100)
+            wait(200,400)
+            currentId = getinventory(inventorySlot).id
+        end
+    end
+end
+
+
+--- use lever on x y z position and ID or if no ID then default lever id
+--- @author  dworak
+--- @return  nil
+function uselever(x,y,z,id)
+    local levers = {2772, 2773}
+	if id then
+		levers = {id}
+	end
+	local curPosz = posz()
+	local itemposition = Position:new(x, y, z)
+	while curPosz == posz() do
+	    local topUseId = topuseitem(itemposition).id
+        useobject(itemposition, topUseId, 0, 0xFF)
+        wait(400,600)
+  end  
+end
+
+
