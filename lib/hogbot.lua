@@ -2814,52 +2814,37 @@ end
 --- @author  dworak
 --- @param   backpack names or ids
 --- @return  bool
-function arewindowsopened(...)
-    local args = {...}
+function windowsopened(...)
     local containers = getcontainers()
-    local openedCount = 0
+    local bpNames = {...}
+    local count = 0
 
     for _, cont in ipairs(containers) do
-        for _, arg in ipairs(args) do
-            if type(arg) == "string" then
-                if cont.name:lower() == arg:lower() then
-                    openedCount = openedCount + 1
+        for _, name in ipairs(bpNames) do
+            if type(name) == "string" then
+                if cont.name:lower() == name:lower() then
+                    count = count + 1
                     break
                 end
-            elseif type(arg) == "number" then
-                if cont.item.id == arg then
-                    openedCount = openedCount + 1
+            elseif type(name) == "number" then
+                if cont.item.id == name then
+                    count = count + 1
                     break
                 end
             end
         end
     end
-
-    return openedCount == #args
+    
+    return count == #bpNames
 end
 
 --- returns amount of containers opened or if selected backpacks are opened
 --- @author  dworak
 --- @param   ---
 --- @return  number
-function windowcount(...)
+function windowcount()
     local containers = getcontainers()
-    local bpNames = {...}
-    local count = 0
-
-    if #bpNames == 0 then
-        return #containers
-    end
-
-    for _, name in ipairs(bpNames) do
-        for _, cont in ipairs(containers) do
-            if cont.name:lower() == name:lower() then
-                count = count + 1
-                break
-            end
-        end
-    end
-    return count == #bpNames
+    return #containers > 0 and #containers or 0
 end
 
 --- return details about spell
