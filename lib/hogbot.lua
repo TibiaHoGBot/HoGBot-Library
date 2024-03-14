@@ -2838,7 +2838,7 @@ function windowsopened(...)
     return count == #bpNames
 end
 
---- returns amount of containers opened or if selected backpacks are opened
+--- returns amount of containers opened
 --- @author  dworak
 --- @param   ---
 --- @return  number
