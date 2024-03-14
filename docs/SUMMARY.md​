@@ -131,6 +131,7 @@
     * [getitempositionfromcontainers](functions/containers/getitempositionfromcontainers.md)
     * [upcontainer](functions/containers/upcontainer.md)
     * [windowcount](functions/containers/windowcount.md)
+    * [windowsopened](functions/containers/windowsopened.md)
     * [arewindowsopened](functions/containers/arewindowsopened.md)
   * [Core](functions/core/README.md)
     * [auto](functions/core/auto.md)
