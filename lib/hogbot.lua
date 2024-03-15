@@ -2814,52 +2814,37 @@ end
 --- @author  dworak
 --- @param   backpack names or ids
 --- @return  bool
-function arewindowsopened(...)
-    local args = {...}
-    local containers = getcontainers()
-    local openedCount = 0
-
-    for _, cont in ipairs(containers) do
-        for _, arg in ipairs(args) do
-            if type(arg) == "string" then
-                if cont.name:lower() == arg:lower() then
-                    openedCount = openedCount + 1
-                    break
-                end
-            elseif type(arg) == "number" then
-                if cont.item.id == arg then
-                    openedCount = openedCount + 1
-                    break
-                end
-            end
-        end
-    end
-
-    return openedCount == #args
-end
-
---- returns amount of containers opened or if selected backpacks are opened
---- @author  dworak
---- @param   ---
---- @return  number
-function windowcount(...)
+function windowsopened(...)
     local containers = getcontainers()
     local bpNames = {...}
     local count = 0
 
-    if #bpNames == 0 then
-        return #containers
-    end
-
-    for _, name in ipairs(bpNames) do
-        for _, cont in ipairs(containers) do
-            if cont.name:lower() == name:lower() then
-                count = count + 1
-                break
+    for _, cont in ipairs(containers) do
+        for _, name in ipairs(bpNames) do
+            if type(name) == "string" then
+                if cont.name:lower() == name:lower() then
+                    count = count + 1
+                    break
+                end
+            elseif type(name) == "number" then
+                if cont.item.id == name then
+                    count = count + 1
+                    break
+                end
             end
         end
     end
+    
     return count == #bpNames
+end
+
+--- returns amount of containers opened
+--- @author  dworak
+--- @param   ---
+--- @return  number
+function windowcount()
+    local containers = getcontainers()
+    return #containers > 0 and #containers or 0
 end
 
 --- return details about spell
@@ -2987,6 +2972,93 @@ function uselever(x,y,z,id)
     while curPosz == posz() do
         local topUseId = topuseitem(itemposition).id
         useobject(itemposition, topUseId, 0, 0xFF)
+        wait(400,600)
+    end
+end
+
+--- eat food
+--- @author  dworak
+--- @return  nil
+function eatfood()
+    local fooditems = {3250, 3577, 3578, 3579, 3581, 3582, 3583, 3584, 3585, 3586, 3587, 3588, 3589, 3590, 3591, 3592, 3593, 3594, 3595, 3596, 3597, 3598, 3599, 3600, 3601, 3602, 3603, 3604, 3605, 3606, 3607, 3723, 3724, 3725, 3727, 3729, 3730, 5096, 5466, 5678, 6125, 6276, 6277, 6278, 6279, 6392, 6393, 6500, 6541, 6542, 6543, 6544, 6545, 6569, 6574, 7372, 7373, 7374, 7375, 7376, 7377, 8010, 8011, 8012, 8013, 8014, 8015, 8016, 8017, 8018, 8019, 8020, 8177, 8197, 9079, 9080, 9081, 9082, 9083, 9084, 9085, 9086, 9087, 9088, 10219, 10329, 11459, 11460, 11461, 11462, 11584, 11586, 11587, 11588, 11682, 11683, 11685, 12310, 13992, 14084, 14085, 14681, 16103, 17457, 17820, 17821, 20310}
+    
+    for _, i in ipairs(fooditems) do
+        if countitems(i) > 0 and not ispzone() then
+            foodposition = getitempositionfromcontainers(i)
+            useobject(foodposition, i, foodposition.z, 0)
+        end
+    end
+end
+
+--- eat food and drop trash, put item ids to keep 1 piece
+--- @author  dworak
+--- @return  nil
+function eatdrop(...)
+    local keepItems = {...} -- Shovel and Rope ID / Items to Keep 1 piece
+    local foodItems = {3250, 3577, 3578, 3579, 3581, 3582, 3583, 3584, 3585, 3586, 3587, 3588, 3589, 3590, 3591, 3592, 3593, 3594, 3595, 3596, 3597, 3598, 3599, 3600, 3601, 3602, 3603, 3604, 3605, 3606, 3607, 3723, 3724, 3727, 3729, 3730, 5096, 5466, 5678, 6125, 6276, 6277, 6278, 6279, 6392, 6393, 6500, 6541, 6542, 6543, 6544, 6545, 6569, 6574, 7372, 7373, 7374, 7375, 7376, 7377, 8010, 8011, 8012, 8013, 8014, 8015, 8016, 8017, 8018, 8019, 8020, 8177, 8197, 9079, 9080, 9081, 9082, 9083, 9084, 9085, 9086, 9087, 9088, 10219, 10329, 11459, 11460, 11461, 11462, 11584, 11586, 11587, 11588, 11682, 11683, 11685, 12310, 13992, 14084, 14085, 14681, 16103, 17457, 17820, 17821, 20310} -- Food IDs to Eat and drop
+    
+    for _, id in ipairs(keepItems) do
+        local count = countitems(id)
+        if count > 1 then
+            local dropAmount = count-1
+            dropitems(id, dropAmount)
+        end
+    end
+    for _, food in ipairs(foodItems) do
+        local foodCount = countitems(food)
+        if foodCount > 0 then
+            local pos = getitempositionfromcontainers(food)
+            if pos then
+                useobject(pos, food, pos.z, 0)
+                wait(100,200)
+                local foodCountdrop = foodCount-1
+                if foodCountdrop > 0 then
+                    dropitems(food,foodCount)
+                end
+            end
+        end
+    end
+end
+
+--- returns how many minutes left for tibia day
+--- @author  dworak
+--- @return  number
+function isday()
+    local currentTimestamp = os.time()
+    local currentMinute = os.date("*t", currentTimestamp).min
+
+    if currentMinute >= 16 and currentMinute <= 44 then
+        local dayLeft = ((44 - currentMinute) + 60) % 60
+        return dayLeft
+    else
+        return -1
+    end
+end
+
+--- returns how many minutes left for tibia night
+--- @author  dworak
+--- @return  number
+function isnight()
+    local currentTimestamp = os.time()
+    local currentMinute = os.date("*t", currentTimestamp).min
+
+    if currentMinute >= 45 or currentMinute <= 15 then
+        local nightLeft = ((15 - currentMinute) + 60) % 60
+        return nightLeft
+    else
+        return -1
+    end
+end
+
+--- use item ID on machine in x y z coords
+--- @author  dulec
+--- @return  nil
+function useitemonmachine(x,y,z,id)
+    local curX, curY, curZ = posx(), posy(), posz()
+    local machinePos = Position:new(x, y, z)
+    while curX == posx() and curY == posy() and curZ == posz() do
+        local itemPos = getitempositionfromcontainers(id)
+        usetwoobjects(itemPos, id, itemPos.z, machinePos, topitem(machinePos).id, 0)
         wait(400,600)
     end
 end
