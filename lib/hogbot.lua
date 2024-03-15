@@ -1467,17 +1467,19 @@ end
 --- @author  Loro
 --- @param   range number
 --- @return  number
-function maround(monsters, range)
-    range = range or 10
+function maround(range, ...)
+    local range = range or 8
     local creatures = getcreatures()
+    local monsters = { ... }
     local monstersAround = 0
-
-    if monsters ~= nil then
-        for _, m in ipairs(monsters) do
-            for _, c in ipairs(creatures) do
-                if math.floor(c.dist) <= range and c.type == CREATURE_TYPE_MONSTER and c.name == m:lower() then
-                    monstersAround = monstersAround + 1
-                end
+    
+    if next(monsters) ~= nil then
+        for i, name in ipairs(monsters) do
+            monsters[i] = name:lower()
+        end
+        for _, c in ipairs(creatures) do
+            if math.floor(c.dist) <= range and c.type == CREATURE_TYPE_MONSTER and table.contains(monsters, c.name:lower()) then
+                monstersAround = monstersAround + 1
             end
         end
     else
