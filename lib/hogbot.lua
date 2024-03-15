@@ -3062,3 +3062,169 @@ function useitemonmachine(x,y,z,id)
         wait(400,600)
     end
 end
+
+--- splits item and fills the container with it
+--- @author  sh_u
+--- @param   itemId number id of an item to split
+--- @param   contAmount? number number of containers to fill. "nil" - try filling every container
+--- @param   contName? string name of a starting container, e.g "brocade backpack". "nil" - split and fill from first container found
+--- @param   leaveOpened? number[]|boolean array of indices, e.g "{0,2}" will keep first and third window of filled containers opened. "true" - all containers stay opened
+--- @return  any
+function splititemfillcontainer(itemId, contAmount, contName, leaveOpened)
+  local function closeOtherContainers(currContId, containers)
+    for _, cont in ipairs(containers) do
+      if cont.id ~= currContId then
+        closecontainer(cont.id)
+        waitping()
+      end
+    end
+  end
+
+  local function isInTable(contId, leaveOpened)
+    if leaveOpened == true then
+      return true
+    end
+
+    if not leaveOpened then
+      return false
+    end
+
+    for _, value in ipairs(leaveOpened) do
+      if value == contId then
+        return true
+      end
+    end
+    return false
+  end
+
+  local function getDestContById(contId, containers)
+    for _, cont in ipairs(containers) do
+      if cont.id == contId then
+        return cont
+      end
+    end
+    return nil
+  end
+
+  local function getNewContainer(currContId, itemId, containers, asNew)
+    for _, cont in ipairs(containers) do
+      if cont.item.id == itemId then
+        if not asNew or (asNew and cont.id ~= currContId) then
+          return cont
+        end
+      end
+    end
+
+    return nil
+  end
+
+
+  if type(itemId) ~= "number" then
+    error("itemid must be number")
+  end
+
+  local containersFilled = 0
+  local containers = getcontainers()
+  local destCont = contName and getcontainer(contName) or getDestContById(0, containers)
+
+  closeOtherContainers(destCont.id, containers)
+
+  if not destCont then
+    error("Failed to get a container")
+  end
+
+  local pos = findstackeditempos(itemId, destCont)
+  local dest = findemptyslotpos(destCont)
+
+  while dest and pos do
+    moveobject(pos, itemId, pos.z, dest, 1)
+    wait(400)
+
+    destCont = getcontainer(destCont.id)
+
+    pos = findstackeditempos(itemId, destCont)
+    dest = findemptyslotpos(destCont)
+
+
+    if pos and not dest then
+      :: FindNextCont ::
+      containersFilled = containersFilled + 1
+
+      if contAmount and containersFilled >= contAmount then
+        break
+      end
+
+
+      for i, item in ipairs(destCont.items) do
+        if itemproperty(item.id, ITEM_CONTAINER) then
+          local itemCount = destCont.items[pos.z + 1].count
+
+          moveobject(pos, itemId, pos.z, Position:new(0xffff, 0x40 + destCont.id, i - 1), itemCount - 1)
+          wait(350)
+
+          local asNew = isInTable(containersFilled - 1, leaveOpened)
+
+          openobject(item.id, destCont.name, asNew, destCont.id + 1)
+          waitping(450)
+
+          destCont = getNewContainer(destCont.id, item.id, getcontainers(), asNew)
+
+          if not destCont then
+            error("Failed to get the newly opened container")
+            break
+          end
+
+          pos = findstackeditempos(itemId, destCont)
+          dest = findemptyslotpos(destCont)
+
+          if pos and not dest then
+            goto FindNextCont
+          end
+
+          break
+        end
+      end
+    end
+  end
+end
+
+--- finds position of a first item that has count of 1 or more
+--- @author  sh_u
+--- @param   itemId number id of an item to split
+--- @param   destCont string name of a container, e.g "brocade backpack".
+--- @return  Position|nil
+function findstackeditempos(itemId, destCont)
+  if type(itemId) ~= "number" then
+    error("ItemId must be number")
+  end
+
+  if not destCont or not destCont.items then
+    error("Must provide a valid container")
+  end
+
+  for i, item in ipairs(destCont.items) do
+    if item.id == itemId and item.count > 1 then
+      return Position:new(0xffff, 0x40 + destCont.id, i - 1)
+    end
+  end
+
+  return nil
+end
+
+--- finds position of a first empty slot
+--- @author  sh_u
+--- @param   destCont string name of a container, e.g "brocade backpack".
+--- @return  Position|nil
+function findemptyslotpos(destCont)
+  if not destCont or not destCont.items then
+    error("Must provide a valid container")
+  end
+
+  for i = 1, destCont.numslots do
+    if not destCont.items[i] then
+      return Position:new(0xffff, 0x40 + destCont.id, i - 1)
+    end
+  end
+
+  return nil
+end
