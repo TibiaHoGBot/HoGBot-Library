@@ -2713,23 +2713,37 @@ end
 --- @param	x,y,z of hole and optional pickid
 --- @returns boolean
 function fishinice(x, y, z, pickid)
-    pickid = pickid or 3456
-    local ignoreids = {2886, 2887}
-    local fishpos = Position:new(x, y, z)
-    local destination = findreachabletilearoundposition(fishpos)
-    if destination ~= nil then
-        reachlocation(destination.x, destination.y, destination.z)
-    else
+    if countitems(3492) > 0 then
+        if pickid == nil then
+            pickid = 3456
+        end
+        local ignoreids = {2886, 2887, 7237}
+        local fishpos = Position:new(x, y, z)
+        local destination = findreachabletilearoundposition(fishpos)
+        if destination ~= nil then
+            reachlocation(destination.x, destination.y, destination.z)
+        end
+        while topitem(fishpos).id ~= 7200 and topitem(fishpos).id ~= 7236 and not table.contains(ignoreids, topitem(fishpos).id) do
+            moveallitemstoyourposition(fishpos)
+        end
+        local tile = gettile(fishpos)
+        if (isitemontile(7200,tile) or isitemontile(7236,tile)) and not (posx() == x and posy() == y and posz() == z) then
+            local id = topitem(fishpos).id
+            while id ~= 7237 do
+                if id == 7200 then
+                    useitemonground(pickid, fishpos)
+                    wait(1000,1100)
+                elseif id == 7236 then
+                    useitemonground(3483, fishpos)
+                    wait(1000,1100)
+                else
+                    return false
+                end
+                id = topitem(fishpos).id
+            end
+        end
         return false
     end
-    while topitem(fishpos).id ~= 7200 and topitem(fishpos).id ~= 7236 and not table.contains(ignoreids, topitem(fishpos).id) do
-        moveallitemstoyourposition(fishpos)
-    end
-    if topitem(fishpos).id == 7200 or table.contains(ignoreids, topitem(fishpos).id) then
-        useitemonground(pickid, fishpos)
-        return true
-    end
-    return false
 end
 
 --- @desc Buying items up to x cap left
