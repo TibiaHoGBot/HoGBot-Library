@@ -2220,7 +2220,7 @@ function reopenbps(...)
     local bps = { ... }
 
     closecontainers()
-    waitping()
+    wait(500,800)
 
     for _, bp in ipairs(bps) do
         openobject(bp[1], bp[2], bp[3])
