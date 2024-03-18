@@ -3078,3 +3078,36 @@ function useitemonmachine(x,y,z,id)
         wait(400,600)
     end
 end
+
+
+--- returns id of ring when its used
+--- @author  dworak
+--- @return  number
+function ringinuse(iid)
+    local rings = {
+        [3092] = 3095,
+        [3091] = 3094,
+        [3093] = 3096,
+        [3052] = 3089,
+        [3098] = 3100,
+        [3097] = 3099,
+        [3051] = 3088,
+        [3053] = 3090,
+        [3049] = 3086,
+        [9593] = 9593,
+        [9393] = 9392,
+        [3007] = 3007,
+        [6299] = 6300,
+        [9585] = 9585,
+        [3048] = 3048,
+        [3050] = 3087,
+        [3245] = 3245,
+        [3006] = 3006,
+        [349] = 349,
+        [3004] = 3004,
+        [16114] = 16264
+    }
+    
+    local ringid = rings[iid]
+    return ringid and ringid or 0
+end
