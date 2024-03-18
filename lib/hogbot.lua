@@ -1470,7 +1470,7 @@ end
 function maround(range, ...)
     local range = range or 8
     local creatures = getcreatures()
-    local monsters = { ... }
+    local monsters = { table.unpack(...) }
     local monstersAround = 0
     
     if next(monsters) ~= nil then
