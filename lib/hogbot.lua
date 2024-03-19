@@ -3111,3 +3111,17 @@ function ringinuse(iid)
     local ringid = rings[iid]
     return ringid and ringid or 0
 end
+
+
+--- check if Yours character is on top position and can attack area spells
+--- @author  szulak & dworak
+--- @return  boolean
+function ischarontop()
+    tiles = gettile(Position:new(posx(), posy(), posz()))
+    for _, tile in ipairs(tiles.items) do
+        if tile.id == 99 and tile.count ~= id() then
+            return true
+        end
+    end
+    return false
+end
