@@ -948,6 +948,10 @@ function buyitemsupto(itemid, amount, ignorecap, withbackpacks)
     if type(itemid) ~= "number" or type(amount) ~= "number" then
         error("All arguments must be numbers")
     end
+    
+    if countitems(itemid) >= amount then
+       return
+    end
 
     ignorecap = ignorecap or false
     withbackpacks = withbackpacks or false
