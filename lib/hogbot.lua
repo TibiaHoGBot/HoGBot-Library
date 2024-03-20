@@ -3129,3 +3129,15 @@ function ischarontop()
     end
     return false
 end
+
+--- use top usable item on X Y Z
+--- @author  dworak
+--- @return  nil
+function usetopitem(x,y,z)
+    local itemPos = Position:new(x, y, z)
+    local topUseId = topuseitem(itemPos).id
+    reachlocation(itemPos.x, itemPos.y, itemPos.z)
+    wait(200,400)
+    useobject(itemPos, topUseId, 0, 0xFF)
+    wait(800,1400)
+end
