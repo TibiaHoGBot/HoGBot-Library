@@ -3141,3 +3141,41 @@ function usetopitem(x,y,z)
     useobject(itemPos, topUseId, 0, 0xFF)
     wait(800,1400)
 end
+
+--- anti furniture trap
+--- @author  dworak
+--- @param   standtime, weapon to use(need be in backpack), detection range - all params are optionally
+--- @return  nil
+function antifurnituretrap(stand, weapon, range)
+    local range = range or 1
+    local weapon = weapon or 3308
+    local stand = (stand or 0) * 1000
+    local toolposition = getitempositionfromcontainers(weapon)
+    if standtime() > stand then
+        local positions = {}
+        local playerX, playerY, playerZ = posx(), posy(), posz()
+        for xOffset = -range, range do
+            for yOffset = -range, range do
+                local posX, posY = playerX + xOffset, playerY + yOffset
+                table.insert(positions, Position:new(posX, posY, playerZ))
+            end
+        end
+        for _, pos in ipairs(positions) do
+            local tile = gettile(pos)
+            for _, item in ipairs(tile.items) do
+                if itemproperty(item.id, ITEM_UNPASS) and not itemproperty(item.id, ITEM_UNMOVE) and topitem(pos).id == item.id and tilereachable(pos.x, pos.y, pos.z) then
+                    local tile = getitemsontile(pos)
+                    local objectindex = finditemindex(tile, item.id)
+                    while objectindex ~= -1 do
+                        reachlocation(pos.x, pos.y, pos.z)
+                        wait(400,600)
+                        usetwoobjects(toolposition, weapon, toolposition.z, pos, item.id, objectindex)
+                        tile = getitemsontile(pos)
+                        objectindex = finditemindex(tile, item.id)
+                        wait(400,600)
+                    end
+                end
+            end
+        end
+    end
+end
