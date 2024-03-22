@@ -3184,7 +3184,16 @@ end
 --- @author  dworak
 --- @param   city list
 --- @return  string
-function randomizer(randomCity)
+function randomizer(randomCity, huntCity)
+    huntCity = huntCity or nil
+    if huntCity then
+        for i = #randomCity, 1, -1 do
+            if randomCity[i] == huntCity then
+                table.remove(randomCity, i)
+            end
+        end
+    end
+    
     math.randomseed(os.time())
     local randomIndex = math.random(1, #randomCity)
     return randomCity[randomIndex]
