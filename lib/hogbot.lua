@@ -3179,3 +3179,13 @@ function antifurnituretrap(stand, weapon, range)
         end
     end
 end
+
+--- choose random city from list
+--- @author  dworak
+--- @param   city list
+--- @return  string
+function randomizer(randomCity)
+    math.randomseed(os.time())
+    local randomIndex = math.random(1, #randomCity)
+    return randomCity[randomIndex]
+end
