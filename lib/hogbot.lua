@@ -3123,11 +3123,12 @@ end
 function ischarontop()
     tiles = gettile(Position:new(posx(), posy(), posz()))
     for _, tile in ipairs(tiles.items) do
-        if tile.id == 99 and tile.count ~= id() then
-            return true
+        if tile.id == 99 then
+            return tile.count == id()
         end
     end
-    return false
+
+    return true
 end
 
 --- use top usable item on X Y Z
