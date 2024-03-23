@@ -3220,7 +3220,7 @@ function gloothbags()
             local count = countitems(id)
             if count > 0 then
                 dropitems(id, count)
-                wait(50,100)
+                wait(100,200)
             end
         end
     end
