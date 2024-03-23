@@ -3218,10 +3218,9 @@ function gloothbags()
         wait(200,400)
         for _, id in ipairs(dropItems) do
             local count = countitems(id)
-        	wait(100,200)
             if count > 0 then
                 dropitems(id, count)
-                wait(400,500)
+                wait(50,100)
             end
         end
     end
