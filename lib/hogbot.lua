@@ -3207,3 +3207,22 @@ function useiteminbp(itemid)
     local itemPos = getitempositionfromcontainers(itemid)
     useobject(itemPos, itemid, itemPos.z, 0)
 end
+
+--- use all visible glooth backpacks and drop trash
+--- @author  dworak
+--- @return  nil
+function gloothbags()
+    local dropItems = {21158, 21143, 21144, 21146, 21295}
+    if countitems(21203) > 0 and maround() == 0 then
+        useiteminbp(21203)
+        wait(200,400)
+        for _, id in ipairs(dropItems) do
+            local count = countitems(id)
+        	wait(100,200)
+            if count > 0 then
+                dropitems(id, count)
+                wait(400,500)
+            end
+        end
+    end
+end
