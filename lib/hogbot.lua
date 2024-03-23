@@ -1093,18 +1093,20 @@ function pickupitems(position, itemid, amount, containerid)
     end
 end
 
---- check if character know spell by id
---- @author  dulec
+--- check if character know spell by name
+--- @author  dulec & dworak
 --- @param   spellid number
 --- @return  boolean
-function knowspell(spellid)
-    if type(spellid) ~= "number" then
-        error("itemid must be number")
+function knowspell(spellName)
+    if type(spellName) ~= "string" then
+        error("spellName must be a string")
     end
-
-    spells = knownspells()
-    for _, spell in ipairs(spells) do
-        if spellid == spell.id then
+    
+    local cooldownId, minMana, spellGroup = getspelldetails(spellName)
+    local knownspells = knownspells()
+    
+    for _, spell in ipairs(knownspells) do
+        if spell == cooldownId then
             return true
         end
     end
