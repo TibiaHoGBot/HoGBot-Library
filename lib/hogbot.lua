@@ -3198,3 +3198,12 @@ function randomizer(randomCity, huntCity)
     local randomIndex = math.random(1, #randomCity)
     return randomCity[randomIndex]
 end
+
+--- use given item ID from backpack
+--- @author  dworak
+--- @param   item id to use
+--- @return  nil
+function useiteminbp(itemid)
+    local itemPos = getitempositionfromcontainers(itemid)
+    useobject(itemPos, itemid, itemPos.z, 0)
+end
