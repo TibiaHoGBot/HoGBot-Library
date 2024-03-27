@@ -610,7 +610,7 @@ ITEMS_ROCK_IN_A_HARD_PLACE = {283, 284, 285, 2874, 2906, 3003, 3264, 3265, 3266,
 ITEMS_TAMORIL              = {2903, 3036, 3037, 3038, 3039, 3041}
 ITEMS_TELAS                = {5887, 5888, 5889, 5892, 8775, 9027, 9028, 9063, 9064, 9065, 9066, 9067, 9632, 9654, 9655, 9656, 9664, 10298, 10310, 10315, 11447, 12600, 12806, 16130, 16133, 16135, 16137, 16138}
 ITEMS_RASHID               = {661, 662, 664, 667, 668, 669, 672, 673, 680, 681, 682, 683, 686, 687, 688, 691, 692, 780, 781, 783, 786, 787, 788, 791, 792, 795, 796, 798, 803, 804, 805, 808, 809, 811, 812, 813, 814, 815, 816, 817, 818, 819, 820, 821, 822, 823, 824, 825, 826, 827, 828, 829, 830, 2958, 2991, 3002, 3006, 3007, 3008, 3010, 3016, 3017, 3018, 3019, 3025, 3055, 3063, 3290, 3314, 3315, 3326, 3327, 3328, 3330, 3332, 3333, 3334, 3339, 3340, 3342, 3344, 3356, 3360, 3364, 3366, 3386, 3397, 3404, 3408, 3414, 3420, 3421, 3435, 3436, 3440, 3441, 3442, 3550, 3554, 3556, 5461, 5710, 5741, 5810, 5917, 5918, 6095, 6096, 6131, 6299, 6553, 7379, 7380, 7381, 7382, 7383, 7384, 7386, 7387, 7388, 7389, 7390, 7392, 7402, 7403, 7404, 7406, 7408, 7414, 7415, 7418, 7422, 7424, 7425, 7426, 7427, 7429, 7430, 7432, 7434, 7437, 7438, 7449, 7452, 7456, 7457, 7460, 7461, 7462, 7463, 7464, 8022, 8027, 8045, 8049, 8050, 8052, 8057, 8061, 8063, 9013, 9014, 9015, 9017, 9302, 9303, 9304, 9653, 10457, 11674, 12683, 16163, 16164, 17828, 17829, 17852, 22726, 22727, 22866, 22867}
-ITEMS_YASIR                = {647, 2933, 3044, 3058, 3735, 3736, 3741, 5479, 5804, 5809, 5875, 5876, 5877, 5878, 5879, 5880, 5881, 5882, 5883, 5884, 5885, 5890, 5891, 5893, 5894, 5895, 5896, 5897, 5898, 5899, 5901, 5902, 5904, 5905, 5906, 5909, 5910, 5911, 5912, 5913, 5914, 5919, 5920, 5921, 5922, 5925, 5930, 5948, 5954, 6491, 6525, 6534, 6535, 6536, 6537, 6539, 6540, 6546, 8031, 8143, 9035, 9053, 9054, 9055, 9631, 9633, 9634, 9635, 9636, 9637, 9638, 9639, 9640, 9641, 9642, 9643, 9644, 9645, 9646, 9647, 9648, 9649, 9650, 9651, 9652, 9657, 9658, 9659, 9660, 9661, 9662, 9663, 9665, 9666, 9667, 9668, 9683, 9684, 9685, 9686, 9688, 9689, 9690, 9691, 9692, 9693, 9694, 10196, 10272, 10273, 10274, 10275, 10276, 10277, 10278, 10279, 10280, 10281, 10282, 10283, 10291, 10292, 10293, 10295, 10296, 10297, 10299, 10300, 10301, 10302, 10303, 10304, 10305, 10306, 10307, 10308, 10309, 10311, 10312, 10313, 10314, 10316, 10317, 10318, 10319, 10320, 10321, 10397, 10404, 10405, 10407, 10408, 10409, 10410, 10411, 10413, 10414, 10415, 10416, 10417, 10418, 10420, 10444, 10449, 10450, 10452, 10453, 10454, 10455, 10456, 11443, 11444, 11445, 11446, 11448, 11449, 11450, 11451, 11452, 11453, 11454, 11455, 11456, 11457, 11458, 11463, 11464, 11465, 11466, 11467, 11469, 11470, 11471, 11472, 11473, 11474, 11475, 11476, 11477, 11478, 11479, 11480, 11481, 11482, 11483, 11484, 11485, 11486, 11487, 11488, 11489, 11490, 11491, 11492, 11493, 11510, 11511, 11512, 11513, 11514, 11515, 11539, 11652, 11658, 11659, 11660, 11661, 11666, 11671, 11672, 11673, 11680, 11684, 11702, 11703, 12541, 12730, 12737, 12742, 14008, 14009, 14010, 14011, 14012, 14013, 14017, 14041, 14044, 14076, 14077, 14078, 14079, 14080, 14081, 14082, 14083, 14225, 16131, 16132, 16134, 16139, 16140, 17458, 17461, 17462, 17463, 17809, 17817, 17818, 17819, 17822, 17823, 17826, 17827, 17830, 17831, 17847, 17848, 17849, 17850, 17851, 17853, 17854, 17855, 17856, 17857, 18924, 18925, 18926, 18927, 18928, 18929, 18930, 18993, 18994, 18995, 18996, 18997, 19110, 19111, 20183, 20184, 20199, 20200, 20201, 20202, 20203, 20204, 20205, 20206, 20207}
+ITEMS_YASIR                = {647, 2933, 3044, 3058, 3735, 3736, 3741, 5479, 5804, 5809, 5875, 5876, 5877, 5878, 5879, 5880, 5881, 5882, 5883, 5884, 5885, 5890, 5891, 5893, 5894, 5895, 5896, 5897, 5898, 5899, 5901, 5902, 5904, 5905, 5906, 5909, 5910, 5911, 5912, 5913, 5914, 5919, 5920, 5921, 5922, 5925, 5930, 5948, 5954, 6491, 6525, 6534, 6535, 6536, 6537, 6539, 6540, 6546, 8031, 8143, 9035, 9053, 9054, 9055, 9631, 9633, 9634, 9635, 9636, 9637, 9638, 9639, 9640, 9641, 9642, 9643, 9644, 9645, 9646, 9647, 9648, 9649, 9650, 9651, 9652, 9657, 9658, 9659, 9660, 9661, 9662, 9663, 9665, 9666, 9667, 9668, 9683, 9684, 9685, 9686, 9688, 9689, 9690, 9691, 9692, 9693, 9694, 10196, 10272, 10273, 10274, 10275, 10276, 10277, 10278, 10279, 10280, 10281, 10282, 10283, 10291, 10292, 10293, 10295, 10296, 10297, 10299, 10300, 10301, 10302, 10303, 10304, 10305, 10306, 10307, 10308, 10309, 10311, 10312, 10313, 10314, 10316, 10317, 10318, 10319, 10320, 10321, 10397, 10404, 10405, 10407, 10408, 10409, 10410, 10411, 10413, 10414, 10415, 10416, 10417, 10418, 10420, 10444, 10449, 10450, 10452, 10453, 10454, 10455, 10456, 11443, 11444, 11445, 11446, 11448, 11449, 11450, 11451, 11452, 11453, 11454, 11455, 11456, 11457, 11458, 11463, 11464, 11465, 11466, 11467, 11469, 11470, 11471, 11472, 11473, 11474, 11475, 11476, 11477, 11478, 11479, 11480, 11481, 11482, 11483, 11484, 11485, 11486, 11487, 11488, 11489, 11490, 11491, 11492, 11493, 11510, 11511, 11512, 11513, 11514, 11515, 11539, 11652, 11658, 11659, 11660, 11661, 11666, 11671, 11672, 11673, 11680, 11684, 11702, 11703, 12541, 12730, 12737, 12742, 14008, 14009, 14010, 14011, 14012, 14013, 14017, 14041, 14044, 14076, 14077, 14078, 14079, 14080, 14081, 14082, 14083, 14225, 16131, 16132, 16134, 16139, 16140, 17458, 17461, 17462, 17463, 17809, 17817, 17818, 17819, 17822, 17823, 17826, 17827, 17830, 17831, 17847, 17848, 17849, 17850, 17851, 17853, 17854, 17855, 17856, 17857, 18924, 18925, 18926, 18927, 18928, 18929, 18930, 18993, 18994, 18995, 18996, 18997, 19110, 19111, 20183, 20184, 20199, 20200, 20201, 20202, 20203, 20204, 20205, 20206, 20207, 27597, 27598, 31331, 23508, 30005, 23523, 23511, 27592, 31443, 39415, 27593, 27594, 27515, 31678, 23507, 29345, 3155, 44736, 25743, 25742, 27462, 23519, 21974, 39377, 39392, 35588, 39346, 31559, 30058, 23516, 33945, 32773, 23515, 39386, 32227, 29346, 35572, 35573, 39400, 21975, 23510, 39381, 35596, 23506, 23503, 23505, 23502, 35571, 32772, 35574, 39378, 31589, 39416, 22051, 29347, 25744, 39376, 22057, 22055, 22056, 22053, 22054, 27463, 43731, 22052, 35612}
 ITEMS_RAFZAN               = {17846, 17813, 17812, 17810, 17859}
 ITEMS_ROCK                 = {14247, 14001, 14088, 14087, 13991, 14250, 13987, 13996, 13998, 14043, 14246, 14089, 13990, 14040, 14042, 14083, 14079, 14011, 14044, 14010, 14041, 14017, 14012, 14013, 14225, 12730, 14009, 14077, 14008, 14082, 14078, 14076, 14080, 14081}
 ITEMS_LAILENE              = {9103, 8064, 8043, 10451, 10438, 8042, 10439}
@@ -948,6 +948,10 @@ function buyitemsupto(itemid, amount, ignorecap, withbackpacks)
     if type(itemid) ~= "number" or type(amount) ~= "number" then
         error("All arguments must be numbers")
     end
+    
+    if countitems(itemid) >= amount then
+       return
+    end
 
     ignorecap = ignorecap or false
     withbackpacks = withbackpacks or false
@@ -1089,18 +1093,20 @@ function pickupitems(position, itemid, amount, containerid)
     end
 end
 
---- check if character know spell by id
---- @author  dulec
+--- check if character know spell by name
+--- @author  dulec & dworak
 --- @param   spellid number
 --- @return  boolean
-function knowspell(spellid)
-    if type(spellid) ~= "number" then
-        error("itemid must be number")
+function knowspell(spellName)
+    if type(spellName) ~= "string" then
+        error("spellName must be a string")
     end
-
-    spells = knownspells()
-    for _, spell in ipairs(spells) do
-        if spellid == spell.id then
+    
+    local cooldownId, minMana, spellGroup = getspelldetails(spellName)
+    local knownspells = knownspells()
+    
+    for _, spell in ipairs(knownspells) do
+        if spell == cooldownId then
             return true
         end
     end
@@ -1467,17 +1473,19 @@ end
 --- @author  Loro
 --- @param   range number
 --- @return  number
-function maround(monsters, range)
-    range = range or 10
+function maround(range, ...)
+    local range = range or 8
     local creatures = getcreatures()
+    local monsters = { table.unpack(...) }
     local monstersAround = 0
-
-    if monsters ~= nil then
-        for _, m in ipairs(monsters) do
-            for _, c in ipairs(creatures) do
-                if math.floor(c.dist) <= range and c.type == CREATURE_TYPE_MONSTER and c.name == m:lower() then
-                    monstersAround = monstersAround + 1
-                end
+    
+    if next(monsters) ~= nil then
+        for i, name in ipairs(monsters) do
+            monsters[i] = name:lower()
+        end
+        for _, c in ipairs(creatures) do
+            if math.floor(c.dist) <= range and c.type == CREATURE_TYPE_MONSTER and table.contains(monsters, c.name:lower()) then
+                monstersAround = monstersAround + 1
             end
         end
     else
@@ -2218,7 +2226,7 @@ function reopenbps(...)
     local bps = { ... }
 
     closecontainers()
-    waitping()
+    wait(500,800)
 
     for _, bp in ipairs(bps) do
         openobject(bp[1], bp[2], bp[3])
@@ -2711,23 +2719,37 @@ end
 --- @param	x,y,z of hole and optional pickid
 --- @returns boolean
 function fishinice(x, y, z, pickid)
-    pickid = pickid or 3456
-    local ignoreids = {2886, 2887}
-    local fishpos = Position:new(x, y, z)
-    local destination = findreachabletilearoundposition(fishpos)
-    if destination ~= nil then
-        reachlocation(destination.x, destination.y, destination.z)
-    else
+    if countitems(3492) > 0 then
+        if pickid == nil then
+            pickid = 3456
+        end
+        local ignoreids = {2886, 2887, 7237}
+        local fishpos = Position:new(x, y, z)
+        local destination = findreachabletilearoundposition(fishpos)
+        if destination ~= nil then
+            reachlocation(destination.x, destination.y, destination.z)
+        end
+        while topitem(fishpos).id ~= 7200 and topitem(fishpos).id ~= 7236 and not table.contains(ignoreids, topitem(fishpos).id) do
+            moveallitemstoyourposition(fishpos)
+        end
+        local tile = gettile(fishpos)
+        if (isitemontile(7200,tile) or isitemontile(7236,tile)) and not (posx() == x and posy() == y and posz() == z) then
+            local id = topitem(fishpos).id
+            while id ~= 7237 do
+                if id == 7200 then
+                    useitemonground(pickid, fishpos)
+                    wait(1000,1100)
+                elseif id == 7236 then
+                    useitemonground(3483, fishpos)
+                    wait(1000,1100)
+                else
+                    return false
+                end
+                id = topitem(fishpos).id
+            end
+        end
         return false
     end
-    while topitem(fishpos).id ~= 7200 and topitem(fishpos).id ~= 7236 and not table.contains(ignoreids, topitem(fishpos).id) do
-        moveallitemstoyourposition(fishpos)
-    end
-    if topitem(fishpos).id == 7200 or table.contains(ignoreids, topitem(fishpos).id) then
-        useitemonground(pickid, fishpos)
-        return true
-    end
-    return false
 end
 
 --- @desc Buying items up to x cap left
@@ -3227,4 +3249,147 @@ function findemptyslotpos(destCont)
   end
 
   return nil
+end
+
+--- returns id of ring when its used
+--- @author  dworak
+--- @return  number
+function ringinuse(iid)
+    local rings = {
+        [3092] = 3095,
+        [3091] = 3094,
+        [3093] = 3096,
+        [3052] = 3089,
+        [3098] = 3100,
+        [3097] = 3099,
+        [3051] = 3088,
+        [3053] = 3090,
+        [3049] = 3086,
+        [9593] = 9593,
+        [9393] = 9392,
+        [3007] = 3007,
+        [6299] = 6300,
+        [9585] = 9585,
+        [3048] = 3048,
+        [3050] = 3087,
+        [3245] = 3245,
+        [3006] = 3006,
+        [349] = 349,
+        [3004] = 3004,
+        [16114] = 16264
+    }
+    
+    local ringid = rings[iid]
+    return ringid and ringid or 0
+end
+
+
+--- check if Yours character is on top position and can attack area spells
+--- @author  szulak & dworak
+--- @return  boolean
+function ischarontop()
+    tiles = gettile(Position:new(posx(), posy(), posz()))
+    for _, tile in ipairs(tiles.items) do
+        if tile.id == 99 then
+            return tile.count == id()
+        end
+    end
+
+    return true
+end
+
+--- use top usable item on X Y Z
+--- @author  dworak
+--- @return  nil
+function usetopitem(x,y,z)
+    local itemPos = Position:new(x, y, z)
+    local topUseId = topuseitem(itemPos).id
+    reachlocation(itemPos.x, itemPos.y, itemPos.z)
+    wait(200,400)
+    useobject(itemPos, topUseId, 0, 0xFF)
+    wait(800,1400)
+end
+
+--- anti furniture trap
+--- @author  dworak
+--- @param   standtime, weapon to use(need be in backpack), detection range - all params are optionally
+--- @return  nil
+function antifurnituretrap(stand, weapon, range)
+    local range = range or 1
+    local weapon = weapon or 3308
+    local stand = (stand or 0) * 1000
+    local toolposition = getitempositionfromcontainers(weapon)
+    if standtime() > stand then
+        local positions = {}
+        local playerX, playerY, playerZ = posx(), posy(), posz()
+        for xOffset = -range, range do
+            for yOffset = -range, range do
+                local posX, posY = playerX + xOffset, playerY + yOffset
+                table.insert(positions, Position:new(posX, posY, playerZ))
+            end
+        end
+        for _, pos in ipairs(positions) do
+            local tile = gettile(pos)
+            for _, item in ipairs(tile.items) do
+                if itemproperty(item.id, ITEM_UNPASS) and not itemproperty(item.id, ITEM_UNMOVE) and topitem(pos).id == item.id and tilereachable(pos.x, pos.y, pos.z) then
+                    local tile = getitemsontile(pos)
+                    local objectindex = finditemindex(tile, item.id)
+                    while objectindex ~= -1 do
+                        reachlocation(pos.x, pos.y, pos.z)
+                        wait(400,600)
+                        usetwoobjects(toolposition, weapon, toolposition.z, pos, item.id, objectindex)
+                        tile = getitemsontile(pos)
+                        objectindex = finditemindex(tile, item.id)
+                        wait(400,600)
+                    end
+                end
+            end
+        end
+    end
+end
+
+--- choose random city from list
+--- @author  dworak
+--- @param   city list
+--- @return  string
+function randomizer(randomCity, huntCity)
+    huntCity = huntCity or nil
+    if huntCity then
+        for i = #randomCity, 1, -1 do
+            if randomCity[i] == huntCity then
+                table.remove(randomCity, i)
+            end
+        end
+    end
+    
+    math.randomseed(os.time())
+    local randomIndex = math.random(1, #randomCity)
+    return randomCity[randomIndex]
+end
+
+--- use given item ID from backpack
+--- @author  dworak
+--- @param   item id to use
+--- @return  nil
+function useiteminbp(itemid)
+    local itemPos = getitempositionfromcontainers(itemid)
+    useobject(itemPos, itemid, itemPos.z, 0)
+end
+
+--- use all visible glooth backpacks and drop trash
+--- @author  dworak
+--- @return  nil
+function gloothbags()
+    local dropItems = {21158, 21143, 21144, 21146, 21295}
+    if countitems(21203) > 0 and maround() == 0 then
+        useiteminbp(21203)
+        wait(200,400)
+        for _, id in ipairs(dropItems) do
+            local count = countitems(id)
+            if count > 0 then
+                dropitems(id, count)
+                wait(100,200)
+            end
+        end
+    end
 end
